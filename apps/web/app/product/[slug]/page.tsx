@@ -1,24 +1,22 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductDetailClient } from "@/components/product/ProductDetailClient";
-import {
-  getProductBySlug,
-  getRelatedProducts,
-  getReviewsForProduct,
-  products,
-} from "@/lib/fixtures";
+import { getAllProductSlugs, getProductPageData } from "@/lib/api/products";
+import { getProductBySlug } from "@/lib/fixtures";
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
 };
 
 export async function generateStaticParams() {
-  return products.map((product) => ({ slug: product.slug }));
+  const slugs = await getAllProductSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const data = await getProductPageData(slug);
+  const product = data?.product ?? getProductBySlug(slug);
 
   if (!product) {
     return { title: "Product not found — Alankara" };
@@ -32,14 +30,13 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const data = await getProductPageData(slug);
 
-  if (!product) {
+  if (!data) {
     notFound();
   }
 
-  const relatedProducts = getRelatedProducts(product.relatedSlugs);
-  const productReviews = getReviewsForProduct(product.id);
+  const { product, relatedProducts, productReviews } = data;
 
   return (
     <ProductDetailClient

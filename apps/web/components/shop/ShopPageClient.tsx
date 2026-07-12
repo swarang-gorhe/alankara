@@ -8,9 +8,13 @@ import {
   type ShopFiltersState,
 } from "@/components/shop/ShopFilters";
 import { SectionDivider } from "@/components/ui/SectionDivider";
-import { products } from "@/lib/fixtures";
+import type { ProductFixture } from "@/lib/fixtures/types";
 
-export function ShopPageClient() {
+type ShopPageClientProps = {
+  products: ProductFixture[];
+};
+
+export function ShopPageClient({ products }: ShopPageClientProps) {
   const [filters, setFilters] = useState<ShopFiltersState>({
     categories: [],
     materials: [],
@@ -19,7 +23,7 @@ export function ShopPageClient() {
 
   const filteredProducts = useMemo(
     () => filterProducts(products, filters),
-    [filters],
+    [products, filters],
   );
 
   return (
@@ -31,7 +35,7 @@ export function ShopPageClient() {
         </h1>
         <p className="mt-4 max-w-2xl text-charcoal-muted">
           Each piece is finished by artisan hands — explore by category, material, or
-          price. Product photography arrives in Phase 4; placeholders mark pieces awaiting
+          price. Product photography arrives soon; placeholders mark pieces awaiting
           their portrait.
         </p>
       </section>

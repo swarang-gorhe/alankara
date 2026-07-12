@@ -63,7 +63,21 @@ pip install pytest httpx ruff
 cd ../..
 ```
 
-### 5. Run development servers
+### 5. Database migrations & seed (Phase 4+)
+
+With Docker Postgres running:
+
+```bash
+cd apps/api
+source .venv/bin/activate
+alembic upgrade head
+python -m scripts.seed
+cd ../..
+```
+
+Re-seed from fixtures: `python -m scripts.seed --force`
+
+### 6. Run development servers
 
 ```bash
 pnpm dev
@@ -147,6 +161,8 @@ And `NEXT_PUBLIC_API_URL` on Vercel points to the Railway API URL.
 | `pnpm lint` | Lint web + API |
 | `pnpm typecheck` | TypeScript checks |
 | `pnpm test` | Run API pytest |
+| `pnpm --filter @alankara/api db:migrate` | Run Alembic migrations |
+| `pnpm --filter @alankara/api db:seed` | Seed DB from web fixtures |
 
 ## CI
 
@@ -160,9 +176,9 @@ GitHub Actions (`.github/workflows/ci.yml`) runs on every push/PR to `main`:
 | Phase | Status | Scope |
 |-------|--------|-------|
 | **1** | ✅ Complete | Monorepo scaffold, design system, layout shell |
-| 2 | Planned | Cinematic homepage (Three.js, GSAP, Lenis) |
-| 3 | Planned | Shop, PDP, editorial pages (fixtures) |
-| 4 | Planned | Backend schema, product APIs |
+| **2** | ✅ Complete | Cinematic homepage (Three.js, GSAP, Lenis) |
+| **3** | ✅ Complete | Shop, PDP, editorial pages (fixtures) |
+| **4** | ✅ Complete | Backend schema, product APIs, frontend wiring |
 | 5 | Planned | Cart + checkout |
 | 6 | Planned | Admin panel |
 | 7 | Planned | LangChain AI layer |

@@ -37,6 +37,23 @@ jobs:
     defaults:
       run:
         working-directory: apps/api
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: alankara
+          POSTGRES_PASSWORD: alankara_dev
+          POSTGRES_DB: alankara_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U alankara -d alankara_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://alankara:alankara_dev@localhost:5432/alankara_test
+      JWT_SECRET: test-secret
     steps:
       - uses: actions/checkout@v4
 
@@ -53,7 +70,7 @@ jobs:
           pip install pytest httpx ruff
 
       - name: Ruff lint
-        run: ruff check app tests
+        run: ruff check app tests scripts alembic
 
       - name: Pytest
         run: pytest -q
