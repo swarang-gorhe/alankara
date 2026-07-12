@@ -1,14 +1,29 @@
 "use client";
 
 import Lenis from "lenis";
-import { useEffect } from "react";
+import { createContext, useContext, useEffect, useRef } from "react";
+import { gsap, registerGsap, ScrollTrigger } from "@/lib/gsap";
+
+type LenisContextValue = {
+  lenis: Lenis | null;
+};
+
+const LenisContext = createContext<LenisContextValue>({ lenis: null });
+
+export function useLenis() {
+  return useContext(LenisContext);
+}
 
 type LenisProviderProps = {
   children: React.ReactNode;
 };
 
 export function LenisProvider({ children }: LenisProviderProps) {
+  const lenisRef = useRef<Lenis | null>(null);
+
   useEffect(() => {
+    registerGsap();
+
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefersReducedMotion) return;
 
@@ -18,20 +33,28 @@ export function LenisProvider({ children }: LenisProviderProps) {
       smoothWheel: true,
     });
 
-    let frameId: number;
+    lenisRef.current = lenis;
 
-    function raf(time: number) {
-      lenis.raf(time);
-      frameId = requestAnimationFrame(raf);
-    }
+    lenis.on("scroll", ScrollTrigger.update);
 
-    frameId = requestAnimationFrame(raf);
+    const tickerCallback = (time: number) => {
+      lenis.raf(time * 1000);
+    };
+
+    gsap.ticker.add(tickerCallback);
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
-      cancelAnimationFrame(frameId);
+      gsap.ticker.remove(tickerCallback);
       lenis.destroy();
+      lenisRef.current = null;
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, []);
 
-  return <>{children}</>;
+  return (
+    <LenisContext.Provider value={{ lenis: lenisRef.current }}>
+      {children}
+    </LenisContext.Provider>
+  );
 }

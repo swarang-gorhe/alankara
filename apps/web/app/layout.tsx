@@ -3,6 +3,7 @@ import { Cormorant_Garamond, Playfair_Display, Source_Sans_3 } from "next/font/g
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { LenisProvider } from "@/components/providers/LenisProvider";
+import { LuxuryCursorProvider } from "@/components/providers/LuxuryCursorProvider";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -43,11 +44,13 @@ export default function RootLayout({
     >
       <body className="min-h-screen bg-cream font-body text-charcoal antialiased">
         <LenisProvider>
-          <div className="flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
+          <LuxuryCursorProvider>
+            <div className="flex min-h-screen flex-col">
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
+          </LuxuryCursorProvider>
         </LenisProvider>
       </body>
     </html>
