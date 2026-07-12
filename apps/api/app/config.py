@@ -25,6 +25,13 @@ class Settings(BaseSettings):
     storage_backend: str = "local"
     local_upload_dir: str = "./uploads"
 
+    llm_provider: str = "openai"
+    openai_api_key: str = ""
+    openai_chat_model: str = "gpt-4o-mini"
+    openai_embedding_model: str = "text-embedding-3-small"
+    anthropic_api_key: str = ""
+    anthropic_chat_model: str = "claude-3-5-haiku-latest"
+
     @property
     def cors_origin_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]

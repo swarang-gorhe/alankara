@@ -70,10 +70,10 @@ export type OurStoryFixture = {
 };
 
 export type AIInsightsFixture = {
-  status: "placeholder";
+  status: "placeholder" | "live";
   summary: string;
   positiveThemes: string[];
   concerns: string[];
   trendingPraise: string[];
-  lastUpdated: string;
+  lastUpdated: string | null;
 };

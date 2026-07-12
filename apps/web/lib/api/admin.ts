@@ -113,7 +113,7 @@ export type AdminReview = {
   createdAt: string;
 };
 
-async function adminFetch<T>(path: string, init?: RequestInit): Promise<T> {
+export async function adminFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const token = getAdminToken();
   const res = await fetch(`${API_URL}${path}`, {
     ...init,

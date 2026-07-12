@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ProductCard } from "@/components/product/ProductCard";
 import { ProductPlaceholder } from "@/components/product/ProductPlaceholder";
@@ -8,6 +8,7 @@ import { ReviewCard } from "@/components/reviews/ReviewCard";
 import { useCart } from "@/components/providers/CartProvider";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { Button } from "@/components/ui/button";
+import { fetchProductReviewSummary } from "@/lib/api/ai";
 import { formatPrice, MATERIAL_LABELS } from "@/lib/fixtures";
 import type { ProductFixture, ReviewFixture } from "@/lib/fixtures/types";
 import { cn } from "@/lib/utils";
@@ -28,10 +29,17 @@ export function ProductDetailClient({
   const [adding, setAdding] = useState(false);
   const [addError, setAddError] = useState<string | null>(null);
   const [added, setAdded] = useState(false);
+  const [reviewSummary, setReviewSummary] = useState<string | null>(null);
   const selectedVariant =
     product.variants.find((v) => v.id === selectedVariantId) ?? product.variants[0];
   const inStock = (selectedVariant?.stock ?? 0) > 0;
   const image = product.images[0];
+
+  useEffect(() => {
+    fetchProductReviewSummary(product.slug)
+      .then((data) => setReviewSummary(data?.summary ?? null))
+      .catch(() => setReviewSummary(null));
+  }, [product.slug]);
 
   const handleAddToCart = async () => {
     if (!selectedVariant || !inStock) return;
@@ -219,7 +227,8 @@ export function ProductDetailClient({
             <h2 className="font-display text-3xl text-maroon">Customer voices</h2>
             <p className="mt-2 text-sm text-charcoal-muted">
               {productReviews.length}{" "}
-              {productReviews.length === 1 ? "review" : "reviews"} · AI summary in Phase 7
+              {productReviews.length === 1 ? "review" : "reviews"}
+              {reviewSummary ? " · AI summary below" : ""}
             </p>
           </div>
           <Link
@@ -242,9 +251,16 @@ export function ProductDetailClient({
           </div>
         )}
 
-        <div className="mt-8 rounded-sm border border-dashed border-gold/30 bg-cream-light/50 px-6 py-4 text-center text-sm text-charcoal-muted">
-          Per-product AI review summary — placeholder until Phase 7 LangChain integration
-        </div>
+        {reviewSummary ? (
+          <div className="mt-8 rounded-sm border border-gold/30 bg-olive-linen/40 px-6 py-5">
+            <p className="text-[10px] uppercase tracking-widest text-gold">AI review summary</p>
+            <p className="mt-2 text-sm leading-relaxed text-charcoal">{reviewSummary}</p>
+          </div>
+        ) : (
+          <div className="mt-8 rounded-sm border border-dashed border-gold/30 bg-cream-light/50 px-6 py-4 text-center text-sm text-charcoal-muted">
+            Per-product AI summary will appear once generated in admin.
+          </div>
+        )}
       </section>
 
       {/* Related products */}

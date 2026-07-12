@@ -9,6 +9,7 @@ from app.routers import (
     auth,
     cart,
     categories,
+    chat,
     checkout,
     discounts,
     health,
@@ -44,6 +45,7 @@ app.add_middleware(
 )
 
 app.include_router(health.router)
+app.include_router(chat.router)
 app.include_router(products.router)
 app.include_router(categories.router)
 app.include_router(reviews.router)

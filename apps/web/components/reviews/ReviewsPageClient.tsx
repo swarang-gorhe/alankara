@@ -1,13 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ReviewCard } from "@/components/reviews/ReviewCard";
 import { AIInsightsPanel } from "@/components/reviews/AIInsightsPanel";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { Button } from "@/components/ui/button";
-import { aiInsights, reviews } from "@/lib/fixtures";
-import type { CategorySlug } from "@/lib/fixtures/types";
+import { fetchReviewInsights } from "@/lib/api/ai";
+import { fetchReviews } from "@/lib/api/client";
+import { aiInsights, reviews as fixtureReviews } from "@/lib/fixtures";
+import type { AIInsightsFixture, CategorySlug, ReviewFixture } from "@/lib/fixtures/types";
 import { cn } from "@/lib/utils";
 
 const CATEGORY_OPTIONS: { slug: CategorySlug | "all"; label: string }[] = [
@@ -27,6 +29,18 @@ const RATING_OPTIONS = [
 export function ReviewsPageClient() {
   const [category, setCategory] = useState<CategorySlug | "all">("all");
   const [minRating, setMinRating] = useState(0);
+  const [insights, setInsights] = useState<AIInsightsFixture>(aiInsights);
+  const [reviews, setReviews] = useState<ReviewFixture[]>(fixtureReviews);
+
+  useEffect(() => {
+    fetchReviewInsights()
+      .then(setInsights)
+      .catch(() => setInsights(aiInsights));
+
+    fetchReviews()
+      .then(setReviews)
+      .catch(() => setReviews(fixtureReviews));
+  }, []);
 
   const filteredReviews = useMemo(() => {
     return reviews.filter((r) => {
@@ -35,7 +49,7 @@ export function ReviewsPageClient() {
       if (minRating > 0 && r.rating < minRating) return false;
       return true;
     });
-  }, [category, minRating]);
+  }, [category, minRating, reviews]);
 
   const featuredReview = filteredReviews[0];
   const remainingReviews = filteredReviews.slice(1);
@@ -56,7 +70,7 @@ export function ReviewsPageClient() {
       <SectionDivider />
 
       <section className="mx-auto max-w-7xl px-6 py-12">
-        <AIInsightsPanel insights={aiInsights} />
+        <AIInsightsPanel insights={insights} />
       </section>
 
       <SectionDivider />

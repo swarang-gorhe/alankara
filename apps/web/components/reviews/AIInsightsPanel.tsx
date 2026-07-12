@@ -18,10 +18,10 @@ export function AIInsightsPanel({ insights }: AIInsightsPanelProps) {
       <div className="relative">
         <div className="mb-6 flex flex-wrap items-center gap-3">
           <span className="rounded-sm border border-gold/40 bg-cream/80 px-2 py-0.5 font-body text-[10px] uppercase tracking-widest text-charcoal-muted">
-            AI insights — Phase 7
+            AI insights
           </span>
           <span className="text-xs text-charcoal-muted">
-            Placeholder data · Live RAG summaries coming soon
+            {insights.status === "live" ? "Live from Alankara reviews" : "Seed data — run AI re-index for live themes"}
           </span>
         </div>
 

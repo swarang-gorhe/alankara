@@ -8,8 +8,10 @@ from sqlalchemy.orm import selectinload
 
 from app.database import get_db
 from app.models.product import Product
+from app.schemas.ai import ReviewSummarySchema
 from app.schemas.mappers import product_to_schema
 from app.schemas.product import PaginatedProductsSchema, ProductDetailSchema, ProductSchema
+from app.services.ai.chains.review_summary_chain import get_product_review_summary
 
 router = APIRouter(prefix="/products", tags=["products"])
 
@@ -120,3 +122,22 @@ async def get_product(slug: str, db: DbSession) -> ProductDetailSchema:
 
     base = product_to_schema(product)
     return ProductDetailSchema(**base.model_dump(), relatedProducts=related)
+
+
+@router.get("/{slug}/review-summary", response_model=ReviewSummarySchema)
+async def get_product_review_summary_endpoint(slug: str, db: DbSession) -> ReviewSummarySchema:
+    stmt = select(Product).where(Product.slug == slug)
+    result = await db.execute(stmt)
+    product = result.scalar_one_or_none()
+    if product is None:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    summary = await get_product_review_summary(db, product.id)
+    if summary is None:
+        raise HTTPException(status_code=404, detail="No review summary available for this product")
+
+    return ReviewSummarySchema(
+        productId=product.id,
+        summary=summary.generated_summary,
+        generatedAt=summary.generated_at.isoformat(),
+    )

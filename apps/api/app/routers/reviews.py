@@ -10,7 +10,9 @@ from app.database import get_db
 from app.models.category import Category
 from app.models.product import Product
 from app.models.review import Review
+from app.schemas.ai import AIInsightsSchema
 from app.schemas.review import PaginatedReviewsSchema, ReviewSchema
+from app.services.ai.chains.insights_chain import get_global_insights
 
 router = APIRouter(prefix="/reviews", tags=["reviews"])
 
@@ -73,3 +75,9 @@ async def list_reviews(
         page_size=page_size,
         pages=pages,
     )
+
+
+@router.get("/insights", response_model=AIInsightsSchema)
+async def review_insights(db: DbSession) -> AIInsightsSchema:
+    data = await get_global_insights(db)
+    return AIInsightsSchema(**data)

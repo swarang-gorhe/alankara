@@ -1,4 +1,5 @@
 from app.models.address import Address
+from app.models.admin_ai_log import AdminAiLog
 from app.models.artisan import Artisan
 from app.models.cart import Cart, CartItem
 from app.models.category import Category
@@ -10,6 +11,7 @@ from app.models.product import Product, ProductVariant
 from app.models.review import Review, ReviewSummary
 
 __all__ = [
+    "AdminAiLog",
     "Address",
     "Artisan",
     "Cart",
