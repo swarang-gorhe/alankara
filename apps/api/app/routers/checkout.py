@@ -19,6 +19,7 @@ from app.services.cart import (
     clear_cart,
     get_or_create_cart,
 )
+from app.services.discount import validate_discount_for_cart
 from app.services.payment import get_payment_provider
 
 router = APIRouter(tags=["checkout"])
@@ -57,6 +58,27 @@ async def checkout(
                 detail=f"{item.productName} has only {item.stock} in stock",
             )
 
+    subtotal = cart_schema.subtotal.amount
+    discount_code: str | None = None
+    discount_amount = 0
+    applied_discount = None
+
+    if body.discountCode:
+        category_slugs = list(
+            {item.categorySlug for item in cart_schema.items if item.categorySlug}
+        )
+        product_ids = list({item.productId for item in cart_schema.items})
+        applied_discount, discount_amount = await validate_discount_for_cart(
+            db,
+            body.discountCode,
+            subtotal,
+            category_slugs=category_slugs,
+            product_ids=product_ids,
+        )
+        discount_code = applied_discount.code
+
+    total_amount = subtotal - discount_amount
+
     now = datetime.now(UTC)
     order_id = _new_id("ord")
     addr = body.shippingAddress
@@ -68,8 +90,10 @@ async def checkout(
         status="pending_payment",
         email=addr.email,
         phone=addr.phone,
-        subtotal_amount=cart_schema.subtotal.amount,
-        total_amount=cart_schema.subtotal.amount,
+        subtotal_amount=subtotal,
+        discount_code=discount_code,
+        discount_amount=discount_amount,
+        total_amount=total_amount,
         currency=cart_schema.subtotal.currency,
         shipping_address=addr.model_dump(),
         created_at=now,
@@ -95,6 +119,9 @@ async def checkout(
         )
     order.items = order_items
     db.add(order)
+
+    if applied_discount is not None:
+        applied_discount.usage_count += 1
 
     if user:
         db.add(
@@ -145,6 +172,10 @@ async def checkout(
             for oi in order_items
         ],
         subtotal=MoneySchema(amount=order.subtotal_amount, currency=order.currency),
+        discountCode=order.discount_code,
+        discountAmount=MoneySchema(amount=order.discount_amount, currency=order.currency)
+        if order.discount_amount
+        else None,
         total=MoneySchema(amount=order.total_amount, currency=order.currency),
         shippingAddress=addr,
         createdAt=order.created_at.isoformat(),

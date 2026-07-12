@@ -25,6 +25,7 @@ class CartItemDetailSchema(BaseModel):
     lineTotal: MoneySchema
     stock: int
     image: str | None = None
+    categorySlug: str | None = None
 
 
 class CartSchema(BaseModel):

@@ -2,7 +2,9 @@ from app.models.address import Address
 from app.models.artisan import Artisan
 from app.models.cart import Cart, CartItem
 from app.models.category import Category
+from app.models.discount import Discount
 from app.models.embedding import DocumentEmbedding
+from app.models.faq import FaqEntry
 from app.models.order import Order, OrderItem
 from app.models.product import Product, ProductVariant
 from app.models.review import Review, ReviewSummary
@@ -13,7 +15,9 @@ __all__ = [
     "Cart",
     "CartItem",
     "Category",
+    "Discount",
     "DocumentEmbedding",
+    "FaqEntry",
     "Order",
     "OrderItem",
     "Product",

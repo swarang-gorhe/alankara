@@ -107,9 +107,29 @@ export async function removeCartItem(itemId: string): Promise<CartResponse> {
   });
 }
 
-export async function checkout(shippingAddress: ShippingAddress): Promise<CheckoutResponse> {
+export async function checkout(
+  shippingAddress: ShippingAddress,
+  discountCode?: string,
+): Promise<CheckoutResponse> {
   return cartFetch<CheckoutResponse>("/checkout", {
     method: "POST",
-    body: JSON.stringify({ shippingAddress }),
+    body: JSON.stringify({ shippingAddress, discountCode: discountCode || undefined }),
   });
+}
+
+export async function validateDiscount(
+  code: string,
+  subtotalAmount: number,
+): Promise<{ valid: boolean; discountAmount: number; message?: string; code?: string }> {
+  const res = await fetch(`${API_URL}/discounts/validate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({ code, subtotalAmount }),
+  });
+  return res.json() as Promise<{
+    valid: boolean;
+    discountAmount: number;
+    message?: string;
+    code?: string;
+  }>;
 }

@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.models.cart import Cart, CartItem
-from app.models.product import ProductVariant
+from app.models.product import Product, ProductVariant
 from app.schemas.cart import CartItemDetailSchema, CartSchema
 from app.schemas.product import MoneySchema
 
@@ -46,7 +46,12 @@ async def _get_cart_by_session(db: AsyncSession, session_id: str) -> Cart | None
     stmt = (
         select(Cart)
         .where(Cart.session_id == session_id)
-        .options(selectinload(Cart.items).selectinload(CartItem.variant).selectinload(ProductVariant.product))
+        .options(
+            selectinload(Cart.items)
+            .selectinload(CartItem.variant)
+            .selectinload(ProductVariant.product)
+            .selectinload(Product.category),
+        )
     )
     result = await db.execute(stmt)
     return result.scalar_one_or_none()
@@ -56,7 +61,12 @@ async def _get_cart_by_user(db: AsyncSession, user_id: str) -> Cart | None:
     stmt = (
         select(Cart)
         .where(Cart.user_id == user_id)
-        .options(selectinload(Cart.items).selectinload(CartItem.variant).selectinload(ProductVariant.product))
+        .options(
+            selectinload(Cart.items)
+            .selectinload(CartItem.variant)
+            .selectinload(ProductVariant.product)
+            .selectinload(Product.category),
+        )
     )
     result = await db.execute(stmt)
     return result.scalar_one_or_none()
@@ -175,6 +185,7 @@ def cart_to_schema(cart: Cart) -> CartSchema:
                 lineTotal=MoneySchema(amount=line_total, currency=variant.price_currency),
                 stock=variant.stock,
                 image=images[0] if images else None,
+                categorySlug=product.category.slug if product.category else None,
             )
         )
 

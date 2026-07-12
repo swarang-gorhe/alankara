@@ -17,6 +17,7 @@ class ShippingAddressSchema(BaseModel):
 
 class CheckoutRequest(BaseModel):
     shippingAddress: ShippingAddressSchema
+    discountCode: str | None = Field(None, max_length=64)
 
 
 class OrderItemSchema(BaseModel):
@@ -38,6 +39,8 @@ class OrderSchema(BaseModel):
     phone: str | None = None
     items: list[OrderItemSchema]
     subtotal: MoneySchema
+    discountCode: str | None = None
+    discountAmount: MoneySchema | None = None
     total: MoneySchema
     shippingAddress: ShippingAddressSchema
     createdAt: str

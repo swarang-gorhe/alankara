@@ -12,7 +12,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import async_session_maker, engine
-from app.models import Artisan, Category, Product, ProductVariant, Review, ReviewSummary
+from app.models import Artisan, Category, Discount, FaqEntry, Product, ProductVariant, Review, ReviewSummary
 
 FIXTURES_DIR = Path(__file__).resolve().parents[2] / "web" / "lib" / "fixtures"
 
@@ -120,6 +120,66 @@ async def seed_review_summaries(session: AsyncSession) -> None:
     )
 
 
+async def seed_discounts(session: AsyncSession) -> None:
+    now = datetime.now(UTC)
+    session.add(
+        Discount(
+            id="disc-welcome10",
+            code="WELCOME10",
+            type="percentage",
+            value=10,
+            conditions={"minOrderAmount": 300000},
+            expires_at=None,
+            usage_limit=None,
+            usage_count=0,
+            active=True,
+            created_at=now,
+            updated_at=now,
+        )
+    )
+
+
+async def seed_faq(session: AsyncSession) -> None:
+    now = datetime.now(UTC)
+    entries = [
+        (
+            "shipping-time",
+            "How long does shipping take?",
+            "Domestic orders ship within 3–5 business days. Express delivery is available in metro cities.",
+            "shipping",
+            1,
+        ),
+        (
+            "returns-policy",
+            "What is your returns policy?",
+            "Unworn pieces in original packaging may be returned within 14 days. Custom pieces are final sale.",
+            "returns",
+            2,
+        ),
+        (
+            "jewellery-care",
+            "How should I care for my Alankara pieces?",
+            "Store in the provided pouch, avoid water and perfume contact, and polish gently with a soft cloth.",
+            "care",
+            3,
+        ),
+    ]
+    for slug, question, answer, category, sort_order in entries:
+        session.add(
+            FaqEntry(
+                id=f"faq-{slug}",
+                slug=slug,
+                question=question,
+                answer=answer,
+                category=category,
+                sort_order=sort_order,
+                published=True,
+                created_at=now,
+                updated_at=now,
+            )
+        )
+
+
 async def database_is_seeded(session: AsyncSession) -> bool:
     result = await session.execute(select(Product.id).limit(1))
     return result.scalar_one_or_none() is not None
@@ -134,6 +194,8 @@ async def run_seed(force: bool = False) -> None:
         if force:
             await session.execute(Review.__table__.delete())
             await session.execute(ReviewSummary.__table__.delete())
+            await session.execute(FaqEntry.__table__.delete())
+            await session.execute(Discount.__table__.delete())
             await session.execute(ProductVariant.__table__.delete())
             await session.execute(Product.__table__.delete())
             await session.execute(Category.__table__.delete())
@@ -145,6 +207,8 @@ async def run_seed(force: bool = False) -> None:
         await seed_artisans(session)
         await seed_reviews(session)
         await seed_review_summaries(session)
+        await seed_discounts(session)
+        await seed_faq(session)
         await session.commit()
         print("Seed complete.")
 

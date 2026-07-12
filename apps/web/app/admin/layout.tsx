@@ -1,0 +1,10 @@
+import type { ReactNode } from "react";
+import { AdminGuard } from "@/components/admin/AdminGuard";
+
+export const metadata = {
+  title: "Admin — Alankara",
+};
+
+export default function AdminLayout({ children }: { children: ReactNode }) {
+  return <AdminGuard>{children}</AdminGuard>;
+}

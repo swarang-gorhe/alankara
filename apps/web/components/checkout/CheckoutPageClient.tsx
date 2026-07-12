@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useCart } from "@/components/providers/CartProvider";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { Button } from "@/components/ui/button";
-import { checkout, type CheckoutResponse, type ShippingAddress } from "@/lib/api/cart";
+import { checkout, validateDiscount, type CheckoutResponse, type ShippingAddress } from "@/lib/api/cart";
 import { formatPrice } from "@/lib/fixtures";
 import { initiatePaymentFromCheckoutResponse } from "@/lib/checkout/payment";
 
@@ -30,9 +30,34 @@ export function CheckoutPageClient() {
   const [error, setError] = useState<string | null>(null);
   const [completed, setCompleted] = useState<CheckoutResponse | null>(null);
   const [paymentMessage, setPaymentMessage] = useState<string | null>(null);
+  const [discountCode, setDiscountCode] = useState("");
+  const [discountAmount, setDiscountAmount] = useState(0);
+  const [discountMessage, setDiscountMessage] = useState<string | null>(null);
+  const [validatingDiscount, setValidatingDiscount] = useState(false);
 
   const updateField = (field: keyof ShippingAddress, value: string) => {
     setAddress((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleApplyDiscount = async () => {
+    if (!cart || !discountCode.trim()) return;
+    setValidatingDiscount(true);
+    setDiscountMessage(null);
+    try {
+      const result = await validateDiscount(discountCode.trim(), cart.subtotal.amount);
+      if (result.valid) {
+        setDiscountAmount(result.discountAmount);
+        setDiscountMessage(result.message ?? "Discount applied");
+      } else {
+        setDiscountAmount(0);
+        setDiscountMessage(result.message ?? "Invalid code");
+      }
+    } catch {
+      setDiscountAmount(0);
+      setDiscountMessage("Could not validate discount");
+    } finally {
+      setValidatingDiscount(false);
+    }
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -41,7 +66,7 @@ export function CheckoutPageClient() {
     setError(null);
 
     try {
-      const result = await checkout(address);
+      const result = await checkout(address, discountCode.trim() || undefined);
       const payment = await initiatePaymentFromCheckoutResponse(result.payment);
       setCompleted(result);
       setPaymentMessage(payment.message ?? null);
@@ -137,6 +162,30 @@ export function CheckoutPageClient() {
           </fieldset>
 
           <div className="rounded-sm border border-dashed border-gold/40 bg-olive-linen/30 px-5 py-4">
+            <p className="text-xs uppercase tracking-widest text-gold">Discount code</p>
+            <div className="mt-3 flex gap-2">
+              <input
+                type="text"
+                value={discountCode}
+                onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
+                placeholder="WELCOME10"
+                className="flex-1 rounded-sm border border-gold/30 bg-cream-light px-4 py-2 text-sm uppercase focus:border-gold focus:outline-none"
+              />
+              <Button
+                type="button"
+                variant="outline"
+                disabled={validatingDiscount || !discountCode.trim()}
+                onClick={() => void handleApplyDiscount()}
+              >
+                {validatingDiscount ? "Checking…" : "Apply"}
+              </Button>
+            </div>
+            {discountMessage && (
+              <p className="mt-2 text-sm text-charcoal-muted">{discountMessage}</p>
+            )}
+          </div>
+
+          <div className="rounded-sm border border-dashed border-gold/40 bg-olive-linen/30 px-5 py-4">
             <p className="text-xs uppercase tracking-widest text-gold">Payment</p>
             <p className="mt-2 text-sm text-charcoal-muted">
               Stripe / Razorpay integration coming soon. Placing this order saves it as{" "}
@@ -179,9 +228,15 @@ export function CheckoutPageClient() {
               ))}
             </ul>
             <SectionDivider className="my-6" />
+            {discountAmount > 0 && (
+              <div className="mb-3 flex justify-between text-sm text-charcoal-muted">
+                <span>Discount</span>
+                <span>−{formatPrice(discountAmount)}</span>
+              </div>
+            )}
             <div className="flex justify-between font-display text-lg text-maroon">
               <span>Total</span>
-              <span>{formatPrice(cart.subtotal.amount)}</span>
+              <span>{formatPrice(cart.subtotal.amount - discountAmount)}</span>
             </div>
           </div>
         </aside>

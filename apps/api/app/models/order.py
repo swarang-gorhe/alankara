@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, Integer, String
+from sqlalchemy import DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -17,9 +17,12 @@ class Order(Base):
     email: Mapped[str] = mapped_column(String(255))
     phone: Mapped[str | None] = mapped_column(String(32), nullable=True)
     subtotal_amount: Mapped[int] = mapped_column(Integer)
+    discount_code: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    discount_amount: Mapped[int] = mapped_column(Integer, default=0)
     total_amount: Mapped[int] = mapped_column(Integer)
     currency: Mapped[str] = mapped_column(String(8), default="INR")
     shipping_address: Mapped[dict] = mapped_column(JSONB)
+    fulfillment_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 

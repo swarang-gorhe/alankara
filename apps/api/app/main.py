@@ -4,7 +4,18 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
-from app.routers import artisans, auth, cart, categories, checkout, health, products, reviews
+from app.routers import (
+    artisans,
+    auth,
+    cart,
+    categories,
+    checkout,
+    discounts,
+    health,
+    products,
+    reviews,
+)
+from app.routers.admin import router as admin_router
 from app.services.storage import get_storage_backend
 
 settings = get_settings()
@@ -40,6 +51,8 @@ app.include_router(artisans.router)
 app.include_router(auth.router)
 app.include_router(cart.router)
 app.include_router(checkout.router)
+app.include_router(discounts.router)
+app.include_router(admin_router)
 
 
 @app.get("/")
