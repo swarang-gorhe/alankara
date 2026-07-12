@@ -47,6 +47,7 @@ type FloatingElementsProps = {
 
 export function FloatingElements({ mouse }: FloatingElementsProps) {
   const groupRef = useRef<THREE.Group>(null);
+  const pearlsRef = useRef<THREE.Group>(null);
 
   const pearls = useMemo(
     () =>
@@ -88,7 +89,7 @@ export function FloatingElements({ mouse }: FloatingElementsProps) {
     groupRef.current.rotation.x = mouse.y * 0.03;
 
     const t = state.clock.elapsedTime;
-    groupRef.current.children.forEach((child, index) => {
+    pearlsRef.current?.children.forEach((child, index) => {
       const pearl = pearls[index];
       if (!pearl || child.type !== "Mesh") return;
       child.position.y = pearl.position[1] + Math.sin(t * pearl.speed + pearl.offset) * 0.15;
@@ -97,7 +98,7 @@ export function FloatingElements({ mouse }: FloatingElementsProps) {
 
   return (
     <group ref={groupRef} rotation={[0, 0, 0]}>
-      <group>
+      <group ref={pearlsRef}>
         {pearls.map((pearl) => (
           <mesh key={pearl.id} position={pearl.position} scale={pearl.scale}>
             <sphereGeometry args={[1, 16, 16]} />
