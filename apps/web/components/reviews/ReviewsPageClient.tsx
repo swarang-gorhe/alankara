@@ -17,7 +17,9 @@ const CATEGORY_OPTIONS: { slug: CategorySlug | "all"; label: string }[] = [
   { slug: "earrings", label: "Earrings" },
   { slug: "necklaces", label: "Necklaces" },
   { slug: "bracelets", label: "Bracelets" },
-  { slug: "clothing-jewellery", label: "Clothing" },
+  { slug: "hair-accessories", label: "Hair" },
+  { slug: "sets", label: "Sets" },
+  { slug: "embroidered-textile", label: "Textile" },
 ];
 
 const RATING_OPTIONS = [

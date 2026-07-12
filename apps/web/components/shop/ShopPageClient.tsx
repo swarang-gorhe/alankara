@@ -1,23 +1,23 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ProductCard } from "@/components/product/ProductCard";
-import {
-  ShopFilters,
-  filterProducts,
-  type ShopFiltersState,
-} from "@/components/shop/ShopFilters";
-import { SectionDivider } from "@/components/ui/SectionDivider";
-import type { ProductFixture } from "@/lib/fixtures/types";
+import { EditorialProductCard } from "@/components/shop/EditorialProductCard";
+import { ShopChipFilters, filterProducts } from "@/components/shop/ShopChipFilters";
+import { ShopEmptyState } from "@/components/shop/ShopEmptyState";
+import { FabricTexture } from "@/components/ui/FabricTexture";
+import type { ProductFixture, ShopFiltersState } from "@/lib/fixtures/types";
+import { cn } from "@/lib/utils";
 
 type ShopPageClientProps = {
   products: ProductFixture[];
 };
 
+const cardVariants = ["fold", "shadow", "thread"] as const;
+
 export function ShopPageClient({ products }: ShopPageClientProps) {
   const [filters, setFilters] = useState<ShopFiltersState>({
     categories: [],
-    materials: [],
+    styles: [],
     priceRange: null,
   });
 
@@ -27,50 +27,50 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
   );
 
   return (
-    <div>
-      <section className="mx-auto max-w-7xl px-6 py-16 md:py-24">
-        <p className="font-script text-xl italic text-gold md:text-2xl">The Collection</p>
-        <h1 className="mt-4 font-display text-4xl text-maroon md:text-5xl">
-          Shop handcrafted adornments
+    <div className="relative">
+      <FabricTexture id="shop" className="fixed inset-0" opacity={0.04} />
+
+      <section className="relative mx-auto max-w-7xl px-6 pb-8 pt-16 md:pt-24">
+        <p className="font-script text-xl italic text-warm-brown md:text-2xl">The catalogue</p>
+        <h1 className="mt-4 max-w-3xl font-display text-4xl text-maroon md:text-5xl text-balance">
+          Cloth &amp; thread jewellery
         </h1>
-        <p className="mt-4 max-w-2xl text-charcoal-muted">
-          Each piece is finished by artisan hands — explore by category, material, or
-          price. Product photography arrives soon; placeholders mark pieces awaiting
-          their portrait.
+        <p className="mt-4 max-w-2xl font-body text-ink-muted">
+          An editorial collection of fabric earrings, embroidered collars, pearl-thread necklaces,
+          and hair adornments — each finished by hand in small batches.
         </p>
       </section>
 
-      <SectionDivider />
-
-      <section className="mx-auto max-w-7xl px-6 pb-24">
-        <div className="flex flex-col gap-12 lg:flex-row">
-          <div className="lg:w-64 lg:shrink-0">
-            <div className="lg:sticky lg:top-24">
-              <ShopFilters
-                filters={filters}
-                onChange={setFilters}
-                productCount={filteredProducts.length}
-              />
-            </div>
-          </div>
-
-          <div className="flex-1">
-            {filteredProducts.length === 0 ? (
-              <div className="rounded-sm border border-gold/20 bg-cream-light px-8 py-16 text-center">
-                <p className="font-display text-xl text-maroon">No pieces match</p>
-                <p className="mt-2 text-sm text-charcoal-muted">
-                  Try adjusting your filters to discover more of the collection.
-                </p>
-              </div>
-            ) : (
-              <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
-                {filteredProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-              </div>
-            )}
-          </div>
+      <section className="relative mx-auto max-w-7xl px-6 pb-24">
+        <div className="sticky top-20 z-20 mb-12 rounded-sm border border-sage/25 bg-ivory/90 p-4 backdrop-blur-md md:p-6">
+          <ShopChipFilters
+            filters={filters}
+            onChange={setFilters}
+            productCount={filteredProducts.length}
+          />
         </div>
+
+        {filteredProducts.length === 0 ? (
+          <ShopEmptyState />
+        ) : (
+          <div className="grid auto-rows-auto gap-6 md:grid-cols-4 md:gap-8">
+            {filteredProducts.map((product, index) => {
+              const layout =
+                index % 7 === 0 ? "large" : index % 5 === 0 ? "tall" : "default";
+              const variant = cardVariants[index % cardVariants.length];
+
+              return (
+                <EditorialProductCard
+                  key={product.id}
+                  product={product}
+                  variant={variant}
+                  size={layout}
+                  className={cn(layout === "large" && "md:col-span-2")}
+                />
+              );
+            })}
+          </div>
+        )}
       </section>
     </div>
   );

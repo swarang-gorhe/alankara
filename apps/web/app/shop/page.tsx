@@ -6,7 +6,7 @@ import { createPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = createPageMetadata({
   title: "Shop",
   description:
-    "Browse handcrafted earrings, necklaces, bracelets, and clothing jewellery. Filter by category, material, and price.",
+    "Browse handmade fabric earrings, embroidered textile jewellery, pearl-thread necklaces, and cotton hair adornments.",
   path: "/shop",
 });
 

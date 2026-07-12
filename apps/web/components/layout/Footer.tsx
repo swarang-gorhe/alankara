@@ -11,14 +11,13 @@ const footerLinks = [
 
 export function Footer() {
   return (
-    <footer className="mt-auto border-t border-gold/20 bg-cream-light">
+    <footer className="mt-auto border-t border-champagne/20 bg-ivory">
       <SectionDivider className="py-4" />
 
       <div className="mx-auto max-w-7xl px-6 py-12">
         <div className="flex flex-col items-center gap-6 md:flex-row md:justify-between">
           <div className="flex flex-col items-center gap-3 md:items-start">
-            <AnimatedLogo size={56} />
-            <p className="font-script text-lg italic text-gold">Crafted for little moments.</p>
+            <AnimatedLogo size={56} showTagline />
           </div>
 
           <nav className="flex flex-wrap justify-center gap-6" aria-label="Footer navigation">
@@ -26,7 +25,7 @@ export function Footer() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm uppercase tracking-widest text-charcoal-muted transition-colors hover:text-gold"
+                className="font-body text-sm uppercase tracking-widest text-ink-muted transition-colors hover:text-champagne"
               >
                 {link.label}
               </Link>
@@ -34,8 +33,9 @@ export function Footer() {
           </nav>
         </div>
 
-        <p className="mt-10 text-center text-xs text-charcoal-muted">
-          &copy; {new Date().getFullYear()} Alankara. All rights reserved.
+        <p className="mt-10 text-center font-body text-xs text-ink-muted">
+          &copy; {new Date().getFullYear()} Alankara. Handmade cloth jewellery — slow fashion,
+          wearable art.
         </p>
       </div>
     </footer>

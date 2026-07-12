@@ -17,7 +17,7 @@ function StarRating({ rating }: { rating: number }) {
           key={i}
           className={cn(
             "h-3.5 w-3.5",
-            i < rating ? "fill-gold-bright text-gold-bright" : "text-gold/30",
+            i < rating ? "fill-champagne text-champagne" : "text-champagne/30",
           )}
         />
       ))}
@@ -35,8 +35,8 @@ export function ReviewCard({ review, className, featured = false }: ReviewCardPr
   return (
     <article
       className={cn(
-        "relative rounded-sm border border-gold/25 bg-cream-light p-6 shadow-[0_2px_12px_rgba(44,36,32,0.04)]",
-        "before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:bg-gradient-to-b before:from-gold-bright before:to-gold/40",
+        "relative rounded-sm border border-sage/25 bg-ivory p-6 shadow-luxury",
+        "before:absolute before:left-0 before:top-0 before:h-full before:w-1 before:bg-gradient-to-b before:from-champagne before:to-champagne/40",
         featured && "md:col-span-2 md:p-8",
         className,
       )}
@@ -45,11 +45,11 @@ export function ReviewCard({ review, className, featured = false }: ReviewCardPr
         <div>
           <StarRating rating={review.rating} />
           <p className="mt-2 font-display text-lg text-maroon">{review.authorName}</p>
-          <p className="text-xs text-charcoal-muted">{date}</p>
+          <p className="text-xs text-ink-muted">{date}</p>
         </div>
         <Link
           href={`/product/${review.productSlug}`}
-          className="text-right text-xs uppercase tracking-widest text-gold transition-colors hover:text-gold-bright"
+          className="text-right text-xs uppercase tracking-widest text-champagne transition-colors hover:text-warm-brown"
         >
           {review.productName}
         </Link>
@@ -57,14 +57,14 @@ export function ReviewCard({ review, className, featured = false }: ReviewCardPr
 
       <p
         className={cn(
-          "font-body leading-relaxed text-charcoal",
+          "font-body leading-relaxed text-ink",
           featured ? "text-lg md:text-xl" : "text-sm md:text-base",
         )}
       >
         &ldquo;{review.text}&rdquo;
       </p>
 
-      <p className="mt-4 text-xs uppercase tracking-widest text-charcoal-muted">
+      <p className="mt-4 text-xs uppercase tracking-widest text-ink-muted">
         {review.categorySlug.replace("-", " ")}
       </p>
     </article>
