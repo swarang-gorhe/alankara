@@ -31,10 +31,48 @@ class LocalStorageBackend(StorageBackend):
         return f"/uploads/{key}"
 
 
+class SupabaseStorageBackend(StorageBackend):
+    """Supabase Storage scaffold — wire HTTP upload when credentials are configured.
+
+  Set STORAGE_BACKEND=supabase plus SUPABASE_URL and SUPABASE_SERVICE_KEY.
+  See supabase/README.md for bucket setup.
+    """
+
+    def __init__(self, url: str, service_key: str, bucket: str) -> None:
+        if not url or not service_key:
+            raise RuntimeError(
+                "STORAGE_BACKEND=supabase requires SUPABASE_URL and SUPABASE_SERVICE_KEY. "
+                "See supabase/README.md."
+            )
+        self.url = url.rstrip("/")
+        self.service_key = service_key
+        self.bucket = bucket
+
+    def save(self, filename: str, data: bytes, content_type: str | None = None) -> str:
+        safe_name = filename.replace("/", "_").replace("\\", "_")
+        key = f"{uuid4().hex}_{safe_name}"
+        # Stub: production upload via supabase-py or httpx to Storage API.
+        # POST {url}/storage/v1/object/{bucket}/{key}
+        raise NotImplementedError(
+            f"Supabase upload for '{key}' is scaffolded but not wired yet. "
+            "Use STORAGE_BACKEND=local for development, or implement upload in "
+            "SupabaseStorageBackend.save()."
+        )
+
+    def get_url(self, key: str) -> str:
+        return f"{self.url}/storage/v1/object/public/{self.bucket}/{key}"
+
+
 def get_storage_backend() -> StorageBackend:
     settings = get_settings()
     if settings.storage_backend == "local":
         return LocalStorageBackend(settings.upload_path)
-    raise NotImplementedError(
-        f"Storage backend '{settings.storage_backend}' is not implemented yet (Phase 8: supabase)"
+    if settings.storage_backend == "supabase":
+        return SupabaseStorageBackend(
+            url=settings.supabase_url,
+            service_key=settings.supabase_service_key,
+            bucket=settings.supabase_storage_bucket,
+        )
+    raise ValueError(
+        f"Unknown STORAGE_BACKEND '{settings.storage_backend}'. Use 'local' or 'supabase'."
     )

@@ -3,12 +3,14 @@ import Link from "next/link";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { Button } from "@/components/ui/button";
 import { artisans } from "@/lib/fixtures";
+import { createPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Artisans — Alankara",
+export const metadata: Metadata = createPageMetadata({
+  title: "Artisans",
   description:
     "Meet the master craftspeople behind Alankara — kundan setters, zari embroiderers, silversmiths, and more.",
-};
+  path: "/artisans",
+});
 
 export default function ArtisansPage() {
   return (

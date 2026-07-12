@@ -4,6 +4,7 @@ import { SiteChrome } from "@/components/layout/SiteChrome";
 import { CartProvider } from "@/components/providers/CartProvider";
 import { LenisProvider } from "@/components/providers/LenisProvider";
 import { LuxuryCursorProvider } from "@/components/providers/LuxuryCursorProvider";
+import { rootMetadata } from "@/lib/seo/metadata";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -26,11 +27,7 @@ const sourceSans = Source_Sans_3({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: "Alankara — Crafted for little moments",
-  description:
-    "Luxury handcrafted jewellery and adornments. Artisan-made pieces for life's precious moments.",
-};
+export const metadata: Metadata = rootMetadata;
 
 export default function RootLayout({
   children,

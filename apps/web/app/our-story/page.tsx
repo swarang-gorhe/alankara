@@ -3,12 +3,14 @@ import Link from "next/link";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { Button } from "@/components/ui/button";
 import { ourStory } from "@/lib/fixtures";
+import { createPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Our Story — Alankara",
+export const metadata: Metadata = createPageMetadata({
+  title: "Our Story",
   description:
     "The story behind Alankara — artisan partnerships, slow craft, and jewellery made for life's little moments.",
-};
+  path: "/our-story",
+});
 
 export default function OurStoryPage() {
   const { hero, sections } = ourStory;

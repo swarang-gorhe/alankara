@@ -25,6 +25,10 @@ class Settings(BaseSettings):
     storage_backend: str = "local"
     local_upload_dir: str = "./uploads"
 
+    supabase_url: str = ""
+    supabase_service_key: str = ""
+    supabase_storage_bucket: str = "product-images"
+
     llm_provider: str = "openai"
     openai_api_key: str = ""
     openai_chat_model: str = "gpt-4o-mini"

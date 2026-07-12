@@ -24,7 +24,7 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    if settings.storage_backend == "local":
+    if settings.storage_backend in ("local", "supabase"):
         get_storage_backend()
     yield
 

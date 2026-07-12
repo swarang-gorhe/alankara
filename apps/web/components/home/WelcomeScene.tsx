@@ -4,6 +4,8 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { AnimatedLogo } from "@/components/brand/AnimatedLogo";
+import { useIsMobile } from "@/hooks/useIsMobile";
+import { useIsTouchDevice } from "@/hooks/useIsTouchDevice";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { gsap, registerGsap } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
@@ -29,6 +31,9 @@ export function WelcomeScene() {
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const isTouch = useIsTouchDevice();
+  const isMobile = useIsMobile();
+  const show3D = !prefersReducedMotion && !isTouch && !isMobile;
 
   useEffect(() => {
     registerGsap();
@@ -62,10 +67,11 @@ export function WelcomeScene() {
       className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-24"
       aria-label="Welcome"
     >
-      {!prefersReducedMotion && (
+      {!show3D && <WelcomeHeroFallback />}
+
+      {show3D && (
         <WelcomeHero3D className="absolute inset-0 h-full w-full opacity-90" />
       )}
-      {prefersReducedMotion && <WelcomeHeroFallback />}
 
       <div
         ref={glowRef}
@@ -89,7 +95,7 @@ export function WelcomeScene() {
         <h1
           ref={titleRef}
           className={cn(
-            "max-w-3xl font-display text-4xl leading-tight text-maroon md:text-6xl lg:text-7xl",
+            "max-w-3xl font-display text-3xl leading-tight text-maroon sm:text-4xl md:text-6xl lg:text-7xl",
             prefersReducedMotion ? "opacity-100" : "opacity-0",
           )}
         >
@@ -99,7 +105,7 @@ export function WelcomeScene() {
         <p
           ref={subtitleRef}
           className={cn(
-            "mt-6 max-w-md font-script text-xl italic text-gold md:text-2xl",
+            "mt-4 max-w-md font-script text-lg italic text-gold sm:mt-6 sm:text-xl md:text-2xl",
             prefersReducedMotion ? "opacity-100" : "opacity-0",
           )}
         >
@@ -114,7 +120,7 @@ export function WelcomeScene() {
           alt=""
           width={16}
           height={16}
-          className="animate-bounce opacity-40"
+          className="motion-reduce:animate-none animate-bounce opacity-40"
           aria-hidden="true"
         />
       </div>
