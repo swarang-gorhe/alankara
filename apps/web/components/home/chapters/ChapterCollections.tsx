@@ -53,7 +53,7 @@ export function ChapterCollections() {
     <section
       ref={sectionRef}
       className="relative px-6 py-24 md:py-32"
-      aria-label="Collections"
+      aria-label="The Collection"
     >
       <FabricTexture id="collections" opacity={0.04} />
 

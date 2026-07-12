@@ -5,6 +5,7 @@ import { useState } from "react";
 import { AnimatedLogo } from "@/components/brand/AnimatedLogo";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { FabricTexture } from "@/components/ui/FabricTexture";
+import { clearIntroSeen } from "@/lib/intro/storage";
 import { cn } from "@/lib/utils";
 
 const footerLinks = [
@@ -16,6 +17,11 @@ const footerLinks = [
 
 export function ChapterFooter() {
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
+
+  const handleReplayIntro = () => {
+    clearIntroSeen();
+    window.location.href = "/";
+  };
 
   return (
     <footer className="relative border-t border-champagne/20 bg-ivory" aria-label="Site footer">
@@ -55,10 +61,19 @@ export function ChapterFooter() {
           </nav>
         </div>
 
-        <p className="mt-12 text-center font-body text-xs text-ink-muted">
-          &copy; {new Date().getFullYear()} Alankara. Handmade cloth jewellery — slow fashion,
-          wearable art.
-        </p>
+        <div className="mt-10 flex flex-col items-center gap-4">
+          <button
+            type="button"
+            onClick={handleReplayIntro}
+            className="font-body text-xs uppercase tracking-[0.25em] text-ink-muted transition-colors hover:text-champagne"
+          >
+            Replay the opening
+          </button>
+          <p className="text-center font-body text-xs text-ink-muted">
+            &copy; {new Date().getFullYear()} Alankara. Handmade cloth jewellery — slow fashion,
+            wearable art.
+          </p>
+        </div>
       </div>
     </footer>
   );

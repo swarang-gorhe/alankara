@@ -41,7 +41,7 @@ export function ChapterThreadToTreasure() {
     <section
       ref={sectionRef}
       className="relative bg-ivory px-6 py-24 md:py-32"
-      aria-label="From thread to treasure"
+      aria-label="Our Story — the craft"
     >
       <FabricTexture id="thread" opacity={0.05} />
 

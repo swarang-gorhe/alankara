@@ -45,7 +45,7 @@ export function ChapterMeetMakers() {
     <section
       ref={sectionRef}
       className="relative overflow-hidden bg-cotton px-6 py-24"
-      aria-label="Meet the makers"
+      aria-label="The Artisans"
     >
       <FabricTexture id="makers" opacity={0.04} />
 

@@ -48,7 +48,11 @@ function CartLink() {
   );
 }
 
-export function Header() {
+type HeaderProps = {
+  className?: string;
+};
+
+export function Header({ className }: HeaderProps) {
   const pathname = usePathname();
   const scrolled = useScrollMorph(32);
   const isHome = pathname === "/";
@@ -57,6 +61,7 @@ export function Header() {
     <header
       className={cn(
         "sticky top-0 z-50 border-b transition-all duration-base ease-luxury",
+        className,
         scrolled
           ? "border-champagne/15 bg-ivory/85 shadow-luxury backdrop-blur-lg"
           : "border-champagne/20 bg-linen/90 backdrop-blur-md",

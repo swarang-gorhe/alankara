@@ -18,7 +18,7 @@ export function ChapterNewsletter() {
   return (
     <section
       className="relative overflow-hidden bg-maroon px-6 py-24 text-ivory md:py-28"
-      aria-label="Newsletter"
+      aria-label="Join the Alankara Family"
     >
       <FabricTexture id="newsletter" className="opacity-[0.08]" opacity={1} />
 

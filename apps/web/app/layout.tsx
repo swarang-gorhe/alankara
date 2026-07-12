@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Playfair_Display, Source_Sans_3 } from "next/font/google";
-import { SiteChrome } from "@/components/layout/SiteChrome";
-import { CartProvider } from "@/components/providers/CartProvider";
-import { LenisProvider } from "@/components/providers/LenisProvider";
-import { LuxuryCursorProvider } from "@/components/providers/LuxuryCursorProvider";
+import { AppProviders } from "@/components/providers/AppProviders";
 import { rootMetadata } from "@/lib/seo/metadata";
 import "./globals.css";
 
@@ -40,13 +37,7 @@ export default function RootLayout({
       className={`${playfair.variable} ${cormorant.variable} ${sourceSans.variable}`}
     >
       <body className="min-h-screen bg-linen font-body text-ink antialiased">
-        <LenisProvider>
-          <LuxuryCursorProvider>
-            <CartProvider>
-              <SiteChrome>{children}</SiteChrome>
-            </CartProvider>
-          </LuxuryCursorProvider>
-        </LenisProvider>
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );
