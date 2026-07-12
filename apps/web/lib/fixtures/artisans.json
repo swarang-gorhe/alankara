@@ -1,57 +1,57 @@
 [
   {
     "id": "art-001",
-    "slug": "lakshmi-devi",
-    "name": "Lakshmi Devi",
-    "title": "Master Kundan Artisan",
-    "location": "Jaipur, Rajasthan",
-    "bio": "Lakshmi learned kundan setting from her mother at age twelve, in a workshop tucked behind the old city walls. Thirty years later, her hands still set each stone with the same unhurried precision — she says the lac must breathe before the foil is laid.",
-    "specialty": ["Kundan setting", "Jhumka construction", "Stone matching"],
-    "yearsExperience": 32,
-    "quote": "A stone knows when it has found its place. My job is to listen."
-  },
-  {
-    "id": "art-002",
     "slug": "farida-bano",
     "name": "Farida Bano",
     "title": "Zari & Textile Embroiderer",
     "location": "Lucknow, Uttar Pradesh",
-    "bio": "Farida specialises in chikankari-inspired zari work for our clothing jewellery line. She works from a sunlit room where silk is stretched on frames and the only sound is her needle passing through cloth — a rhythm she has kept for twenty-five years.",
+    "bio": "Farida specialises in chikankari-inspired zari work for our embroidered textile jewellery line. She works from a sunlit room where silk is stretched on frames and the only sound is her needle passing through cloth — a rhythm she has kept for twenty-five years.",
     "specialty": ["Zari embroidery", "Silk mounting", "Brooch finishing"],
     "yearsExperience": 25,
     "quote": "Thread carries intention. I embroider as if the wearer is in the room."
   },
   {
+    "id": "art-002",
+    "slug": "priya-sharma",
+    "name": "Priya Sharma",
+    "title": "Block Print Textile Artist",
+    "location": "Bagru, Rajasthan",
+    "bio": "Priya carves wooden blocks and prints natural dyes onto cotton and linen for our cloth earrings and fabric necklaces. Each motif is pressed by hand — no two prints are identical, and she considers that the soul of the piece.",
+    "specialty": ["Block printing", "Natural dyeing", "Fabric cutting"],
+    "yearsExperience": 14,
+    "quote": "A print is a fingerprint. The block remembers every press."
+  },
+  {
     "id": "art-003",
-    "slug": "rajesh-kumar",
-    "name": "Rajesh Kumar",
-    "title": "Silversmith & Bangle Maker",
-    "location": "Kolkata, West Bengal",
-    "bio": "Rajesh trained as a silversmith in the traditional workshops of north Kolkata. He hammers each bangle by hand, believing that machine uniformity strips jewellery of soul. His hammer marks are signatures, not flaws.",
-    "specialty": ["Silver forging", "Hammer texture", "Bangle sizing"],
-    "yearsExperience": 18,
-    "quote": "Metal remembers every strike. I strike with purpose."
+    "slug": "meenakshi-iyer",
+    "name": "Meenakshi Iyer",
+    "title": "Silk Thread Weaver",
+    "location": "Kanchipuram, Tamil Nadu",
+    "bio": "Meenakshi winds silk thread into gajras, tassels, and braided necklace strands. She learned from her grandmother how to match thread tension so each coil holds its shape through seasons of wear.",
+    "specialty": ["Silk thread winding", "Gajra construction", "Tassel finishing"],
+    "yearsExperience": 20,
+    "quote": "Thread must hold memory — of the hand that wound it and the hair that wears it."
   },
   {
     "id": "art-004",
-    "slug": "meenakshi-iyer",
-    "name": "Meenakshi Iyer",
-    "title": "Pearl Stringer & Necklace Designer",
-    "location": "Madurai, Tamil Nadu",
-    "bio": "Meenakshi comes from a family of pearl merchants and stringers. She matches pearls by lustre in natural morning light — never under lamps — and knots silk thread between each gem so a broken strand never loses more than one pearl.",
-    "specialty": ["Pearl grading", "Silk knotting", "Necklace draping"],
-    "yearsExperience": 22,
-    "quote": "A necklace should fall like water. Pearls must agree with each other first."
+    "slug": "ravi-desai",
+    "name": "Ravi Desai",
+    "title": "Upcycled Fabric Innovator",
+    "location": "Ahmedabad, Gujarat",
+    "bio": "Ravi transforms reclaimed denim, sari borders, and factory offcuts into cuffs and sustainable fashion accessories. His workshop is a library of rescued textiles — each scrap tagged with origin and story.",
+    "specialty": ["Upcycling", "Denim reconstruction", "Zero-waste design"],
+    "yearsExperience": 11,
+    "quote": "Nothing is waste until we decide to throw it away. Fabric deserves second lives."
   },
   {
     "id": "art-005",
-    "slug": "hassan-qureshi",
-    "name": "Hassan Qureshi",
-    "title": "Enamel Artist",
-    "location": "Hyderabad, Telangana",
-    "bio": "Hassan paints enamel with brushes made from squirrel hair, mixing pigments the way his grandfather taught him. His gulmohar blooms on our kada bands are fired twice — the second firing deepens the red until it resembles flame-tree petals at dusk.",
-    "specialty": ["Hand enamel", "Colour mixing", "Firing & finishing"],
-    "yearsExperience": 15,
-    "quote": "Colour is not decoration. It is the emotion of the piece."
+    "slug": "kavita-patel",
+    "name": "Kavita Patel",
+    "title": "Mirror Work Specialist",
+    "location": "Kutch, Gujarat",
+    "bio": "Kavita stitches shisha mirrors into fabric chokers and hair pins using techniques passed through her Kutchi community. Each mirror is set by hand so light catches at every angle of movement.",
+    "specialty": ["Mirror work", "Shisha embroidery", "Choker construction"],
+    "yearsExperience": 17,
+    "quote": "Mirrors do not reflect vanity — they reflect the joy of the person wearing them."
   }
 ]

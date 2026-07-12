@@ -4,15 +4,29 @@ export type CategorySlug =
   | "earrings"
   | "necklaces"
   | "bracelets"
-  | "clothing-jewellery";
+  | "rings"
+  | "hair-accessories"
+  | "sets"
+  | "embroidered-textile";
 
 export type MaterialSlug =
-  | "gold-plated"
-  | "silver"
-  | "kundan"
-  | "pearl"
+  | "embroidery"
+  | "pearls"
+  | "cotton"
   | "silk-thread"
-  | "zari";
+  | "zari"
+  | "ghungroos";
+
+export type StyleTag =
+  | "embroidery"
+  | "pearls"
+  | "cotton"
+  | "minimal"
+  | "statement"
+  | "boho"
+  | "earthy"
+  | "pastel"
+  | "traditional";
 
 export type ProcessStep = {
   title: string;
@@ -25,6 +39,9 @@ export type ProductFixture = Product & {
   process: ProcessStep[];
   relatedSlugs: string[];
   primaryMaterial: MaterialSlug;
+  styleTags: StyleTag[];
+  comfort?: string;
+  packaging?: string;
   /** Lowest variant price in INR — used for shop filters */
   minPrice: number;
 };
@@ -76,4 +93,10 @@ export type AIInsightsFixture = {
   concerns: string[];
   trendingPraise: string[];
   lastUpdated: string | null;
+};
+
+export type ShopFiltersState = {
+  categories: CategorySlug[];
+  styles: StyleTag[];
+  priceRange: import("./index").PriceRangeId | null;
 };

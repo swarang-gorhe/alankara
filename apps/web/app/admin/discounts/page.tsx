@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { AdminTable, AdminTableCell, AdminTableRow } from "@/components/admin/AdminTable";
 import {
   createAdminDiscount,
@@ -50,50 +49,57 @@ export default function AdminDiscountsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="font-display text-3xl text-maroon">Discounts</h1>
-          <p className="mt-1 text-sm text-charcoal-muted">Promo codes for checkout</p>
+          <h1 className="font-display text-3xl text-admin-text">Discounts</h1>
+          <p className="mt-1 text-sm text-admin-muted">Flat, percentage, and festival promo codes</p>
         </div>
-        <Button onClick={() => setShowForm((v) => !v)}>
+        <button
+          type="button"
+          onClick={() => setShowForm((v) => !v)}
+          className="rounded bg-admin-accent px-4 py-2 text-xs uppercase tracking-widest text-admin-bg"
+        >
           {showForm ? "Cancel" : "New code"}
-        </Button>
+        </button>
       </div>
 
       {showForm && (
         <form
           onSubmit={(e) => void handleCreate(e)}
-          className="flex flex-wrap items-end gap-4 rounded-sm border border-gold/25 bg-cream-light p-5"
+          className="flex flex-wrap items-end gap-4 rounded-lg border border-admin-border bg-admin-surface p-5"
         >
           <label className="block">
-            <span className="text-xs uppercase tracking-widest text-charcoal-muted">Code</span>
+            <span className="text-xs uppercase tracking-widest text-admin-muted">Code</span>
             <input
               required
               value={form.code}
               onChange={(e) => setForm((f) => ({ ...f, code: e.target.value }))}
-              className="mt-1 block rounded-sm border border-gold/30 bg-cream px-3 py-2 text-sm uppercase"
+              className="mt-1 block rounded border border-admin-border bg-admin-elevated px-3 py-2 text-sm uppercase text-admin-text"
             />
           </label>
           <label className="block">
-            <span className="text-xs uppercase tracking-widest text-charcoal-muted">Type</span>
+            <span className="text-xs uppercase tracking-widest text-admin-muted">Type</span>
             <select
               value={form.type}
               onChange={(e) => setForm((f) => ({ ...f, type: e.target.value }))}
-              className="mt-1 block rounded-sm border border-gold/30 bg-cream px-3 py-2 text-sm"
+              className="mt-1 block rounded border border-admin-border bg-admin-elevated px-3 py-2 text-sm text-admin-text"
             >
               <option value="percentage">Percentage</option>
               <option value="flat">Flat amount (paise)</option>
+              <option value="bogo">BOGO</option>
             </select>
           </label>
           <label className="block">
-            <span className="text-xs uppercase tracking-widest text-charcoal-muted">Value</span>
+            <span className="text-xs uppercase tracking-widest text-admin-muted">Value</span>
             <input
               type="number"
               required
               value={form.value}
               onChange={(e) => setForm((f) => ({ ...f, value: Number(e.target.value) }))}
-              className="mt-1 block rounded-sm border border-gold/30 bg-cream px-3 py-2 text-sm"
+              className="mt-1 block rounded border border-admin-border bg-admin-elevated px-3 py-2 text-sm text-admin-text"
             />
           </label>
-          <Button type="submit">Create</Button>
+          <button type="submit" className="rounded bg-admin-accent px-4 py-2 text-xs uppercase tracking-widest text-admin-bg">
+            Create
+          </button>
         </form>
       )}
 
@@ -110,7 +116,7 @@ export default function AdminDiscountsPage() {
               {discount.usageLimit ? ` / ${discount.usageLimit}` : ""}
             </AdminTableCell>
             <AdminTableCell>
-              <span className={discount.active ? "text-olive" : "text-maroon"}>
+              <span className={discount.active ? "text-admin-success" : "text-admin-danger"}>
                 {discount.active ? "Active" : "Inactive"}
               </span>
             </AdminTableCell>
@@ -118,7 +124,7 @@ export default function AdminDiscountsPage() {
               <button
                 type="button"
                 onClick={() => void handleDelete(discount.id)}
-                className="text-xs uppercase tracking-widest text-maroon hover:underline"
+                className="text-xs uppercase tracking-widest text-admin-danger hover:underline"
               >
                 Delete
               </button>

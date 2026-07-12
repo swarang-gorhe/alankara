@@ -18,8 +18,14 @@ export type ReviewSummaryResponse = {
   generatedAt: string;
 };
 
+export type AgentAction = {
+  id: string;
+  label: string;
+};
+
 export type AdminAgentResponse = {
   agentType: string;
+  action: string | null;
   result: string;
   toolsCalled?: unknown[];
   logId: string;
@@ -78,15 +84,37 @@ export async function sendFaqChatMessage(
   return res.json() as Promise<FaqChatResponse>;
 }
 
-export async function runAdminAgent(
-  agentType: "product" | "inventory" | "marketing" | "reviews" | "image",
-  prompt: string,
+export async function fetchAgentActions(): Promise<Record<string, AgentAction[]>> {
+  const { adminFetch } = await import("@/lib/api/admin");
+  const data = await adminFetch<{ agents: Record<string, AgentAction[]> }>("/admin/ai/actions");
+  return data.agents;
+}
+
+export async function runAdminAgentAction(
+  agentType: "product" | "inventory" | "marketing" | "reviews",
+  action: string,
 ): Promise<AdminAgentResponse> {
   const { adminFetch } = await import("@/lib/api/admin");
   return adminFetch<AdminAgentResponse>(`/admin/ai/agents/${agentType}`, {
     method: "POST",
-    body: JSON.stringify({ prompt }),
+    body: JSON.stringify({ action }),
   });
+}
+
+/** Legacy panel helper — maps free-text prompt to agent action endpoint */
+export async function runAdminAgent(
+  agentType: "product" | "inventory" | "marketing" | "reviews" | "image",
+  prompt: string,
+): Promise<AdminAgentResponse> {
+  if (agentType === "image") {
+    return {
+      agentType,
+      action: null,
+      result: "Image prep agent will be wired in Phase 7.",
+      logId: "stub",
+    };
+  }
+  return runAdminAgentAction(agentType, prompt);
 }
 
 export async function triggerKnowledgeReindex(): Promise<{ taskId?: string; message: string }> {

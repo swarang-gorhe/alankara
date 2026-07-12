@@ -46,12 +46,23 @@ class ReviewSummarySchema(BaseModel):
 
 
 class AdminAgentRequestSchema(BaseModel):
-    prompt: str = Field(..., min_length=1, max_length=4000)
+    action: str | None = Field(None, min_length=1, max_length=128)
+    prompt: str | None = Field(None, min_length=1, max_length=4000)
     context: dict | None = None
+
+
+class AdminAgentActionSchema(BaseModel):
+    id: str
+    label: str
+
+
+class AdminAgentActionsSchema(BaseModel):
+    agents: dict[str, list[AdminAgentActionSchema]]
 
 
 class AdminAgentResponseSchema(BaseModel):
     agent_type: str = Field(..., alias="agentType")
+    action: str | None = None
     result: str
     tools_called: list | None = Field(None, alias="toolsCalled")
     log_id: str = Field(..., alias="logId")

@@ -20,6 +20,7 @@ def test_dashboard_stats(client, admin_headers):
     data = response.json()
     assert "revenue" in data
     assert "ordersCount" in data
+    assert "productsCount" in data
     assert "lowStockAlerts" in data
 
 
@@ -40,8 +41,8 @@ def test_admin_products_crud(client, admin_headers):
             "slug": "test-admin-product",
             "name": "Test Admin Product",
             "description": "Created via admin API test",
-            "categoryId": "cat-necklaces",
-            "primaryMaterial": "gold",
+            "categoryId": "cat-fabric-necklaces",
+            "primaryMaterial": "cotton",
             "minPrice": 500000,
         },
     )

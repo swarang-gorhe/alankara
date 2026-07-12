@@ -69,6 +69,19 @@ const config: Config = {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
+        /* Admin console — dark luxury palette */
+        admin: {
+          bg: "#0D0B09",
+          surface: "#161310",
+          elevated: "#1E1A16",
+          border: "#2A241E",
+          muted: "#6B6358",
+          text: "#E8E0D4",
+          accent: "#C9932F",
+          "accent-dim": "#8A6520",
+          success: "#4A7C59",
+          danger: "#9B4A38",
+        },
       },
       fontFamily: {
         display: ["var(--font-playfair)", "Georgia", "serif"],

@@ -157,9 +157,9 @@ async def seed_faq(session: AsyncSession) -> None:
             2,
         ),
         (
-            "jewellery-care",
-            "How should I care for my Alankara pieces?",
-            "Store in the provided pouch, avoid water and perfume contact, and polish gently with a soft cloth.",
+            "textile-jewellery-care",
+            "How should I care for my Alankara textile pieces?",
+            "Store in the provided pouch, avoid water and perfume contact, and spot clean gently with a damp cloth. Never machine wash fabric jewellery.",
             "care",
             3,
         ),

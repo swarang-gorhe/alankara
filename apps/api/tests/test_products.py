@@ -11,26 +11,26 @@ def test_list_products(client):
 
 
 def test_list_products_filter_by_category(client):
-    response = client.get("/products", params={"category": "earrings"})
+    response = client.get("/products", params={"category": "cloth-earrings"})
     assert response.status_code == 200
     data = response.json()
     for item in data["items"]:
-        assert item["categorySlug"] == "earrings"
+        assert item["categorySlug"] == "cloth-earrings"
 
 
 def test_list_products_search(client):
-    response = client.get("/products", params={"q": "jhumka"})
+    response = client.get("/products", params={"q": "tassel"})
     assert response.status_code == 200
     data = response.json()
     assert data["total"] >= 1
 
 
 def test_get_product_by_slug(client):
-    response = client.get("/products/chandni-jhumka")
+    response = client.get("/products/jaal-tassel-earrings")
     assert response.status_code == 200
     product = response.json()
-    assert product["slug"] == "chandni-jhumka"
-    assert product["name"] == "Chandni Jhumka"
+    assert product["slug"] == "jaal-tassel-earrings"
+    assert product["name"] == "Jaal Tassel Earrings"
     assert len(product["relatedProducts"]) >= 1
 
 

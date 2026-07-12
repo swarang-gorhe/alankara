@@ -40,8 +40,8 @@ export default function AdminOrdersPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="font-display text-3xl text-maroon">Orders</h1>
-        <p className="mt-1 text-sm text-charcoal-muted">Status updates and fulfillment notes</p>
+        <h1 className="font-display text-3xl text-admin-text">Orders</h1>
+        <p className="mt-1 text-sm text-admin-muted">Status updates and fulfillment notes</p>
       </div>
 
       <AdminTable columns={["Order", "Customer", "Total", "Status", "Date", ""]}>
@@ -54,7 +54,7 @@ export default function AdminOrdersPage() {
               <select
                 value={order.status}
                 onChange={(e) => void handleStatusChange(order.id, e.target.value)}
-                className="rounded-sm border border-gold/30 bg-cream px-2 py-1 text-xs"
+                className="rounded border border-admin-border bg-admin-elevated px-2 py-1 text-xs text-admin-text"
               >
                 {STATUSES.map((s) => (
                   <option key={s} value={s}>
@@ -63,14 +63,14 @@ export default function AdminOrdersPage() {
                 ))}
               </select>
             </AdminTableCell>
-            <AdminTableCell className="text-xs text-charcoal-muted">
+            <AdminTableCell className="text-xs text-admin-muted">
               {new Date(order.createdAt).toLocaleDateString()}
             </AdminTableCell>
             <AdminTableCell>
               <button
                 type="button"
                 onClick={() => setExpanded(expanded === order.id ? null : order.id)}
-                className="text-xs uppercase tracking-widest text-gold hover:underline"
+                className="text-xs uppercase tracking-widest text-admin-accent hover:underline"
               >
                 {expanded === order.id ? "Hide" : "Details"}
               </button>
@@ -80,16 +80,16 @@ export default function AdminOrdersPage() {
       </AdminTable>
 
       {expanded && (
-        <div className="rounded-sm border border-gold/25 bg-cream-light p-5">
+        <div className="rounded-lg border border-admin-border bg-admin-surface p-5">
           {(() => {
             const order = orders.find((o) => o.id === expanded);
             if (!order) return null;
             return (
               <div className="space-y-4">
-                <h3 className="font-display text-lg text-maroon">Order {order.id}</h3>
+                <h3 className="font-display text-lg text-admin-text">Order {order.id}</h3>
                 <ul className="space-y-2 text-sm">
                   {order.items.map((item) => (
-                    <li key={item.id} className="flex justify-between">
+                    <li key={item.id} className="flex justify-between text-admin-text">
                       <span>
                         {item.productName} × {item.quantity}
                       </span>
@@ -98,25 +98,25 @@ export default function AdminOrdersPage() {
                   ))}
                 </ul>
                 {order.discountCode && (
-                  <p className="text-sm text-charcoal-muted">
+                  <p className="text-sm text-admin-muted">
                     Discount {order.discountCode}: −{formatPrice(order.discountAmount.amount)}
                   </p>
                 )}
                 <label className="block">
-                  <span className="text-xs uppercase tracking-widest text-charcoal-muted">
+                  <span className="text-xs uppercase tracking-widest text-admin-muted">
                     Fulfillment notes
                   </span>
                   <textarea
                     value={notes[order.id] ?? order.fulfillmentNotes ?? ""}
                     onChange={(e) => setNotes((n) => ({ ...n, [order.id]: e.target.value }))}
-                    className="mt-1 w-full rounded-sm border border-gold/30 bg-cream px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded border border-admin-border bg-admin-elevated px-3 py-2 text-sm text-admin-text"
                     rows={3}
                   />
                 </label>
                 <button
                   type="button"
                   onClick={() => void handleSaveNotes(order.id)}
-                  className="text-xs uppercase tracking-widest text-maroon hover:underline"
+                  className="text-xs uppercase tracking-widest text-admin-accent hover:underline"
                 >
                   Save notes
                 </button>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 import { AdminTable, AdminTableCell, AdminTableRow } from "@/components/admin/AdminTable";
 import {
   createAdminFaq,
@@ -46,61 +45,67 @@ export default function AdminFaqPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
         <div>
-          <h1 className="font-display text-3xl text-maroon">FAQ</h1>
-          <p className="mt-1 text-sm text-charcoal-muted">
-            Knowledge base entries — indexed for AI in Phase 7
+          <h1 className="font-display text-3xl text-admin-text">FAQ</h1>
+          <p className="mt-1 text-sm text-admin-muted">
+            Knowledge base for textile jewellery — indexed for AI chat
           </p>
         </div>
-        <Button onClick={() => setShowForm((v) => !v)}>
+        <button
+          type="button"
+          onClick={() => setShowForm((v) => !v)}
+          className="rounded bg-admin-accent px-4 py-2 text-xs uppercase tracking-widest text-admin-bg"
+        >
           {showForm ? "Cancel" : "New entry"}
-        </Button>
+        </button>
       </div>
 
       {showForm && (
         <form
           onSubmit={(e) => void handleCreate(e)}
-          className="space-y-4 rounded-sm border border-gold/25 bg-cream-light p-5"
+          className="space-y-4 rounded-lg border border-admin-border bg-admin-surface p-5"
         >
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block">
-              <span className="text-xs uppercase tracking-widest text-charcoal-muted">Slug</span>
+              <span className="text-xs uppercase tracking-widest text-admin-muted">Slug</span>
               <input
                 required
                 value={form.slug}
                 onChange={(e) => setForm((f) => ({ ...f, slug: e.target.value }))}
-                className="mt-1 w-full rounded-sm border border-gold/30 bg-cream px-3 py-2 text-sm"
+                className="mt-1 w-full rounded border border-admin-border bg-admin-elevated px-3 py-2 text-sm text-admin-text"
               />
             </label>
             <label className="block">
-              <span className="text-xs uppercase tracking-widest text-charcoal-muted">Category</span>
+              <span className="text-xs uppercase tracking-widest text-admin-muted">Category</span>
               <input
                 required
                 value={form.category}
                 onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
-                className="mt-1 w-full rounded-sm border border-gold/30 bg-cream px-3 py-2 text-sm"
+                className="mt-1 w-full rounded border border-admin-border bg-admin-elevated px-3 py-2 text-sm text-admin-text"
               />
             </label>
           </div>
           <label className="block">
-            <span className="text-xs uppercase tracking-widest text-charcoal-muted">Question</span>
+            <span className="text-xs uppercase tracking-widest text-admin-muted">Question</span>
             <input
               required
               value={form.question}
               onChange={(e) => setForm((f) => ({ ...f, question: e.target.value }))}
-              className="mt-1 w-full rounded-sm border border-gold/30 bg-cream px-3 py-2 text-sm"
+              className="mt-1 w-full rounded border border-admin-border bg-admin-elevated px-3 py-2 text-sm text-admin-text"
             />
           </label>
           <label className="block">
-            <span className="text-xs uppercase tracking-widest text-charcoal-muted">Answer</span>
+            <span className="text-xs uppercase tracking-widest text-admin-muted">Answer</span>
             <textarea
               required
               value={form.answer}
               onChange={(e) => setForm((f) => ({ ...f, answer: e.target.value }))}
-              className="mt-1 w-full rounded-sm border border-gold/30 bg-cream px-3 py-2 text-sm"
+              className="mt-1 w-full rounded border border-admin-border bg-admin-elevated px-3 py-2 text-sm text-admin-text"
               rows={4}
             />
           </label>
-          <Button type="submit">Create entry</Button>
+          <button type="submit" className="rounded bg-admin-accent px-4 py-2 text-xs uppercase tracking-widest text-admin-bg">
+            Create entry
+          </button>
         </form>
       )}
 
@@ -109,7 +114,7 @@ export default function AdminFaqPage() {
           <AdminTableRow key={entry.id}>
             <AdminTableCell>
               <p className="font-medium">{entry.question}</p>
-              <p className="mt-1 line-clamp-2 text-xs text-charcoal-muted">{entry.answer}</p>
+              <p className="mt-1 line-clamp-2 text-xs text-admin-muted">{entry.answer}</p>
             </AdminTableCell>
             <AdminTableCell>{entry.category}</AdminTableCell>
             <AdminTableCell>{entry.published ? "Yes" : "No"}</AdminTableCell>
@@ -117,7 +122,7 @@ export default function AdminFaqPage() {
               <button
                 type="button"
                 onClick={() => void handleDelete(entry.id)}
-                className="text-xs uppercase tracking-widest text-maroon hover:underline"
+                className="text-xs uppercase tracking-widest text-admin-danger hover:underline"
               >
                 Delete
               </button>

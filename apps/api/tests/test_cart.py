@@ -19,7 +19,7 @@ def test_add_update_remove_cart_item(client):
     assert add.status_code == 200
     data = add.json()
     assert data["itemCount"] == 1
-    assert data["items"][0]["productSlug"] == "chandni-jhumka"
+    assert data["items"][0]["productSlug"] == "jaal-tassel-earrings"
     item_id = data["items"][0]["id"]
 
     update = client.patch(

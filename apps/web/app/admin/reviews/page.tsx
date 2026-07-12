@@ -60,8 +60,8 @@ export default function AdminReviewsPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-display text-3xl text-maroon">Reviews</h1>
-          <p className="mt-1 text-sm text-charcoal-muted">Moderation and AI summary regeneration</p>
+          <h1 className="font-display text-3xl text-admin-text">Reviews</h1>
+          <p className="mt-1 text-sm text-admin-muted">Moderation and AI summary regeneration</p>
         </div>
         <div className="flex gap-2">
           {(["all", "approved", "hidden"] as const).map((value) => (
@@ -69,10 +69,10 @@ export default function AdminReviewsPage() {
               key={value}
               type="button"
               onClick={() => setFilter(value)}
-              className={`rounded-sm px-3 py-1.5 text-xs uppercase tracking-widest ${
+              className={`rounded px-3 py-1.5 text-xs uppercase tracking-widest ${
                 filter === value
-                  ? "bg-maroon text-cream-light"
-                  : "border border-gold/30 text-charcoal-muted hover:bg-cream"
+                  ? "bg-admin-accent text-admin-bg"
+                  : "border border-admin-border text-admin-muted hover:text-admin-text"
               }`}
             >
               {value}
@@ -81,16 +81,16 @@ export default function AdminReviewsPage() {
         </div>
       </div>
 
-      <div className="flex flex-wrap items-end gap-3 rounded-sm border border-gold/25 bg-cream-light p-4">
+      <div className="flex flex-wrap items-end gap-3 rounded-lg border border-admin-border bg-admin-surface p-4">
         <div>
-          <label htmlFor="summary-product" className="text-[10px] uppercase tracking-widest text-gold">
+          <label htmlFor="summary-product" className="text-[10px] uppercase tracking-widest text-admin-muted">
             Product summary
           </label>
           <select
             id="summary-product"
             value={summaryProductId}
             onChange={(e) => setSummaryProductId(e.target.value)}
-            className="mt-1 block rounded-sm border border-gold/30 bg-cream px-3 py-2 text-sm"
+            className="mt-1 block rounded border border-admin-border bg-admin-elevated px-3 py-2 text-sm text-admin-text"
           >
             <option value="">Select product…</option>
             {products.map((p) => (
@@ -104,7 +104,7 @@ export default function AdminReviewsPage() {
           type="button"
           disabled={!summaryProductId || busy}
           onClick={() => void runSummary(false)}
-          className="rounded-sm bg-maroon px-4 py-2 text-xs uppercase tracking-widest text-cream-light disabled:opacity-50"
+          className="rounded bg-admin-accent px-4 py-2 text-xs uppercase tracking-widest text-admin-bg disabled:opacity-50"
         >
           Generate now
         </button>
@@ -112,12 +112,12 @@ export default function AdminReviewsPage() {
           type="button"
           disabled={!summaryProductId || busy}
           onClick={() => void runSummary(true)}
-          className="rounded-sm border border-gold/40 px-4 py-2 text-xs uppercase tracking-widest text-charcoal disabled:opacity-50"
+          className="rounded border border-admin-border px-4 py-2 text-xs uppercase tracking-widest text-admin-muted disabled:opacity-50"
         >
           Queue regenerate
         </button>
         {summaryStatus && (
-          <p className="w-full text-xs text-charcoal-muted">{summaryStatus}</p>
+          <p className="w-full text-xs text-admin-muted">{summaryStatus}</p>
         )}
       </div>
 
@@ -127,11 +127,11 @@ export default function AdminReviewsPage() {
             <AdminTableCell className="text-sm">{review.productName}</AdminTableCell>
             <AdminTableCell>{review.authorName}</AdminTableCell>
             <AdminTableCell>{review.rating}★</AdminTableCell>
-            <AdminTableCell className="max-w-xs truncate text-sm text-charcoal-muted">
+            <AdminTableCell className="max-w-xs truncate text-sm text-admin-muted">
               {review.text}
             </AdminTableCell>
             <AdminTableCell>
-              <span className={review.approved ? "text-olive" : "text-maroon"}>
+              <span className={review.approved ? "text-admin-success" : "text-admin-danger"}>
                 {review.approved ? "Approved" : "Hidden"}
               </span>
             </AdminTableCell>
@@ -139,7 +139,7 @@ export default function AdminReviewsPage() {
               <button
                 type="button"
                 onClick={() => void toggleApproval(review)}
-                className="text-xs uppercase tracking-widest text-gold hover:underline"
+                className="text-xs uppercase tracking-widest text-admin-accent hover:underline"
               >
                 {review.approved ? "Hide" : "Approve"}
               </button>

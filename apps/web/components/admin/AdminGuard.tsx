@@ -35,7 +35,7 @@ export function AdminGuard({ children }: AdminGuardProps) {
 
   if (!ready) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#ebe2d0] text-charcoal-muted">
+      <div className="flex min-h-screen items-center justify-center bg-admin-bg text-admin-muted">
         Loading…
       </div>
     );

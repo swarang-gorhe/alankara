@@ -7,7 +7,14 @@ class DashboardStatsSchema(BaseModel):
     revenue: MoneySchema
     ordersCount: int
     pendingOrdersCount: int
+    productsCount: int
+    customersCount: int
+    reviewsCount: int
+    pendingReviewsCount: int
+    activeCouponsCount: int
     lowStockAlerts: list[dict]
+    recentActivity: list[dict] = Field(default_factory=list)
+    revenueByMonth: list[dict] = Field(default_factory=list)
 
 
 class AdminProductCreateSchema(BaseModel):
@@ -116,3 +123,29 @@ class PaginatedAdminProductsSchema(BaseModel):
 
 class AdminReviewModerationSchema(BaseModel):
     approved: bool
+
+
+class CollectionSchema(BaseModel):
+    id: str
+    slug: str
+    name: str
+    description: str | None = None
+    imageUrl: str | None = None
+    featured: bool
+    published: bool
+    sortOrder: int
+    productCount: int = 0
+
+
+class SettingSchema(BaseModel):
+    key: str
+    value: dict | list | str | int | float | bool | None
+
+
+class WishlistItemSchema(BaseModel):
+    id: str
+    productId: str
+    variantId: str | None = None
+    productSlug: str
+    productName: str
+    createdAt: str

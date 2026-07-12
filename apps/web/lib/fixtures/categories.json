@@ -2,21 +2,36 @@
   {
     "slug": "earrings",
     "name": "Earrings",
-    "description": "Hand-finished drops, jhumkas, and studs for every occasion."
+    "description": "Fabric jhumkas, embroidered drops, and pearl-thread studs — light enough for all-day wear."
   },
   {
     "slug": "necklaces",
     "name": "Necklaces",
-    "description": "Layered chains, chokers, and statement haars with heirloom presence."
+    "description": "Pearl chokers, cotton cord strands, and hand-knotted thread pieces for layering."
   },
   {
     "slug": "bracelets",
     "name": "Bracelets",
-    "description": "Delicate kadas and charm bracelets woven with intention."
+    "description": "Woven cotton cuffs, ghungroo wraps, and embroidered fabric bands."
   },
   {
-    "slug": "clothing-jewellery",
-    "name": "Clothing Jewellery",
-    "description": "Brooches, hair adornments, and textile jewellery for festive dressing."
+    "slug": "rings",
+    "name": "Rings",
+    "description": "Thread-wrapped statement rings and embroidered fabric bands for the finger."
+  },
+  {
+    "slug": "hair-accessories",
+    "name": "Hair Accessories",
+    "description": "Gajras, pins, and braided thread adornments for buns and braids."
+  },
+  {
+    "slug": "sets",
+    "name": "Sets",
+    "description": "Coordinated earrings, collars, and cuffs — small-batch matching pieces."
+  },
+  {
+    "slug": "embroidered-textile",
+    "name": "Embroidered Textile",
+    "description": "Brooches, patches, and collar pieces — wearable embroidery on cotton and silk."
   }
 ]

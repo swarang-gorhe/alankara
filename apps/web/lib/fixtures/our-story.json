@@ -1,44 +1,44 @@
 {
   "hero": {
     "eyebrow": "Our Story",
-    "title": "Threads of intention, woven into heirlooms",
-    "subtitle": "Alankara began not in a boardroom but at a kitchen table — with a grandmother's jewellery box, a daughter's curiosity, and a belief that little moments deserve extraordinary craft."
+    "title": "Threads of intention, woven into adornment",
+    "subtitle": "Alankara began at a kitchen table — with a grandmother's fabric jewellery box, a daughter's curiosity, and a belief that textile craft deserves the same reverence as any heirloom."
   },
   "sections": [
     {
       "id": "origin",
       "heading": "Where it began",
-      "body": "In 2019, our founder Ananya returned from London with her mother's mothballed jhumkas and a question: why did everyday jewellery feel so far from the pieces worn at weddings? She spent a year visiting workshops across Rajasthan, Lucknow, and Madurai — sitting on workshop floors, learning how lac holds kundan, how silk carries pearls, how a single hammer strike can change silver's song.",
+      "body": "In 2019, our founder Ananya returned from London with her mother's mothballed zari brooches and a question: why did beautiful textile jewellery feel so hard to find outside wedding markets? She spent a year visiting workshops across Lucknow, Kutch, and Kanchipuram — learning how silk carries thread, how mirrors catch light on fabric, how a single block print can change cotton's story.",
       "pullQuote": "We are not a brand that designs in isolation. We are a bridge between artisan hands and the moments you want to remember."
     },
     {
       "id": "philosophy",
       "heading": "Crafted for little moments",
-      "body": "Our tagline is deliberate. Alankara pieces are made for the sangeet where your niece dances, the anniversary dinner that almost didn't happen, the Tuesday when you dress up just because. We reject the idea that fine jewellery belongs only in vaults. Each piece is finished to heirloom standard but priced and sized for living — not locking away.",
-      "pullQuote": "Little moments are the ones that compound into a life. Jewellery should witness them, not wait for them."
+      "body": "Our tagline is deliberate. Alankara pieces are made for the festival where your niece dances, the dinner that almost didn't happen, the Tuesday when you dress up just because. We reject the idea that textile jewellery belongs only in trousseau trunks. Each piece is finished to heirloom standard but priced and sized for living — not locking away.",
+      "pullQuote": "Little moments are the ones that compound into a life. Adornment should witness them, not wait for them."
     },
     {
       "id": "process",
       "heading": "Slow by design",
-      "body": "Every Alankara piece passes through at least three artisan hands. We do not batch-produce; we batch-finish — meaning components may be prepared in small groups, but assembly, setting, and final polish happen per piece. Lead times are honest. Quality is non-negotiable. We would rather delay a launch than ship something that does not meet the artisan's own standard.",
+      "body": "Every Alankara piece passes through at least three artisan hands. We do not batch-produce; we batch-finish — meaning components may be prepared in small groups, but embroidery, dyeing, and final assembly happen per piece. Lead times are honest. Quality is non-negotiable.",
       "pullQuote": "Speed is the enemy of soul. We choose soul."
     },
     {
       "id": "sustainability",
       "heading": "Materials with conscience",
-      "body": "We source brass and silver from certified recyclers where possible. Our silk thread comes from cooperative spinners in Varanasi. Packaging uses handmade paper from a family mill in Sanganer — no plastic inserts, no foam. We are not perfect, but we publish our supplier list and welcome questions.",
+      "body": "We source cotton and linen from cooperative weavers where possible. Our silk thread comes from spinners in Varanasi. Upcycled pieces use factory offcuts and reclaimed sari borders. Packaging uses handmade paper from a family mill in Sanganer — no plastic inserts, no foam.",
       "pullQuote": "Luxury without conscience is just expense. We aim for both beauty and accountability."
     },
     {
       "id": "community",
       "heading": "The artisan collective",
-      "body": "Alankara works with twelve workshop partners across five states, employing over forty craftspeople — many of them women who learned techniques passed through matrilineal lines. We pay above-market rates, provide health stipends, and never claim exclusivity over an artisan's independent work. When you buy from Alankara, you support a network, not a factory.",
+      "body": "Alankara works with twelve workshop partners across five states, employing over forty craftspeople — many of them women who learned techniques passed through matrilineal lines. We pay above-market rates, provide health stipends, and never claim exclusivity over an artisan's independent work.",
       "pullQuote": "Our logo is a flower medallion because growth should be circular — artisans thrive, customers cherish, stories continue."
     },
     {
       "id": "future",
       "heading": "What comes next",
-      "body": "We are building slowly: collections that deepen rather than multiply, photographs that honour the makers, and technology that helps you choose with confidence — not hype. The cinematic homepage you will soon experience is part of that promise: to show you the hands behind the metal before you ever click buy.",
+      "body": "We are building slowly: collections that deepen rather than multiply, photographs that honour the makers, and technology that helps you choose with confidence — not hype.",
       "pullQuote": "This is chapter one. We are grateful you are reading it."
     }
   ]

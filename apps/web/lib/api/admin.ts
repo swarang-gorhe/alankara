@@ -23,6 +23,11 @@ export type DashboardStats = {
   revenue: { amount: number; currency: string };
   ordersCount: number;
   pendingOrdersCount: number;
+  productsCount: number;
+  customersCount: number;
+  reviewsCount: number;
+  pendingReviewsCount: number;
+  activeCouponsCount: number;
   lowStockAlerts: Array<{
     variantId: string;
     sku: string;
@@ -30,6 +35,15 @@ export type DashboardStats = {
     productName: string;
     stock: number;
   }>;
+  recentActivity?: Array<{
+    type: string;
+    id: string;
+    label: string;
+    email: string;
+    amount: number;
+    createdAt: string;
+  }>;
+  revenueByMonth?: Array<{ month: string; amount: number }>;
 };
 
 export type AdminProduct = {

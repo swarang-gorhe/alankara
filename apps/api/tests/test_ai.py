@@ -44,6 +44,14 @@ def test_admin_ai_agent_returns_503_without_key(client, admin_headers):
     response = client.post(
         "/admin/ai/agents/product",
         headers=admin_headers,
-        json={"prompt": "Draft description for pearl earrings"},
+        json={"action": "luxury-description"},
     )
     assert response.status_code == 503
+
+
+def test_admin_ai_actions_list(client, admin_headers):
+    response = client.get("/admin/ai/actions", headers=admin_headers)
+    assert response.status_code == 200
+    data = response.json()
+    assert "product" in data["agents"]
+    assert len(data["agents"]["product"]) >= 1

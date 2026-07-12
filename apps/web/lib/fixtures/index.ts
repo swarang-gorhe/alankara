@@ -13,6 +13,8 @@ import type {
   OurStoryFixture,
   ProductFixture,
   ReviewFixture,
+  ShopFiltersState,
+  StyleTag,
 } from "./types";
 
 export type {
@@ -24,7 +26,15 @@ export type {
   OurStoryFixture,
   ProductFixture,
   ReviewFixture,
+  ShopFiltersState,
+  StyleTag,
 };
+
+export {
+  MATERIAL_LABELS,
+  SHOP_STYLE_FILTERS,
+  STYLE_LABELS,
+} from "./shop";
 
 export const categories = categoriesData as CategoryFixture[];
 export const products = productsData as ProductFixture[];
@@ -54,15 +64,6 @@ export function getReviewsForProduct(productId: string): ReviewFixture[] {
 export function getArtisanBySlug(slug: string): ArtisanFixture | undefined {
   return artisans.find((a) => a.slug === slug);
 }
-
-export const MATERIAL_LABELS: Record<MaterialSlug, string> = {
-  "gold-plated": "Gold-plated",
-  silver: "Silver",
-  kundan: "Kundan",
-  pearl: "Pearl",
-  "silk-thread": "Silk thread",
-  zari: "Zari",
-};
 
 export const PRICE_RANGES = [
   { id: "under-2000", label: "Under ₹2,000", min: 0, max: 1999 },
