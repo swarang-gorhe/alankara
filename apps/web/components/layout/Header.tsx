@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { AnimatedLogo } from "@/components/brand/AnimatedLogo";
 import { useCart } from "@/components/providers/CartProvider";
 import { Button } from "@/components/ui/button";
+import { useScrollMorph } from "@/hooks/useScrollMorph";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -19,7 +20,7 @@ function CartLink() {
   const count = cart?.itemCount ?? 0;
 
   return (
-    <Button variant="outline" size="sm" asChild className="relative">
+    <Button variant="outline" size="sm" asChild className="relative" data-magnetic>
       <Link href="/cart" aria-label={count > 0 ? `Cart, ${count} items` : "Cart"}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -38,7 +39,7 @@ function CartLink() {
         </svg>
         Cart
         {count > 0 && (
-          <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-maroon px-1 text-[10px] font-medium text-cream-light">
+          <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-maroon px-1 text-[10px] font-medium text-ivory">
             {count > 99 ? "99+" : count}
           </span>
         )}
@@ -49,13 +50,40 @@ function CartLink() {
 
 export function Header() {
   const pathname = usePathname();
+  const scrolled = useScrollMorph(32);
+  const isHome = pathname === "/";
 
   return (
-    <header className="sticky top-0 z-50 border-b border-gold/20 bg-cream/90 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-        <Link href="/" className="flex items-center gap-3" aria-label="Alankara home">
-          <AnimatedLogo size={40} idlePulse />
-          <span className="font-display text-xl tracking-wide text-maroon">Alankara</span>
+    <header
+      className={cn(
+        "sticky top-0 z-50 border-b transition-all duration-base ease-luxury",
+        scrolled
+          ? "border-champagne/15 bg-ivory/85 shadow-luxury backdrop-blur-lg"
+          : "border-champagne/20 bg-linen/90 backdrop-blur-md",
+        isHome && scrolled && "h-14",
+      )}
+    >
+      <div
+        className={cn(
+          "mx-auto flex max-w-7xl items-center justify-between px-6 transition-all duration-base ease-luxury",
+          scrolled ? "h-14" : "h-20",
+        )}
+      >
+        <Link
+          href="/"
+          className="flex items-center gap-3"
+          aria-label="Alankara home"
+          data-magnetic
+        >
+          <AnimatedLogo size={scrolled ? 48 : 56} idlePulse playEntrance={false} />
+          <div className="hidden sm:block">
+            <span className="font-display text-lg tracking-wide text-maroon md:text-xl">
+              Alankara
+            </span>
+            <p className="font-script text-xs italic text-warm-brown md:text-sm">
+              Crafted for little moments.
+            </p>
+          </div>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex" aria-label="Main navigation">
@@ -63,9 +91,11 @@ export function Header() {
             <Link
               key={link.href}
               href={link.href}
+              data-magnetic
+              data-cursor-sparkle
               className={cn(
-                "text-sm uppercase tracking-widest transition-colors hover:text-gold",
-                pathname === link.href ? "text-gold-bright" : "text-charcoal-muted",
+                "font-body text-sm uppercase tracking-widest transition-colors duration-base ease-luxury hover:text-champagne",
+                pathname === link.href ? "text-champagne" : "text-ink-muted",
               )}
             >
               {link.label}
@@ -74,7 +104,7 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" asChild>
+          <Button variant="ghost" size="sm" asChild data-magnetic>
             <Link href="/account">Account</Link>
           </Button>
           <CartLink />

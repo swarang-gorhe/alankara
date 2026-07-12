@@ -5,7 +5,7 @@ import { createPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = createPageMetadata({
   title: "Crafted for little moments",
   description:
-    "Luxury handcrafted jewellery and adornments. Cinematic storytelling, artisan partnerships, and heirloom pieces for life's precious moments.",
+    "Handmade cloth and fabric jewellery — embroidered earrings, pearl-thread necklaces, cotton hair adornments, and wearable art for everyday moments.",
   path: "/",
 });
 

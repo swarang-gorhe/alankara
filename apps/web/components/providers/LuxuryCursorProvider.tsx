@@ -9,6 +9,8 @@ type LuxuryCursorProviderProps = {
   children: React.ReactNode;
 };
 
+type TrailPoint = { x: number; y: number; id: number };
+
 export function LuxuryCursorProvider({ children }: LuxuryCursorProviderProps) {
   const prefersReducedMotion = usePrefersReducedMotion();
   const isTouch = useIsTouchDevice();
@@ -20,6 +22,8 @@ export function LuxuryCursorProvider({ children }: LuxuryCursorProviderProps) {
   const target = useRef({ x: 0, y: 0 });
   const magneticTarget = useRef<HTMLElement | null>(null);
   const frameRef = useRef<number>(0);
+  const trailId = useRef(0);
+  const [trail, setTrail] = useState<TrailPoint[]>([]);
 
   const active = enabled && !prefersReducedMotion && !isTouch;
 
@@ -45,6 +49,14 @@ export function LuxuryCursorProvider({ children }: LuxuryCursorProviderProps) {
       const hoverable = el?.closest("a, button, [data-cursor-sparkle]");
       if (sparkleRef.current) {
         sparkleRef.current.style.opacity = hoverable ? "1" : "0";
+      }
+
+      if (hoverable) {
+        const id = ++trailId.current;
+        setTrail((prev) => [...prev.slice(-8), { x: event.clientX, y: event.clientY, id }]);
+        setTimeout(() => {
+          setTrail((prev) => prev.filter((p) => p.id !== id));
+        }, 600);
       }
     };
 
@@ -96,26 +108,34 @@ export function LuxuryCursorProvider({ children }: LuxuryCursorProviderProps) {
         <>
           <div
             ref={spotlightRef}
-            className="pointer-events-none fixed left-0 top-0 z-[9998] h-48 w-48 rounded-full bg-gold/10 blur-3xl"
+            className="pointer-events-none fixed left-0 top-0 z-[9998] h-56 w-56 rounded-full bg-champagne/10 blur-3xl"
             aria-hidden="true"
           />
+          {trail.map((point) => (
+            <span
+              key={point.id}
+              className="pointer-events-none fixed z-[9997] h-1 w-1 rounded-full bg-champagne/70 animate-thread-trail"
+              style={{ left: point.x, top: point.y }}
+              aria-hidden="true"
+            />
+          ))}
           <div
             ref={cursorRef}
             className={cn(
               "pointer-events-none fixed left-0 top-0 z-[9999] h-3 w-3 rounded-full",
-              "border border-gold-bright/80 bg-cream-light/20 backdrop-blur-sm",
+              "border border-champagne/80 bg-ivory/20 backdrop-blur-sm",
               "shadow-[0_0_12px_rgba(201,147,47,0.5)]",
             )}
             aria-hidden="true"
           />
           <div
             ref={sparkleRef}
-            className="pointer-events-none fixed left-0 top-0 z-[9999] opacity-0 transition-opacity duration-200"
+            className="pointer-events-none fixed left-0 top-0 z-[9999] opacity-0 transition-opacity duration-fast"
             aria-hidden="true"
           >
-            <span className="absolute -left-1 -top-1 h-1 w-1 rounded-full bg-gold-bright" />
-            <span className="absolute left-2 top-0 h-0.5 w-0.5 rounded-full bg-gold" />
-            <span className="absolute -left-0.5 top-2 h-0.5 w-0.5 rounded-full bg-gold-bright" />
+            <span className="absolute -left-1 -top-1 h-1 w-1 rounded-full bg-champagne" />
+            <span className="absolute left-2 top-0 h-0.5 w-0.5 rounded-full bg-champagne/70" />
+            <span className="absolute -left-0.5 top-2 h-0.5 w-0.5 rounded-full bg-champagne" />
           </div>
         </>
       )}
