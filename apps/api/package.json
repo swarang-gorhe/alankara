@@ -9,6 +9,12 @@
     "typecheck": "echo 'Python typecheck via ruff'",
     "test": "pytest -q",
     "db:migrate": "alembic upgrade head",
-    "db:seed": "python -m scripts.seed"
+    "db:seed": "python -m scripts.seed",
+    "build:vercel": "cd ../.. && pnpm turbo run build --filter=@alankara/web && node apps/api/scripts/stage-next-for-vercel.mjs"
+  },
+  "dependencies": {
+    "next": "^15.1.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   }
 }

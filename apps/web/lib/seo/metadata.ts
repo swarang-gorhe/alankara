@@ -8,7 +8,7 @@ const DEFAULT_SITE_URL = "https://alankara.com";
 
 function normalizeSiteUrl(candidate: string | undefined): string | null {
   const trimmed = candidate?.trim();
-  if (!trimmed) {
+  if (!trimmed || trimmed === "undefined" || trimmed === "null") {
     return null;
   }
 
