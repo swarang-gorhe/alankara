@@ -1,6 +1,6 @@
 # Alankara
 
-Luxury e-commerce platform for handcrafted jewellery and adornments. A pnpm + Turborepo monorepo with Next.js 15 frontend, FastAPI backend, and LangChain AI layer.
+Handmade cloth and fabric jewellery — a pnpm + Turborepo monorepo with Next.js 15 frontend, FastAPI backend, and LangChain AI layer.
 
 ## Repository structure
 
@@ -71,12 +71,25 @@ cd ../..
 ```bash
 cd apps/api
 source .venv/bin/activate
-alembic upgrade head
+alembic upgrade head   # includes migration 005 (collections, media, settings, wishlist)
 python -m scripts.seed
 cd ../..
 ```
 
 Re-seed from fixtures: `python -m scripts.seed --force`
+
+### Migration 005 — collections, media, settings, wishlist
+
+Alembic revision `005_collections_media` adds:
+
+| Table | Purpose |
+|-------|---------|
+| `collections` | Curated product groupings (slug, featured, published) |
+| `media` | Product/collection image metadata |
+| `settings` | Key-value site configuration |
+| `wishlist_items` | Customer wishlist (user + variant) |
+
+Run via `alembic upgrade head` after pulling. Seed script populates collections from fixtures when present.
 
 ### 6. Run development servers
 
@@ -204,12 +217,17 @@ Brand tokens in `apps/web/tailwind.config.ts` and `apps/web/app/globals.css`:
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| Cream | `#f3e4cd`, `#f8ecd9` | Backgrounds |
-| Gold | `#b98a4a`, `#c9932f` | Accents, dividers |
-| Maroon | `#6f2317`, `#7a2e1c` | Headings, primary actions |
-| Charcoal | `#2c2420` | Body text |
+| Ivory / Linen | `#faf3e7`, `#f3e4cd` | Backgrounds |
+| Champagne | `#c9932f` | Accents, dividers, focus rings |
+| Maroon | `#6f2317` | Headings, primary actions |
+| Ink | `#2b231c` | Body text |
+| Sage / Olive | `#a8ad96`, `#6b7353` | Borders, labels |
 
 **Typography:** Playfair Display (headings), Cormorant Garamond Italic (tagline), Source Sans 3 (body).
+
+### Product categories (cloth-only)
+
+`cloth-earrings`, `fabric-necklaces`, `fabric-bracelets`, `fabric-rings`, `hair-accessories`, `jewellery-sets`, `embroidered-textile-jewellery`, `sustainable-fashion-accessories`
 
 ## Scripts
 
@@ -234,14 +252,16 @@ GitHub Actions (`.github/workflows/ci.yml`) runs on every push/PR to `main`:
 
 | Phase | Status | Scope |
 |-------|--------|-------|
-| **1** | ✅ Complete | Monorepo scaffold, design system, layout shell |
-| **2** | ✅ Complete | Cinematic homepage (Three.js, GSAP, Lenis) |
-| **3** | ✅ Complete | Shop, PDP, editorial pages |
-| **4** | ✅ Complete | Backend schema, product APIs, frontend wiring |
-| **5** | ✅ Complete | Cart + checkout |
-| **6** | ✅ Complete | Admin panel |
-| **7** | ✅ Complete | LangChain AI layer |
-| **8** | ✅ Complete | Supabase production prep, SEO, accessibility, docs |
+| **1** | ✅ Complete | Design system — ivory/luxury tokens, components, showcase |
+| **2** | ✅ Complete | Cinematic homepage — 10 narrative chapters, lazy R3F hero |
+| **3** | ✅ Complete | Editorial shop with chip filters, story-first PDP, fabric reveal |
+| **4** | ✅ Complete | Frontend wiring to product APIs |
+| **5** | ✅ Complete | Cloth-only seed data, categories, backend schema |
+| **6** | ✅ Complete | Auth-gated admin panel |
+| **7** | ✅ Complete | LangChain AI layer — RAG, agents, review summaries |
+| **8** | ✅ Complete | FAQ chatbot (ivory palette), SEO, Supabase prep |
+| **9** | ✅ Complete | a11y (focus rings, reduced motion), mobile pass, Lighthouse-oriented splits |
+| **10** | ✅ Complete | Env audit, Vercel/Railway/Supabase docs, migration 005 |
 
 ## Performance
 

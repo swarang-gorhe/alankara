@@ -10,7 +10,7 @@ const timelineSteps = [
     id: "source",
     year: "Day 1",
     title: "Sourcing",
-    description: "Natural threads, freshwater pearls, and ethically mined metals arrive at our atelier",
+    description: "Natural threads, freshwater pearls, and ethically sourced cotton arrive at our atelier",
   },
   {
     id: "design",

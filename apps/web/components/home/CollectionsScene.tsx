@@ -9,9 +9,9 @@ import { cn } from "@/lib/utils";
 
 const collections = [
   {
-    id: "bridal",
-    name: "Bridal Heirlooms",
-    description: "Pearl strands and temple-inspired motifs for your most sacred day",
+    id: "sets",
+    name: "Curated Sets",
+    description: "Matched earrings and collars — small-batch coordinates for gifting",
     accent: "from-maroon/10 to-gold/5",
   },
   {
@@ -74,7 +74,7 @@ export function CollectionsScene() {
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-gold">Collections</p>
             <h2 className="mt-4 font-display text-3xl text-maroon md:text-5xl">
-              Open the jewelry box
+              Unfold the collection
             </h2>
           </div>
           <Button variant="outline" className="mt-6 md:mt-0" data-magnetic asChild>

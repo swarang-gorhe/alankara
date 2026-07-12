@@ -8,7 +8,7 @@ import { createPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = createPageMetadata({
   title: "Our Story",
   description:
-    "The story behind Alankara — artisan partnerships, slow craft, and jewellery made for life's little moments.",
+    "The story behind Alankara — artisan partnerships, slow craft, and cloth jewellery made for life's little moments.",
   path: "/our-story",
 });
 
@@ -18,11 +18,11 @@ export default function OurStoryPage() {
   return (
     <div>
       <section className="mx-auto max-w-4xl px-6 py-20 text-center md:py-28">
-        <p className="font-script text-xl italic text-gold md:text-2xl">{hero.eyebrow}</p>
+        <p className="font-script text-xl italic text-champagne md:text-2xl">{hero.eyebrow}</p>
         <h1 className="mt-6 font-display text-4xl leading-tight text-maroon md:text-6xl">
           {hero.title}
         </h1>
-        <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-charcoal-muted">
+        <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-ink-muted">
           {hero.subtitle}
         </p>
       </section>
@@ -36,12 +36,12 @@ export default function OurStoryPage() {
               <h2 className="font-display text-3xl text-maroon md:text-4xl">
                 {section.heading}
               </h2>
-              <p className="mt-6 text-base leading-relaxed text-charcoal md:text-lg">
+              <p className="mt-6 text-base leading-relaxed text-ink md:text-lg">
                 {section.body}
               </p>
               {section.pullQuote && (
-                <blockquote className="mt-8 border-l-2 border-gold pl-6">
-                  <p className="font-script text-xl italic leading-relaxed text-gold md:text-2xl">
+                <blockquote className="mt-8 border-l-2 border-champagne pl-6">
+                  <p className="font-script text-xl italic leading-relaxed text-champagne md:text-2xl">
                     &ldquo;{section.pullQuote}&rdquo;
                   </p>
                 </blockquote>
@@ -54,7 +54,7 @@ export default function OurStoryPage() {
 
       <section className="mx-auto max-w-3xl px-6 pb-24 text-center">
         <SectionDivider />
-        <p className="mt-12 font-script text-lg italic text-gold">Meet the hands behind the metal</p>
+        <p className="mt-12 font-script text-lg italic text-champagne">Meet the hands behind the thread</p>
         <Button asChild variant="outline" className="mt-6">
           <Link href="/artisans">Our artisans</Link>
         </Button>

@@ -1,22 +1,22 @@
 [
   {
-    "slug": "earrings",
-    "name": "Earrings",
+    "slug": "cloth-earrings",
+    "name": "Cloth Earrings",
     "description": "Fabric jhumkas, embroidered drops, and pearl-thread studs — light enough for all-day wear."
   },
   {
-    "slug": "necklaces",
-    "name": "Necklaces",
+    "slug": "fabric-necklaces",
+    "name": "Fabric Necklaces",
     "description": "Pearl chokers, cotton cord strands, and hand-knotted thread pieces for layering."
   },
   {
-    "slug": "bracelets",
-    "name": "Bracelets",
+    "slug": "fabric-bracelets",
+    "name": "Fabric Bracelets",
     "description": "Woven cotton cuffs, ghungroo wraps, and embroidered fabric bands."
   },
   {
-    "slug": "rings",
-    "name": "Rings",
+    "slug": "fabric-rings",
+    "name": "Fabric Rings",
     "description": "Thread-wrapped statement rings and embroidered fabric bands for the finger."
   },
   {
@@ -25,13 +25,18 @@
     "description": "Gajras, pins, and braided thread adornments for buns and braids."
   },
   {
-    "slug": "sets",
-    "name": "Sets",
+    "slug": "jewellery-sets",
+    "name": "Jewellery Sets",
     "description": "Coordinated earrings, collars, and cuffs — small-batch matching pieces."
   },
   {
-    "slug": "embroidered-textile",
-    "name": "Embroidered Textile",
+    "slug": "embroidered-textile-jewellery",
+    "name": "Embroidered Textile Jewellery",
     "description": "Brooches, patches, and collar pieces — wearable embroidery on cotton and silk."
+  },
+  {
+    "slug": "sustainable-fashion-accessories",
+    "name": "Sustainable Fashion Accessories",
+    "description": "Upcycled sari borders, reclaimed linen, and low-waste fabric adornments."
   }
 ]

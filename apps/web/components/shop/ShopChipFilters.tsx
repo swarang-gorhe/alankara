@@ -7,13 +7,14 @@ import type { CategorySlug, ShopFiltersState, StyleTag } from "@/lib/fixtures/ty
 import { cn } from "@/lib/utils";
 
 const CATEGORY_OPTIONS: { slug: CategorySlug; label: string }[] = [
-  { slug: "earrings", label: "Earrings" },
-  { slug: "necklaces", label: "Necklaces" },
-  { slug: "bracelets", label: "Bracelets" },
-  { slug: "rings", label: "Rings" },
+  { slug: "cloth-earrings", label: "Cloth Earrings" },
+  { slug: "fabric-necklaces", label: "Necklaces" },
+  { slug: "fabric-bracelets", label: "Bracelets" },
+  { slug: "fabric-rings", label: "Rings" },
   { slug: "hair-accessories", label: "Hair" },
-  { slug: "sets", label: "Sets" },
-  { slug: "embroidered-textile", label: "Textile" },
+  { slug: "jewellery-sets", label: "Sets" },
+  { slug: "embroidered-textile-jewellery", label: "Textile" },
+  { slug: "sustainable-fashion-accessories", label: "Sustainable" },
 ];
 
 type ShopChipFiltersProps = {

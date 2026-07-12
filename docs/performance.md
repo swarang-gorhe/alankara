@@ -4,13 +4,13 @@ Guidelines for keeping Alankara fast on mobile and low-end devices.
 
 ## Three.js / React Three Fiber (homepage hero)
 
-The cinematic hero (`WelcomeScene`) uses **dynamic import** with `ssr: false`:
+The cinematic hero (`ChapterBloom`) uses **dynamic import** with `ssr: false`:
 
 ```tsx
-// apps/web/components/home/WelcomeScene.tsx
-const WelcomeHero3D = dynamic(() => import("./WelcomeHero3D").then((m) => m.WelcomeHero3D), {
+// apps/web/components/home/chapters/ChapterBloom.tsx
+const WelcomeHero3D = dynamic(() => import("../WelcomeHero3D").then((m) => m.WelcomeHero3D), {
   ssr: false,
-  loading: () => <WelcomeHeroFallback />,
+  loading: () => <BloomFallback />,
 });
 ```
 
@@ -22,9 +22,9 @@ const WelcomeHero3D = dynamic(() => import("./WelcomeHero3D").then((m) => m.Welc
 
 This keeps the hero lightweight on phones while preserving the full experience on desktop.
 
-## Below-fold homepage scenes
+## Below-fold homepage chapters
 
-All homepage sections after `WelcomeScene` are standard React + Framer Motion / GSAP — no additional Three.js bundles. GSAP animations are disabled when `usePrefersReducedMotion()` is true.
+All homepage sections after `ChapterBloom` are standard React + GSAP — no additional Three.js bundles. GSAP animations are disabled when `usePrefersReducedMotion()` is true.
 
 ## Images
 

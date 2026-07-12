@@ -1,13 +1,14 @@
 import type { Product, Review } from "@alankara/shared";
 
 export type CategorySlug =
-  | "earrings"
-  | "necklaces"
-  | "bracelets"
-  | "rings"
+  | "cloth-earrings"
+  | "fabric-necklaces"
+  | "fabric-bracelets"
+  | "fabric-rings"
   | "hair-accessories"
-  | "sets"
-  | "embroidered-textile";
+  | "jewellery-sets"
+  | "embroidered-textile-jewellery"
+  | "sustainable-fashion-accessories";
 
 export type MaterialSlug =
   | "embroidery"

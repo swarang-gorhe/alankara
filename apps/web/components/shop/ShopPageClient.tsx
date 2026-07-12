@@ -1,11 +1,12 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { EditorialProductCard } from "@/components/shop/EditorialProductCard";
 import { ShopChipFilters, filterProducts } from "@/components/shop/ShopChipFilters";
 import { ShopEmptyState } from "@/components/shop/ShopEmptyState";
 import { FabricTexture } from "@/components/ui/FabricTexture";
-import type { ProductFixture, ShopFiltersState } from "@/lib/fixtures/types";
+import type { CategorySlug, ProductFixture, ShopFiltersState } from "@/lib/fixtures/types";
 import { cn } from "@/lib/utils";
 
 type ShopPageClientProps = {
@@ -14,9 +15,31 @@ type ShopPageClientProps = {
 
 const cardVariants = ["fold", "shadow", "thread"] as const;
 
+const VALID_CATEGORIES = new Set<CategorySlug>([
+  "cloth-earrings",
+  "fabric-necklaces",
+  "fabric-bracelets",
+  "fabric-rings",
+  "hair-accessories",
+  "jewellery-sets",
+  "embroidered-textile-jewellery",
+  "sustainable-fashion-accessories",
+]);
+
+function parseCategoryParam(value: string | null): CategorySlug[] {
+  if (!value) return [];
+  return value
+    .split(",")
+    .map((part) => part.trim())
+    .filter((part): part is CategorySlug => VALID_CATEGORIES.has(part as CategorySlug));
+}
+
 export function ShopPageClient({ products }: ShopPageClientProps) {
+  const searchParams = useSearchParams();
+  const initialCategories = parseCategoryParam(searchParams.get("category"));
+
   const [filters, setFilters] = useState<ShopFiltersState>({
-    categories: [],
+    categories: initialCategories,
     styles: [],
     priceRange: null,
   });

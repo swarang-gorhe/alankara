@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageCircle, Send, X } from "lucide-react";
+import { MessageCircle, Send, Sparkles, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { sendFaqChatMessage, AiApiError, type FaqChatMessage } from "@/lib/api/ai";
 import { cn } from "@/lib/utils";
@@ -8,11 +8,48 @@ import { cn } from "@/lib/utils";
 const SUGGESTED_QUESTIONS = [
   "How long does shipping take?",
   "What is your return policy?",
-  "How do I care for kundan jewellery?",
+  "How do I care for embroidered fabric pieces?",
   "Do you offer gift wrapping?",
 ];
 
+const OUT_OF_KB_MARKERS = ["i'm not sure", "hello@alankara.com"] as const;
+
 const SESSION_KEY = "alankara-faq-session";
+
+function isOutOfKnowledgeBase(content: string): boolean {
+  const lower = content.toLowerCase();
+  return OUT_OF_KB_MARKERS.every((marker) => lower.includes(marker));
+}
+
+type ChatBubbleProps = {
+  message: FaqChatMessage;
+};
+
+function ChatBubble({ message }: ChatBubbleProps) {
+  const isUser = message.role === "user";
+  const isFallback = !isUser && isOutOfKnowledgeBase(message.content);
+
+  return (
+    <div
+      className={cn(
+        "max-w-[92%] rounded-sm px-3 py-2.5 text-sm leading-relaxed",
+        isUser && "ml-auto bg-maroon text-ivory",
+        !isUser && !isFallback && "mr-auto border border-sage/40 bg-ivory text-ink",
+        isFallback &&
+          "mr-auto border border-champagne/50 bg-gradient-to-br from-linen to-cotton text-ink",
+      )}
+      aria-label={isUser ? "Your message" : isFallback ? "Assistant fallback reply" : "Assistant reply"}
+    >
+      {isFallback && (
+        <p className="mb-1.5 flex items-center gap-1.5 font-body text-[10px] uppercase tracking-widest text-olive">
+          <Sparkles className="h-3 w-3 text-champagne" aria-hidden="true" />
+          Outside our knowledge base
+        </p>
+      )}
+      {message.content}
+    </div>
+  );
+}
 
 export function FaqChatWidget() {
   const [open, setOpen] = useState(false);
@@ -35,7 +72,11 @@ export function FaqChatWidget() {
   }, []);
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    scrollRef.current?.scrollTo({
+      top: scrollRef.current.scrollHeight,
+      behavior: prefersReduced ? "auto" : "smooth",
+    });
   }, [messages, typing]);
 
   useEffect(() => {
@@ -51,19 +92,8 @@ export function FaqChatWidget() {
       }
     };
 
-    const onFocusIn = (event: FocusEvent) => {
-      if (!panelRef.current?.contains(event.target as Node)) {
-        inputRef.current?.focus();
-      }
-    };
-
     document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("focusin", onFocusIn);
-
-    return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      document.removeEventListener("focusin", onFocusIn);
-    };
+    return () => document.removeEventListener("keydown", onKeyDown);
   }, [open]);
 
   const sendMessage = useCallback(
@@ -104,32 +134,36 @@ export function FaqChatWidget() {
         onClick={() => setOpen((v) => !v)}
         className={cn(
           "fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full",
-          "border border-gold/40 bg-maroon text-cream-light shadow-lg transition-transform hover:scale-105",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-cream",
+          "border border-champagne/40 bg-maroon text-ivory shadow-luxury transition-transform motion-safe:hover:scale-105",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne focus-visible:ring-offset-2 focus-visible:ring-offset-linen",
         )}
         aria-label={open ? "Close FAQ chat" : "Open FAQ chat"}
         aria-expanded={open}
         aria-controls="faq-chat-panel"
       >
-        {open ? <X className="h-5 w-5" aria-hidden="true" /> : <MessageCircle className="h-6 w-6" aria-hidden="true" />}
+        {open ? (
+          <X className="h-5 w-5" aria-hidden="true" />
+        ) : (
+          <MessageCircle className="h-6 w-6" aria-hidden="true" />
+        )}
       </button>
 
       {open && (
         <div
           ref={panelRef}
           id="faq-chat-panel"
-          className="fixed bottom-24 right-6 z-50 flex w-[min(100vw-3rem,24rem)] flex-col overflow-hidden rounded-sm border border-gold/30 bg-cream-light shadow-2xl"
+          className="fixed bottom-24 right-6 z-50 flex w-[min(100vw-3rem,24rem)] flex-col overflow-hidden rounded-sm border border-sage/40 bg-ivory shadow-luxury-lg"
           role="dialog"
           aria-modal="true"
           aria-labelledby="faq-chat-title"
           aria-describedby="faq-chat-desc"
         >
-          <header className="border-b border-gold/20 bg-gradient-to-r from-maroon to-maroon-deep px-4 py-3 text-cream-light">
-            <p id="faq-chat-title" className="font-display text-sm tracking-wide">
+          <header className="border-b border-sage/30 bg-gradient-to-r from-linen via-ivory to-cotton px-4 py-3">
+            <p id="faq-chat-title" className="font-display text-sm tracking-wide text-maroon">
               Alankara Concierge
             </p>
-            <p id="faq-chat-desc" className="text-[10px] uppercase tracking-widest text-gold/80">
-              FAQ assistant
+            <p id="faq-chat-desc" className="font-body text-[10px] uppercase tracking-widest text-olive">
+              Answers from our FAQ knowledge base
             </p>
           </header>
 
@@ -143,8 +177,9 @@ export function FaqChatWidget() {
           >
             {messages.length === 0 && (
               <div className="space-y-3">
-                <p className="text-sm text-charcoal-muted">
-                  Ask about shipping, returns, care, or sizing — I answer from our knowledge base only.
+                <p className="font-body text-sm text-ink-muted">
+                  Ask about shipping, returns, fabric care, or sizing. I answer only from our
+                  published FAQ — for anything else, I&apos;ll connect you with our team.
                 </p>
                 <div className="flex flex-wrap gap-2" role="group" aria-label="Suggested questions">
                   {SUGGESTED_QUESTIONS.map((q) => (
@@ -152,7 +187,7 @@ export function FaqChatWidget() {
                       key={q}
                       type="button"
                       onClick={() => void sendMessage(q)}
-                      className="rounded-sm border border-gold/30 bg-cream px-2 py-1 text-left text-xs text-charcoal hover:border-gold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+                      className="rounded-sm border border-sage/40 bg-linen px-2.5 py-1.5 text-left font-body text-xs text-ink transition-colors hover:border-champagne hover:bg-ivory focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne"
                     >
                       {q}
                     </button>
@@ -162,41 +197,31 @@ export function FaqChatWidget() {
             )}
 
             {messages.map((msg, i) => (
-              <div
-                key={`${msg.role}-${i}`}
-                className={cn(
-                  "max-w-[90%] rounded-sm px-3 py-2 text-sm leading-relaxed",
-                  msg.role === "user"
-                    ? "ml-auto bg-maroon text-cream-light"
-                    : "mr-auto border border-gold/20 bg-cream text-charcoal",
-                )}
-                aria-label={msg.role === "user" ? "Your message" : "Assistant reply"}
-              >
-                {msg.content}
-              </div>
+              <ChatBubble key={`${msg.role}-${i}`} message={msg} />
             ))}
 
             {typing && (
               <div
-                className="mr-auto flex gap-1 rounded-sm border border-gold/20 bg-cream px-3 py-2"
+                className="mr-auto flex items-center gap-2 rounded-sm border border-sage/40 bg-linen px-3 py-2"
                 aria-label="Assistant is typing"
                 role="status"
               >
-                <span className="motion-reduce:animate-none h-1.5 w-1.5 animate-bounce rounded-full bg-gold [animation-delay:0ms]" />
-                <span className="motion-reduce:animate-none h-1.5 w-1.5 animate-bounce rounded-full bg-gold [animation-delay:150ms]" />
-                <span className="motion-reduce:animate-none h-1.5 w-1.5 animate-bounce rounded-full bg-gold [animation-delay:300ms]" />
+                <span className="sr-only">Assistant is typing</span>
+                <span className="motion-reduce:animate-none h-1.5 w-1.5 animate-bounce rounded-full bg-champagne [animation-delay:0ms]" />
+                <span className="motion-reduce:animate-none h-1.5 w-1.5 animate-bounce rounded-full bg-champagne [animation-delay:150ms]" />
+                <span className="motion-reduce:animate-none h-1.5 w-1.5 animate-bounce rounded-full bg-champagne [animation-delay:300ms]" />
               </div>
             )}
           </div>
 
           {error && (
-            <p className="px-4 pb-2 text-xs text-maroon" role="alert">
+            <p className="px-4 pb-2 font-body text-xs text-error" role="alert">
               {error}
             </p>
           )}
 
           <form
-            className="flex gap-2 border-t border-gold/20 p-3"
+            className="flex gap-2 border-t border-sage/30 bg-linen/50 p-3"
             onSubmit={(e) => {
               e.preventDefault();
               void sendMessage(input);
@@ -213,12 +238,12 @@ export function FaqChatWidget() {
               placeholder="Type your question…"
               disabled={loading}
               autoComplete="off"
-              className="flex-1 rounded-sm border border-gold/30 bg-cream px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold"
+              className="flex-1 rounded-sm border border-sage/40 bg-ivory px-3 py-2 font-body text-sm text-ink placeholder:text-ink-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne"
             />
             <button
               type="submit"
               disabled={loading || !input.trim()}
-              className="rounded-sm bg-maroon px-3 py-2 text-cream-light disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2"
+              className="rounded-sm bg-maroon px-3 py-2 text-ivory disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne focus-visible:ring-offset-2 focus-visible:ring-offset-linen"
               aria-label="Send message"
             >
               <Send className="h-4 w-4" aria-hidden="true" />

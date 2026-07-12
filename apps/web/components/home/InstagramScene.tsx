@@ -4,7 +4,7 @@ import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { cn } from "@/lib/utils";
 
 const instagramTiles = [
-  { id: 1, span: "col-span-2 row-span-2", label: "Bridal moment" },
+  { id: 1, span: "col-span-2 row-span-2", label: "Festival moment" },
   { id: 2, span: "col-span-1 row-span-1", label: "Atelier detail" },
   { id: 3, span: "col-span-1 row-span-1", label: "Pearl close-up" },
   { id: 4, span: "col-span-1 row-span-2", label: "Festival glow" },

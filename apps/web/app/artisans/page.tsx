@@ -8,7 +8,7 @@ import { createPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = createPageMetadata({
   title: "Artisans",
   description:
-    "Meet the master craftspeople behind Alankara — kundan setters, zari embroiderers, silversmiths, and more.",
+    "Meet the master craftspeople behind Alankara — zari embroiderers, block printers, silk thread weavers, and upcycled fabric innovators.",
   path: "/artisans",
 });
 
@@ -16,13 +16,13 @@ export default function ArtisansPage() {
   return (
     <div>
       <section className="mx-auto max-w-7xl px-6 py-16 md:py-24">
-        <p className="font-script text-xl italic text-gold md:text-2xl">Meet the crafters</p>
+        <p className="font-script text-xl italic text-champagne md:text-2xl">Meet the crafters</p>
         <h1 className="mt-4 max-w-3xl font-display text-4xl leading-tight text-maroon md:text-5xl">
           The artisan collective
         </h1>
-        <p className="mt-6 max-w-2xl text-lg text-charcoal-muted">
-          Alankara is a bridge between workshop floors and your jewellery box. Each artisan
-          brings decades of technique — and a voice we are proud to amplify.
+        <p className="mt-6 max-w-2xl text-lg text-ink-muted">
+          Alankara is a bridge between workshop floors and your wardrobe. Each artisan brings
+          decades of textile technique — and a voice we are proud to amplify.
         </p>
       </section>
 
@@ -38,7 +38,7 @@ export default function ArtisansPage() {
               <div
                 className={`md:col-span-5 ${index % 2 === 1 ? "md:order-2" : ""}`}
               >
-                <div className="relative aspect-[4/5] overflow-hidden rounded-sm border border-gold/25 bg-gradient-to-br from-cream via-cream-light to-[#e8d4b0]">
+                <div className="relative aspect-[4/5] overflow-hidden rounded-sm border border-sage/30 bg-gradient-to-br from-linen via-ivory to-cotton">
                   <div className="absolute inset-0 flex items-center justify-center p-8">
                     <div className="text-center">
                       <p className="font-display text-5xl text-maroon/20 md:text-6xl">
@@ -47,7 +47,7 @@ export default function ArtisansPage() {
                           .map((n) => n[0])
                           .join("")}
                       </p>
-                      <span className="mt-4 inline-block rounded-sm border border-gold/40 bg-cream/80 px-2 py-0.5 font-body text-[10px] uppercase tracking-widest text-charcoal-muted">
+                      <span className="mt-4 inline-block rounded-sm border border-champagne/40 bg-ivory/80 px-2 py-0.5 font-body text-[10px] uppercase tracking-widest text-ink-muted">
                         portrait pending
                       </span>
                     </div>
@@ -58,18 +58,18 @@ export default function ArtisansPage() {
               <div
                 className={`flex flex-col justify-center md:col-span-7 ${index % 2 === 1 ? "md:order-1" : ""}`}
               >
-                <p className="text-xs uppercase tracking-widest text-gold">
+                <p className="font-body text-xs uppercase tracking-widest text-champagne">
                   {artisan.location} · {artisan.yearsExperience} years
                 </p>
                 <h2 className="mt-2 font-display text-3xl text-maroon md:text-4xl">
                   {artisan.name}
                 </h2>
-                <p className="mt-1 text-sm italic text-charcoal-muted">{artisan.title}</p>
+                <p className="mt-1 text-sm italic text-ink-muted">{artisan.title}</p>
 
-                <p className="mt-6 leading-relaxed text-charcoal">{artisan.bio}</p>
+                <p className="mt-6 leading-relaxed text-ink">{artisan.bio}</p>
 
-                <blockquote className="mt-6 border-l-2 border-gold pl-4">
-                  <p className="font-script text-lg italic text-gold">
+                <blockquote className="mt-6 border-l-2 border-champagne pl-4">
+                  <p className="font-script text-lg italic text-champagne">
                     &ldquo;{artisan.quote}&rdquo;
                   </p>
                 </blockquote>
@@ -78,7 +78,7 @@ export default function ArtisansPage() {
                   {artisan.specialty.map((skill) => (
                     <span
                       key={skill}
-                      className="rounded-sm border border-gold/30 bg-cream-light px-3 py-1 text-xs text-charcoal-muted"
+                      className="rounded-sm border border-sage/40 bg-linen px-3 py-1 text-xs text-ink-muted"
                     >
                       {skill}
                     </span>
@@ -91,7 +91,7 @@ export default function ArtisansPage() {
 
         <div className="mt-20 text-center">
           <SectionDivider />
-          <p className="mt-12 font-script text-lg italic text-gold">
+          <p className="mt-12 font-script text-lg italic text-champagne">
             Every piece carries their signature
           </p>
           <Button asChild className="mt-6">

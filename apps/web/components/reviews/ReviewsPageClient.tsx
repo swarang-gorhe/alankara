@@ -14,12 +14,12 @@ import { cn } from "@/lib/utils";
 
 const CATEGORY_OPTIONS: { slug: CategorySlug | "all"; label: string }[] = [
   { slug: "all", label: "All" },
-  { slug: "earrings", label: "Earrings" },
-  { slug: "necklaces", label: "Necklaces" },
-  { slug: "bracelets", label: "Bracelets" },
+  { slug: "cloth-earrings", label: "Earrings" },
+  { slug: "fabric-necklaces", label: "Necklaces" },
+  { slug: "fabric-bracelets", label: "Bracelets" },
   { slug: "hair-accessories", label: "Hair" },
-  { slug: "sets", label: "Sets" },
-  { slug: "embroidered-textile", label: "Textile" },
+  { slug: "jewellery-sets", label: "Sets" },
+  { slug: "embroidered-textile-jewellery", label: "Textile" },
 ];
 
 const RATING_OPTIONS = [
@@ -59,12 +59,12 @@ export function ReviewsPageClient() {
   return (
     <div>
       <section className="mx-auto max-w-7xl px-6 py-16 md:py-24">
-        <p className="font-script text-xl italic text-gold md:text-2xl">Voices of Alankara</p>
+        <p className="font-script text-xl italic text-champagne md:text-2xl">Voices of Alankara</p>
         <h1 className="mt-4 max-w-3xl font-display text-4xl leading-tight text-maroon md:text-5xl">
           Stories from those who wear our craft
         </h1>
-        <p className="mt-6 max-w-2xl text-lg text-charcoal-muted">
-          Real reviews from real moments — weddings, festivals, quiet Tuesdays dressed up.
+        <p className="mt-6 max-w-2xl text-lg text-ink-muted">
+          Real reviews from real moments — festivals, gatherings, quiet Tuesdays dressed up.
           Every word verified; every piece linked to its story.
         </p>
       </section>
