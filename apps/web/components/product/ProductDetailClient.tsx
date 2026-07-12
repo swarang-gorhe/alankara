@@ -1,16 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ProductCard } from "@/components/product/ProductCard";
-import { ProductPlaceholder } from "@/components/product/ProductPlaceholder";
-import { ReviewCard } from "@/components/reviews/ReviewCard";
+import { FabricStitchReveal } from "@/components/product/FabricStitchReveal";
+import { EditorialProductCard } from "@/components/shop/EditorialProductCard";
 import { useCart } from "@/components/providers/CartProvider";
-import { SectionDivider } from "@/components/ui/SectionDivider";
 import { Button } from "@/components/ui/button";
+import { Chip } from "@/components/ui/chip";
+import { FabricTexture } from "@/components/ui/FabricTexture";
+import { SectionDivider } from "@/components/ui/SectionDivider";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { fetchProductReviewSummary } from "@/lib/api/ai";
 import { formatPrice, MATERIAL_LABELS } from "@/lib/fixtures";
 import type { ProductFixture, ReviewFixture } from "@/lib/fixtures/types";
+import { gsap, registerGsap } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
 
 type ProductDetailClientProps = {
@@ -19,10 +22,28 @@ type ProductDetailClientProps = {
   productReviews: ReviewFixture[];
 };
 
+function StorySection({
+  id,
+  title,
+  children,
+  className,
+}: {
+  id: string;
+  title: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <section id={id} className={cn("mx-auto max-w-4xl px-6 py-16 md:py-20", className)}>
+      <p className="font-body text-xs uppercase tracking-[0.3em] text-olive">{title}</p>
+      <div className="mt-6">{children}</div>
+    </section>
+  );
+}
+
 export function ProductDetailClient({
   product,
   relatedProducts,
-  productReviews,
 }: ProductDetailClientProps) {
   const { addToCart } = useCart();
   const [selectedVariantId, setSelectedVariantId] = useState(product.variants[0]?.id ?? "");
@@ -30,6 +51,9 @@ export function ProductDetailClient({
   const [addError, setAddError] = useState<string | null>(null);
   const [added, setAdded] = useState(false);
   const [reviewSummary, setReviewSummary] = useState<string | null>(null);
+  const sectionsRef = useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
+
   const selectedVariant =
     product.variants.find((v) => v.id === selectedVariantId) ?? product.variants[0];
   const inStock = (selectedVariant?.stock ?? 0) > 0;
@@ -40,6 +64,34 @@ export function ProductDetailClient({
       .then((data) => setReviewSummary(data?.summary ?? null))
       .catch(() => setReviewSummary(null));
   }, [product.slug]);
+
+  useEffect(() => {
+    registerGsap();
+    if (prefersReducedMotion || !sectionsRef.current) return;
+
+    const sections = sectionsRef.current.querySelectorAll("[data-story-section]");
+    const ctx = gsap.context(() => {
+      sections.forEach((section) => {
+        gsap.fromTo(
+          section,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.9,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: section,
+              start: "top 85%",
+              toggleActions: "play none none reverse",
+            },
+          },
+        );
+      });
+    }, sectionsRef);
+
+    return () => ctx.revert();
+  }, [prefersReducedMotion]);
 
   const handleAddToCart = async () => {
     if (!selectedVariant || !inStock) return;
@@ -57,58 +109,45 @@ export function ProductDetailClient({
   };
 
   return (
-    <div>
-      {/* Hero */}
-      <section className="mx-auto max-w-7xl px-6 py-12 md:py-16">
-        <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
-          <div className="overflow-hidden rounded-sm border border-gold/20">
-            <ProductPlaceholder
-              name={product.name}
-              image={image}
-              aspectRatio="portrait"
-            />
-          </div>
+    <div className="relative">
+      <FabricTexture id="product" className="fixed inset-0" opacity={0.03} />
+
+      {/* Hero + purchase */}
+      <section className="relative mx-auto max-w-7xl px-6 py-12 md:py-20">
+        <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
+          <FabricStitchReveal name={product.name} image={image} className="lg:min-h-[520px]" />
 
           <div className="flex flex-col justify-center">
-            <p className="text-xs uppercase tracking-widest text-gold">
-              {product.categorySlug.replace("-", " ")}
+            <p className="font-body text-xs uppercase tracking-widest text-champagne">
+              {product.categorySlug.replace(/-/g, " ")}
             </p>
-            <h1 className="mt-2 font-display text-4xl text-maroon md:text-5xl">
-              {product.name}
-            </h1>
-            <p className="mt-4 text-lg text-charcoal-muted">{product.shortDescription}</p>
+            <h1 className="mt-3 font-display text-4xl text-maroon md:text-5xl">{product.name}</h1>
+            <p className="mt-4 font-body text-lg text-ink-muted">{product.shortDescription}</p>
             <p className="mt-6 font-display text-2xl text-maroon">
               {selectedVariant && formatPrice(selectedVariant.price.amount)}
             </p>
 
-            {/* Variant selector — enabled when stock available */}
             {product.variants.length > 0 && (
               <div className="mt-8">
-                <p className="mb-3 text-xs uppercase tracking-widest text-charcoal-muted">
+                <p className="mb-3 font-body text-xs uppercase tracking-widest text-ink-muted">
                   {product.variants.length > 1 ? "Select variant" : "Variant"}
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {product.variants.map((variant) => {
                     const variantInStock = variant.stock > 0;
                     return (
-                      <button
+                      <Chip
                         key={variant.id}
-                        type="button"
+                        variant={selectedVariantId === variant.id ? "active" : "default"}
                         disabled={!variantInStock}
                         onClick={() => setSelectedVariantId(variant.id)}
-                        className={cn(
-                          "rounded-sm border px-4 py-2 text-sm transition-colors",
-                          !variantInStock && "cursor-not-allowed opacity-40",
-                          selectedVariantId === variant.id
-                            ? "border-maroon bg-maroon text-cream-light"
-                            : "border-gold/30 bg-cream-light text-charcoal hover:border-gold",
-                        )}
+                        data-magnetic
                       >
                         {[variant.material, variant.size, variant.color]
                           .filter(Boolean)
                           .join(" · ")}
                         {!variantInStock && " (out of stock)"}
-                      </button>
+                      </Chip>
                     );
                   })}
                 </div>
@@ -119,18 +158,23 @@ export function ProductDetailClient({
               <Button
                 disabled={!inStock || adding}
                 onClick={() => void handleAddToCart()}
+                data-magnetic
               >
-                {adding ? "Adding…" : added ? "Added to cart" : inStock ? "Add to cart" : "Out of stock"}
+                {adding
+                  ? "Adding…"
+                  : added
+                    ? "Added to cart"
+                    : inStock
+                      ? "Add to cart"
+                      : "Out of stock"}
               </Button>
               <Button variant="outline" disabled title="Available when wishlist is wired">
                 Save to wishlist
               </Button>
             </div>
-            {addError && (
-              <p className="mt-3 text-xs text-maroon">{addError}</p>
-            )}
+            {addError && <p className="mt-3 font-body text-xs text-error">{addError}</p>}
             {added && (
-              <p className="mt-3 text-xs text-gold">
+              <p className="mt-3 font-body text-xs text-champagne">
                 <Link href="/cart" className="underline underline-offset-2">
                   View cart →
                 </Link>
@@ -140,138 +184,127 @@ export function ProductDetailClient({
         </div>
       </section>
 
-      <SectionDivider />
+      <div ref={sectionsRef}>
+        <SectionDivider />
 
-      {/* Story */}
-      <section className="mx-auto max-w-3xl px-6 py-12">
-        <h2 className="font-display text-3xl text-maroon">The story</h2>
-        <p className="mt-6 text-lg leading-relaxed text-charcoal">{product.description}</p>
-      </section>
+        <StorySection id="story" title="The story">
+          <div data-story-section>
+            <p className="font-body text-lg leading-relaxed text-ink md:text-xl">
+              {product.description}
+            </p>
+          </div>
+        </StorySection>
 
-      <SectionDivider />
+        <SectionDivider />
 
-      {/* Materials */}
-      <section className="mx-auto max-w-7xl px-6 py-12">
-        <div className="grid gap-10 md:grid-cols-2">
-          <div>
-            <h2 className="font-display text-3xl text-maroon">Materials</h2>
-            <ul className="mt-6 space-y-3">
+        <StorySection id="materials" title="Materials">
+          <div data-story-section className="paper-card rounded-sm border border-sage/25 p-8">
+            <ul className="space-y-3">
               {product.materials?.map((material) => (
                 <li
                   key={material}
-                  className="flex items-center gap-3 text-charcoal before:h-1.5 before:w-1.5 before:rounded-full before:bg-gold-bright"
+                  className="flex items-center gap-3 font-body text-ink before:h-1.5 before:w-1.5 before:rounded-full before:bg-champagne"
                 >
                   {material}
                 </li>
               ))}
             </ul>
-            <p className="mt-4 text-sm text-charcoal-muted">
+            <p className="mt-6 font-body text-sm text-ink-muted">
               Primary: {MATERIAL_LABELS[product.primaryMaterial]}
             </p>
           </div>
-          <div>
-            <h2 className="font-display text-3xl text-maroon">Care</h2>
-            <p className="mt-6 leading-relaxed text-charcoal-muted">
-              {product.careInstructions}
-            </p>
-          </div>
-        </div>
-      </section>
+        </StorySection>
 
-      <SectionDivider />
+        <SectionDivider />
 
-      {/* Occasion */}
-      <section className="mx-auto max-w-7xl px-6 py-12">
-        <h2 className="font-display text-3xl text-maroon">Worn for</h2>
-        <div className="mt-8 flex flex-wrap gap-3">
-          {product.occasion.map((occ) => (
-            <span
-              key={occ}
-              className="rounded-sm border border-gold/30 bg-olive-linen/50 px-4 py-2 font-script text-lg italic text-maroon"
-            >
-              {occ}
-            </span>
-          ))}
-        </div>
-      </section>
-
-      <SectionDivider />
-
-      {/* Process */}
-      <section className="mx-auto max-w-7xl px-6 py-12">
-        <h2 className="font-display text-3xl text-maroon">The making</h2>
-        <div className="mt-10 grid gap-8 md:grid-cols-3">
-          {product.process.map((step, index) => (
-            <div
-              key={step.title}
-              className="relative rounded-sm border border-gold/20 bg-cream-light p-6"
-            >
-              <span className="font-display text-4xl text-gold/30">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <h3 className="mt-2 font-display text-xl text-maroon">{step.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-charcoal-muted">
-                {step.description}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <SectionDivider />
-
-      {/* Reviews shell */}
-      <section className="mx-auto max-w-7xl px-6 py-12">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h2 className="font-display text-3xl text-maroon">Customer voices</h2>
-            <p className="mt-2 text-sm text-charcoal-muted">
-              {productReviews.length}{" "}
-              {productReviews.length === 1 ? "review" : "reviews"}
-              {reviewSummary ? " · AI summary below" : ""}
-            </p>
-          </div>
-          <Link
-            href="/reviews"
-            className="text-xs uppercase tracking-widest text-gold hover:text-gold-bright"
-          >
-            All reviews →
-          </Link>
-        </div>
-
-        {productReviews.length === 0 ? (
-          <div className="mt-8 rounded-sm border border-gold/20 bg-cream-light px-8 py-12 text-center">
-            <p className="text-charcoal-muted">No reviews yet for this piece.</p>
-          </div>
-        ) : (
-          <div className="mt-8 grid gap-6 md:grid-cols-2">
-            {productReviews.slice(0, 4).map((review) => (
-              <ReviewCard key={review.id} review={review} />
+        <StorySection id="craft" title="How we craft">
+          <div data-story-section className="grid gap-6 md:grid-cols-3">
+            {product.process.map((step, index) => (
+              <article
+                key={step.title}
+                className="rounded-sm border border-sage/25 bg-ivory p-6"
+              >
+                <span className="font-display text-4xl text-champagne/30">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3 className="mt-2 font-display text-xl text-maroon">{step.title}</h3>
+                <p className="mt-3 font-body text-sm text-ink-muted leading-relaxed">
+                  {step.description}
+                </p>
+              </article>
             ))}
           </div>
-        )}
+        </StorySection>
 
-        {reviewSummary ? (
-          <div className="mt-8 rounded-sm border border-gold/30 bg-olive-linen/40 px-6 py-5">
-            <p className="text-[10px] uppercase tracking-widest text-gold">AI review summary</p>
-            <p className="mt-2 text-sm leading-relaxed text-charcoal">{reviewSummary}</p>
-          </div>
-        ) : (
-          <div className="mt-8 rounded-sm border border-dashed border-gold/30 bg-cream-light/50 px-6 py-4 text-center text-sm text-charcoal-muted">
-            Per-product AI summary will appear once generated in admin.
-          </div>
-        )}
-      </section>
+        <SectionDivider />
 
-      {/* Related products */}
+        <StorySection id="comfort" title="Comfort">
+          <div data-story-section>
+            <p className="font-body text-lg leading-relaxed text-ink-muted">
+              {product.comfort ??
+                "Lightweight fabric construction with soft backings and adjustable closures — designed for hours of comfortable wear."}
+            </p>
+          </div>
+        </StorySection>
+
+        <SectionDivider />
+
+        <StorySection id="perfect-for" title="Perfect for">
+          <div data-story-section className="flex flex-wrap gap-3">
+            {product.occasion.map((occ) => (
+              <Chip key={occ} variant="outline" className="pointer-events-none">
+                {occ}
+              </Chip>
+            ))}
+          </div>
+        </StorySection>
+
+        <SectionDivider />
+
+        <StorySection id="packaging" title="Packaging">
+          <div data-story-section className="paper-card rounded-sm border border-sage/25 p-8">
+            <p className="font-body text-ink-muted leading-relaxed">
+              {product.packaging ??
+                "Each piece arrives wrapped in tissue, nestled in a hand-stitched cotton pouch you can reuse for travel storage."}
+            </p>
+          </div>
+        </StorySection>
+
+        <SectionDivider />
+
+        <StorySection id="care" title="Care">
+          <div data-story-section>
+            <p className="font-body text-ink-muted leading-relaxed">{product.careInstructions}</p>
+          </div>
+        </StorySection>
+
+        {reviewSummary && (
+          <>
+            <SectionDivider />
+            <StorySection id="reviews" title="What wearers say">
+              <div data-story-section className="rounded-sm border border-champagne/30 bg-cotton/50 p-6">
+                <p className="font-body text-[10px] uppercase tracking-widest text-champagne">
+                  AI review summary
+                </p>
+                <p className="mt-2 font-body text-sm leading-relaxed text-ink">{reviewSummary}</p>
+              </div>
+            </StorySection>
+          </>
+        )}
+      </div>
+
       {relatedProducts.length > 0 && (
         <>
           <SectionDivider />
           <section className="mx-auto max-w-7xl px-6 pb-24 pt-12">
-            <h2 className="font-display text-3xl text-maroon">You may also cherish</h2>
+            <h2 className="font-display text-3xl text-maroon">Related collection</h2>
             <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {relatedProducts.map((related) => (
-                <ProductCard key={related.id} product={related} />
+              {relatedProducts.map((related, index) => (
+                <EditorialProductCard
+                  key={related.id}
+                  product={related}
+                  variant={index % 3 === 0 ? "fold" : index % 3 === 1 ? "shadow" : "thread"}
+                />
               ))}
             </div>
           </section>

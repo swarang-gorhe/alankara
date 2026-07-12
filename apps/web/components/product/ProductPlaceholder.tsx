@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { WovenTexture } from "@/components/ui/WovenTexture";
+import { FabricTexture } from "@/components/ui/FabricTexture";
 
 type ProductPlaceholderProps = {
   name: string;
@@ -39,14 +39,13 @@ export function ProductPlaceholder({
   return (
     <div
       className={cn(
-        "relative overflow-hidden bg-gradient-to-br from-cream via-cream-light to-[#e8d4b0]",
+        "relative overflow-hidden bg-gradient-to-br from-linen via-ivory to-cotton",
         aspectClasses[aspectRatio],
         className,
       )}
     >
-      <WovenTexture opacity={0.12} />
+      <FabricTexture id={`ph-${name.slice(0, 8)}`} opacity={0.08} />
 
-      {/* Medallion watermark */}
       <div className="absolute inset-0 flex items-center justify-center" aria-hidden="true">
         <Image
           src="/brand/logo.svg"
@@ -57,15 +56,13 @@ export function ProductPlaceholder({
         />
       </div>
 
-      {/* Serif product name */}
       <div className="absolute inset-0 flex items-center justify-center p-6">
         <p className="text-center font-display text-lg leading-snug text-maroon/70 md:text-xl">
           {name}
         </p>
       </div>
 
-      {/* Dev badge */}
-      <span className="absolute bottom-3 right-3 rounded-sm border border-gold/40 bg-cream/80 px-2 py-0.5 font-body text-[10px] uppercase tracking-widest text-charcoal-muted backdrop-blur-sm">
+      <span className="absolute bottom-3 right-3 rounded-sm border border-champagne/40 bg-ivory/80 px-2 py-0.5 font-body text-[10px] uppercase tracking-widest text-ink-muted backdrop-blur-sm">
         photo pending
       </span>
     </div>
