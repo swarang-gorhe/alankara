@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Playfair_Display, Source_Sans_3 } from "next/font/google";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
+import { CartProvider } from "@/components/providers/CartProvider";
 import { LenisProvider } from "@/components/providers/LenisProvider";
 import { LuxuryCursorProvider } from "@/components/providers/LuxuryCursorProvider";
 import "./globals.css";
@@ -45,11 +46,13 @@ export default function RootLayout({
       <body className="min-h-screen bg-cream font-body text-charcoal antialiased">
         <LenisProvider>
           <LuxuryCursorProvider>
-            <div className="flex min-h-screen flex-col">
-              <Header />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
+            <CartProvider>
+              <div className="flex min-h-screen flex-col">
+                <Header />
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </div>
+            </CartProvider>
           </LuxuryCursorProvider>
         </LenisProvider>
       </body>

@@ -27,9 +27,14 @@ def seeded_database(database_url: str) -> Generator[None, None, None]:
 
     from app.database import engine
 
+    api_root = os.path.dirname(os.path.dirname(__file__))
+    alembic_bin = os.path.join(api_root, ".venv", "bin", "alembic")
+    if not os.path.isfile(alembic_bin):
+        alembic_bin = "alembic"
+
     result = subprocess.run(
-        ["alembic", "upgrade", "head"],
-        cwd=os.path.dirname(os.path.dirname(__file__)),
+        [alembic_bin, "upgrade", "head"],
+        cwd=api_root,
         env={**os.environ, "DATABASE_URL": database_url},
         capture_output=True,
         text=True,

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ProductCard } from "@/components/product/ProductCard";
 import { ProductPlaceholder } from "@/components/product/ProductPlaceholder";
 import { ReviewCard } from "@/components/reviews/ReviewCard";
+import { useCart } from "@/components/providers/CartProvider";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { Button } from "@/components/ui/button";
 import { formatPrice, MATERIAL_LABELS } from "@/lib/fixtures";
@@ -22,10 +23,30 @@ export function ProductDetailClient({
   relatedProducts,
   productReviews,
 }: ProductDetailClientProps) {
+  const { addToCart } = useCart();
   const [selectedVariantId, setSelectedVariantId] = useState(product.variants[0]?.id ?? "");
+  const [adding, setAdding] = useState(false);
+  const [addError, setAddError] = useState<string | null>(null);
+  const [added, setAdded] = useState(false);
   const selectedVariant =
     product.variants.find((v) => v.id === selectedVariantId) ?? product.variants[0];
+  const inStock = (selectedVariant?.stock ?? 0) > 0;
   const image = product.images[0];
+
+  const handleAddToCart = async () => {
+    if (!selectedVariant || !inStock) return;
+    setAdding(true);
+    setAddError(null);
+    try {
+      await addToCart(selectedVariant.id, 1);
+      setAdded(true);
+      setTimeout(() => setAdded(false), 2500);
+    } catch (err) {
+      setAddError(err instanceof Error ? err.message : "Could not add to cart");
+    } finally {
+      setAdding(false);
+    }
+  };
 
   return (
     <div>
@@ -52,45 +73,61 @@ export function ProductDetailClient({
               {selectedVariant && formatPrice(selectedVariant.price.amount)}
             </p>
 
-            {/* Variants UI shell — disabled until Phase 4 API */}
-            {product.variants.length > 1 && (
+            {/* Variant selector — enabled when stock available */}
+            {product.variants.length > 0 && (
               <div className="mt-8">
                 <p className="mb-3 text-xs uppercase tracking-widest text-charcoal-muted">
-                  Select variant
+                  {product.variants.length > 1 ? "Select variant" : "Variant"}
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {product.variants.map((variant) => (
-                    <button
-                      key={variant.id}
-                      type="button"
-                      onClick={() => setSelectedVariantId(variant.id)}
-                      className={cn(
-                        "rounded-sm border px-4 py-2 text-sm transition-colors",
-                        selectedVariantId === variant.id
-                          ? "border-maroon bg-maroon text-cream-light"
-                          : "border-gold/30 bg-cream-light text-charcoal hover:border-gold",
-                      )}
-                    >
-                      {[variant.material, variant.size, variant.color]
-                        .filter(Boolean)
-                        .join(" · ")}
-                    </button>
-                  ))}
+                  {product.variants.map((variant) => {
+                    const variantInStock = variant.stock > 0;
+                    return (
+                      <button
+                        key={variant.id}
+                        type="button"
+                        disabled={!variantInStock}
+                        onClick={() => setSelectedVariantId(variant.id)}
+                        className={cn(
+                          "rounded-sm border px-4 py-2 text-sm transition-colors",
+                          !variantInStock && "cursor-not-allowed opacity-40",
+                          selectedVariantId === variant.id
+                            ? "border-maroon bg-maroon text-cream-light"
+                            : "border-gold/30 bg-cream-light text-charcoal hover:border-gold",
+                        )}
+                      >
+                        {[variant.material, variant.size, variant.color]
+                          .filter(Boolean)
+                          .join(" · ")}
+                        {!variantInStock && " (out of stock)"}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button disabled title="Available when cart is wired in Phase 5">
-                Add to cart
+              <Button
+                disabled={!inStock || adding}
+                onClick={() => void handleAddToCart()}
+              >
+                {adding ? "Adding…" : added ? "Added to cart" : inStock ? "Add to cart" : "Out of stock"}
               </Button>
               <Button variant="outline" disabled title="Available when wishlist is wired">
                 Save to wishlist
               </Button>
             </div>
-            <p className="mt-3 text-xs text-charcoal-muted">
-              Cart &amp; checkout arrive in Phase 5 · Variant stock syncs with API in Phase 4
-            </p>
+            {addError && (
+              <p className="mt-3 text-xs text-maroon">{addError}</p>
+            )}
+            {added && (
+              <p className="mt-3 text-xs text-gold">
+                <Link href="/cart" className="underline underline-offset-2">
+                  View cart →
+                </Link>
+              </p>
+            )}
           </div>
         </div>
       </section>
