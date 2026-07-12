@@ -4,7 +4,23 @@ import type {
   ReviewFixture,
 } from "@/lib/fixtures/types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+const LOCAL_DEV_API_URL = "http://localhost:8000";
+
+function resolveApiUrl(): string {
+  const configured = process.env.NEXT_PUBLIC_API_URL?.trim();
+  if (configured && configured !== "undefined" && configured !== "null") {
+    return configured.replace(/\/$/, "");
+  }
+
+  // On Vercel, avoid defaulting to loopback — it triggers CORS/private-network errors in the browser.
+  if (process.env.VERCEL) {
+    return "";
+  }
+
+  return LOCAL_DEV_API_URL;
+}
+
+const API_URL = resolveApiUrl();
 
 type Paginated<T> = {
   items: T[];
@@ -25,6 +41,10 @@ export class ApiError extends Error {
 }
 
 async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  if (!API_URL) {
+    throw new ApiError("API URL is not configured (NEXT_PUBLIC_API_URL is unset)", 503);
+  }
+
   const res = await fetch(`${API_URL}${path}`, {
     ...init,
     headers: {

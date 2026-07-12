@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import { AnimatedLogo } from "@/components/brand/AnimatedLogo";
+import { ClientErrorBoundary } from "@/components/ui/ClientErrorBoundary";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useIsTouchDevice } from "@/hooks/useIsTouchDevice";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
@@ -70,7 +71,9 @@ export function WelcomeScene() {
       {!show3D && <WelcomeHeroFallback />}
 
       {show3D && (
-        <WelcomeHero3D className="absolute inset-0 h-full w-full opacity-90" />
+        <ClientErrorBoundary fallback={<WelcomeHeroFallback />}>
+          <WelcomeHero3D className="absolute inset-0 h-full w-full opacity-90" />
+        </ClientErrorBoundary>
       )}
 
       <div

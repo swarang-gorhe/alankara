@@ -64,6 +64,10 @@ export type CheckoutResponse = {
 };
 
 async function cartFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  if (!API_URL) {
+    throw new Error("Cart API is not configured (NEXT_PUBLIC_API_URL is unset)");
+  }
+
   const res = await fetch(`${API_URL}${path}`, {
     ...init,
     credentials: "include",

@@ -28,9 +28,29 @@ is backed up to `_fastapi_app/` during the Vercel build only — Railway deploym
 
 ### Environment variables (Vercel)
 
+Set these for **Production** and **Preview** (Preview inherits Production by default unless overridden):
+
+| Variable | Example | Notes |
+|----------|---------|-------|
+| `NEXT_PUBLIC_API_URL` | `https://your-api.up.railway.app` | Railway FastAPI URL. If unset on Vercel, cart/API calls are skipped instead of hitting `localhost`. |
+| `NEXT_PUBLIC_SITE_URL` | `https://alankara-xi.vercel.app` | Must include `https://`. Falls back to `VERCEL_URL` on preview when unset. |
+
+Optional (Phase 8 Supabase auth):
+
 | Variable | Example |
 |----------|---------|
-| `NEXT_PUBLIC_API_URL` | Railway API URL |
-| `NEXT_PUBLIC_SITE_URL` | `https://alankara-xi.vercel.app` (must include `https://`) |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key |
+| `NEXT_PUBLIC_AUTH_PROVIDER` | `jwt` (dev) or `supabase` (prod) |
 
 `NEXT_PUBLIC_SITE_URL` without a protocol (e.g. `alankara-xi.vercel.app`) previously crashed metadata at runtime; `lib/seo/metadata.ts` now normalizes and falls back safely.
+
+### Client crash: React Three Fiber + React 19
+
+If the homepage shows “Application error: a client-side exception has occurred”, check the console for:
+
+```
+Cannot read properties of undefined (reading 'ReactCurrentBatchConfig')
+```
+
+That was caused by `@react-three/fiber@8` with React 19 / Next.js 15. The fix is `@react-three/fiber@^9` + `@react-three/drei@^10` (see `apps/web/package.json`).
