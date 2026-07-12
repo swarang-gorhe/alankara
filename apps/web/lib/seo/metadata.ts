@@ -4,8 +4,39 @@ const SITE_NAME = "Alankara";
 const DEFAULT_DESCRIPTION =
   "Luxury handcrafted jewellery and adornments. Artisan-made pieces for life's precious moments.";
 
+const DEFAULT_SITE_URL = "https://alankara.com";
+
+function normalizeSiteUrl(candidate: string | undefined): string | null {
+  const trimmed = candidate?.trim();
+  if (!trimmed) {
+    return null;
+  }
+
+  const withProtocol = /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+
+  try {
+    const parsed = new URL(withProtocol);
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+      return null;
+    }
+    return parsed.origin;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Canonical site origin for SEO metadata, sitemap, and robots.
+ * Falls back to VERCEL_URL on preview deployments when NEXT_PUBLIC_SITE_URL is unset or invalid.
+ */
 export function getSiteUrl(): string {
-  return process.env.NEXT_PUBLIC_SITE_URL ?? "https://alankara.com";
+  return (
+    normalizeSiteUrl(process.env.NEXT_PUBLIC_SITE_URL) ??
+    normalizeSiteUrl(
+      process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
+    ) ??
+    DEFAULT_SITE_URL
+  );
 }
 
 type PageMetadataOptions = {
