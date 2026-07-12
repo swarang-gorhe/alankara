@@ -1,0 +1,57 @@
+[
+  {
+    "id": "art-001",
+    "slug": "lakshmi-devi",
+    "name": "Lakshmi Devi",
+    "title": "Master Kundan Artisan",
+    "location": "Jaipur, Rajasthan",
+    "bio": "Lakshmi learned kundan setting from her mother at age twelve, in a workshop tucked behind the old city walls. Thirty years later, her hands still set each stone with the same unhurried precision — she says the lac must breathe before the foil is laid.",
+    "specialty": ["Kundan setting", "Jhumka construction", "Stone matching"],
+    "yearsExperience": 32,
+    "quote": "A stone knows when it has found its place. My job is to listen."
+  },
+  {
+    "id": "art-002",
+    "slug": "farida-bano",
+    "name": "Farida Bano",
+    "title": "Zari & Textile Embroiderer",
+    "location": "Lucknow, Uttar Pradesh",
+    "bio": "Farida specialises in chikankari-inspired zari work for our clothing jewellery line. She works from a sunlit room where silk is stretched on frames and the only sound is her needle passing through cloth — a rhythm she has kept for twenty-five years.",
+    "specialty": ["Zari embroidery", "Silk mounting", "Brooch finishing"],
+    "yearsExperience": 25,
+    "quote": "Thread carries intention. I embroider as if the wearer is in the room."
+  },
+  {
+    "id": "art-003",
+    "slug": "rajesh-kumar",
+    "name": "Rajesh Kumar",
+    "title": "Silversmith & Bangle Maker",
+    "location": "Kolkata, West Bengal",
+    "bio": "Rajesh trained as a silversmith in the traditional workshops of north Kolkata. He hammers each bangle by hand, believing that machine uniformity strips jewellery of soul. His hammer marks are signatures, not flaws.",
+    "specialty": ["Silver forging", "Hammer texture", "Bangle sizing"],
+    "yearsExperience": 18,
+    "quote": "Metal remembers every strike. I strike with purpose."
+  },
+  {
+    "id": "art-004",
+    "slug": "meenakshi-iyer",
+    "name": "Meenakshi Iyer",
+    "title": "Pearl Stringer & Necklace Designer",
+    "location": "Madurai, Tamil Nadu",
+    "bio": "Meenakshi comes from a family of pearl merchants and stringers. She matches pearls by lustre in natural morning light — never under lamps — and knots silk thread between each gem so a broken strand never loses more than one pearl.",
+    "specialty": ["Pearl grading", "Silk knotting", "Necklace draping"],
+    "yearsExperience": 22,
+    "quote": "A necklace should fall like water. Pearls must agree with each other first."
+  },
+  {
+    "id": "art-005",
+    "slug": "hassan-qureshi",
+    "name": "Hassan Qureshi",
+    "title": "Enamel Artist",
+    "location": "Hyderabad, Telangana",
+    "bio": "Hassan paints enamel with brushes made from squirrel hair, mixing pigments the way his grandfather taught him. His gulmohar blooms on our kada bands are fired twice — the second firing deepens the red until it resembles flame-tree petals at dusk.",
+    "specialty": ["Hand enamel", "Colour mixing", "Firing & finishing"],
+    "yearsExperience": 15,
+    "quote": "Colour is not decoration. It is the emotion of the piece."
+  }
+]

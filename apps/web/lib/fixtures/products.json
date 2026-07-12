@@ -1,0 +1,437 @@
+[
+  {
+    "id": "prod-001",
+    "slug": "chandni-jhumka",
+    "name": "Chandni Jhumka",
+    "description": "Moonlit jhumkas with hand-cut kundan petals and a gentle sway that catches candlelight. Each pair is finished over three days — filed, set, and polished by a single artisan so the symmetry feels almost breathing.",
+    "shortDescription": "Kundan jhumkas with moonstone drops",
+    "categoryId": "cat-earrings",
+    "categorySlug": "earrings",
+    "images": [],
+    "primaryMaterial": "kundan",
+    "minPrice": 4800,
+    "materials": ["Brass base", "Kundan glass", "Moonstone cabochon", "Gold-plated hooks"],
+    "careInstructions": "Store in the provided pouch. Avoid perfume directly on stones. Wipe with a soft dry cloth.",
+    "featured": true,
+    "occasion": ["Wedding festivities", "Evening gatherings", "Festive dressing"],
+    "process": [
+      {
+        "title": "Sketch & silhouette",
+        "description": "The bell curve is drawn freehand on butter paper — no two pairs are identical by design."
+      },
+      {
+        "title": "Stone setting",
+        "description": "Kundan petals are set with lac and silver foil, then burnished until the surface glows softly."
+      },
+      {
+        "title": "Final polish",
+        "description": "Hooks are tested for balance; each jhumka is weighed so both ears carry the same gentle pull."
+      }
+    ],
+    "relatedSlugs": ["meera-choker", "gulmohar-kada"],
+    "variants": [
+      {
+        "id": "var-001-a",
+        "sku": "CJ-KUN-GLD",
+        "material": "Gold-plated",
+        "price": { "amount": 4800, "currency": "INR" },
+        "stock": 12
+      },
+      {
+        "id": "var-001-b",
+        "sku": "CJ-KUN-SLV",
+        "material": "Silver finish",
+        "price": { "amount": 4200, "currency": "INR" },
+        "stock": 8
+      }
+    ]
+  },
+  {
+    "id": "prod-002",
+    "slug": "meera-choker",
+    "name": "Meera Choker",
+    "description": "A close-fitting choker inspired by temple borders — miniature pearls strung on silk thread with a central medallion motif drawn from our logo. It sits at the collarbone like a whispered compliment.",
+    "shortDescription": "Pearl choker with medallion centre",
+    "categoryId": "cat-necklaces",
+    "categorySlug": "necklaces",
+    "images": [],
+    "primaryMaterial": "pearl",
+    "minPrice": 6200,
+    "materials": ["Freshwater pearls", "Silk thread", "Gold-plated brass"],
+    "careInstructions": "Lay flat when storing. Keep away from moisture.",
+    "featured": true,
+    "occasion": ["Bridal trousseau", "Anniversary dinners", "Classical performances"],
+    "process": [
+      {
+        "title": "Pearl selection",
+        "description": "Pearls are matched for lustre and size across forty centimetres of strand."
+      },
+      {
+        "title": "Medallion casting",
+        "description": "The centre motif is cast in brass and hand-engraved before plating."
+      },
+      {
+        "title": "Stringing",
+        "description": "Silk thread is waxed and knotted between each pearl for durability and drape."
+      }
+    ],
+    "relatedSlugs": ["chandni-jhumka", "noor-haar"],
+    "variants": [
+      {
+        "id": "var-002-a",
+        "sku": "MC-PR-GD",
+        "material": "Gold-plated",
+        "price": { "amount": 6200, "currency": "INR" },
+        "stock": 6
+      }
+    ]
+  },
+  {
+    "id": "prod-003",
+    "slug": "gulmohar-kada",
+    "name": "Gulmohar Kada",
+    "description": "A hinged kada with enamelled gulmohar blooms along the band — flame-tree red against warm gold. Opens with a concealed clasp so the floral story stays uninterrupted.",
+    "shortDescription": "Enamelled floral kada bracelet",
+    "categoryId": "cat-bracelets",
+    "categorySlug": "bracelets",
+    "images": [],
+    "primaryMaterial": "gold-plated",
+    "minPrice": 3500,
+    "materials": ["Gold-plated brass", "Hand enamel", "Concealed clasp"],
+    "careInstructions": "Avoid impact on enamel. Store separately to prevent scratching.",
+    "featured": false,
+    "occasion": ["Daily elegance", "Office wear", "Festive stacking"],
+    "process": [
+      {
+        "title": "Band forming",
+        "description": "Brass is rolled to thickness and shaped on a mandrel for wrist comfort."
+      },
+      {
+        "title": "Enamel work",
+        "description": "Each petal is filled with pigment and fired twice for depth of colour."
+      },
+      {
+        "title": "Clasp fitting",
+        "description": "The hidden hinge is tested for five hundred open-close cycles before approval."
+      }
+    ],
+    "relatedSlugs": ["chandni-jhumka", "sitar-strings-bracelet"],
+    "variants": [
+      {
+        "id": "var-003-a",
+        "sku": "GK-EN-S",
+        "size": "Small (2.4 in)",
+        "material": "Gold-plated",
+        "price": { "amount": 3500, "currency": "INR" },
+        "stock": 15
+      },
+      {
+        "id": "var-003-b",
+        "sku": "GK-EN-M",
+        "size": "Medium (2.6 in)",
+        "material": "Gold-plated",
+        "price": { "amount": 3500, "currency": "INR" },
+        "stock": 10
+      }
+    ]
+  },
+  {
+    "id": "prod-004",
+    "slug": "noor-haar",
+    "name": "Noor Haar",
+    "description": "A long haar of graduated kundan stations linked by fine chain — light enough to wear from morning pooja to midnight dessert. Named for the glow it leaves along the neckline.",
+    "shortDescription": "Graduated kundan long necklace",
+    "categoryId": "cat-necklaces",
+    "categorySlug": "necklaces",
+    "images": [],
+    "primaryMaterial": "kundan",
+    "minPrice": 8900,
+    "materials": ["Kundan glass", "Gold-plated chain", "Brass stations"],
+    "careInstructions": "Store hung vertically. Detangle gently with fingers, never a brush.",
+    "featured": true,
+    "occasion": ["Wedding receptions", "Sangeet nights", "Formal portraits"],
+    "process": [
+      {
+        "title": "Station layout",
+        "description": "Stations are arranged on a velvet board to perfect the graduation curve."
+      },
+      {
+        "title": "Linking",
+        "description": "Each station is linked with double-jump rings for security without bulk."
+      },
+      {
+        "title": "Quality check",
+        "description": "The haar is draped on a bust form and inspected for symmetry under warm light."
+      }
+    ],
+    "relatedSlugs": ["meera-choker", "chandni-jhumka"],
+    "variants": [
+      {
+        "id": "var-004-a",
+        "sku": "NH-KUN-GLD",
+        "material": "Gold-plated",
+        "price": { "amount": 8900, "currency": "INR" },
+        "stock": 5
+      }
+    ]
+  },
+  {
+    "id": "prod-005",
+    "slug": "sitar-strings-bracelet",
+    "name": "Sitar Strings Bracelet",
+    "description": "Fine silver wire twisted like sitar strings, capped with miniature tuning peg charms. A conversation piece for musicians and dreamers alike.",
+    "shortDescription": "Silver wire charm bracelet",
+    "categoryId": "cat-bracelets",
+    "categorySlug": "bracelets",
+    "images": [],
+    "primaryMaterial": "silver",
+    "minPrice": 2800,
+    "materials": ["Sterling silver wire", "Silver charms"],
+    "careInstructions": "Polish occasionally with provided cloth. Remove before swimming.",
+    "featured": false,
+    "occasion": ["Creative gatherings", "Gift giving", "Casual layering"],
+    "process": [
+      {
+        "title": "Wire twisting",
+        "description": "Silver wire is twisted by hand to mimic the resonance pattern of sitar strings."
+      },
+      {
+        "title": "Charm casting",
+        "description": "Miniature pegs are cast and attached with soldered loops."
+      },
+      {
+        "title": "Sizing",
+        "description": "Finished with an adjustable chain extender for wrist sizes 5.5–7 in."
+      }
+    ],
+    "relatedSlugs": ["gulmohar-kada", "raag-brooch"],
+    "variants": [
+      {
+        "id": "var-005-a",
+        "sku": "SSB-SLV-ADJ",
+        "material": "Sterling silver",
+        "price": { "amount": 2800, "currency": "INR" },
+        "stock": 20
+      }
+    ]
+  },
+  {
+    "id": "prod-006",
+    "slug": "raag-brooch",
+    "name": "Raag Brooch",
+    "description": "A textile jewellery brooch — zari thread embroidered on silk with a gold-plated pin back. Designed to anchor a dupatta fold or brighten a lapel.",
+    "shortDescription": "Zari embroidered silk brooch",
+    "categoryId": "cat-clothing-jewellery",
+    "categorySlug": "clothing-jewellery",
+    "images": [],
+    "primaryMaterial": "zari",
+    "minPrice": 1800,
+    "materials": ["Silk base", "Zari thread", "Gold-plated pin"],
+    "careInstructions": "Spot clean only. Pin through sturdy fabric layers.",
+    "featured": false,
+    "occasion": ["Festive sarees", "Wedding guest attire", "Heritage events"],
+    "process": [
+      {
+        "title": "Silk mounting",
+        "description": "Silk is stretched on an embroidery frame and stabilised with backing."
+      },
+      {
+        "title": "Zari embroidery",
+        "description": "Motifs are stitched in running zari with a single needle over two days."
+      },
+      {
+        "title": "Pin assembly",
+        "description": "A secure pin back is riveted and covered with felt to protect fabric."
+      }
+    ],
+    "relatedSlugs": ["gajra-hair-pin", "sitar-strings-bracelet"],
+    "variants": [
+      {
+        "id": "var-006-a",
+        "sku": "RB-ZRI-MG",
+        "color": "Maroon & gold",
+        "material": "Zari on silk",
+        "price": { "amount": 1800, "currency": "INR" },
+        "stock": 18
+      },
+      {
+        "id": "var-006-b",
+        "sku": "RB-ZRI-IV",
+        "color": "Ivory & gold",
+        "material": "Zari on silk",
+        "price": { "amount": 1800, "currency": "INR" },
+        "stock": 14
+      }
+    ]
+  },
+  {
+    "id": "prod-007",
+    "slug": "gajra-hair-pin",
+    "name": "Gajra Hair Pin",
+    "description": "A silk-thread gajra wound around a gold-plated hair pin — jasmine-scented thread optional on request. For braids, buns, and the last touch before stepping out.",
+    "shortDescription": "Silk gajra hair adornment",
+    "categoryId": "cat-clothing-jewellery",
+    "categorySlug": "clothing-jewellery",
+    "images": [],
+    "primaryMaterial": "silk-thread",
+    "minPrice": 1200,
+    "materials": ["Silk thread", "Gold-plated pin", "Optional jasmine essence"],
+    "careInstructions": "Store in a dry place. Fluff gently before wearing.",
+    "featured": true,
+    "occasion": ["Bridal styling", "Festive braids", "Classical dance"],
+    "process": [
+      {
+        "title": "Thread winding",
+        "description": "Silk thread is wound in tight coils to mimic fresh gajra fullness."
+      },
+      {
+        "title": "Pin fitting",
+        "description": "The pin is inserted through the coil core and secured with adhesive and wire."
+      },
+      {
+        "title": "Scenting",
+        "description": "Optional jasmine essence is applied sparingly to thread ends."
+      }
+    ],
+    "relatedSlugs": ["raag-brooch", "chandni-jhumka"],
+    "variants": [
+      {
+        "id": "var-007-a",
+        "sku": "GHP-SLK-WHT",
+        "color": "White",
+        "material": "Silk thread",
+        "price": { "amount": 1200, "currency": "INR" },
+        "stock": 25
+      },
+      {
+        "id": "var-007-b",
+        "sku": "GHP-SLK-CRM",
+        "color": "Cream",
+        "material": "Silk thread",
+        "price": { "amount": 1200, "currency": "INR" },
+        "stock": 22
+      }
+    ]
+  },
+  {
+    "id": "prod-008",
+    "slug": "amber-drop-studs",
+    "name": "Amber Drop Studs",
+    "description": "Petite gold-plated studs with amber-toned glass drops — everyday pieces that still feel considered. The post is hypoallergenic for sensitive ears.",
+    "shortDescription": "Everyday amber glass studs",
+    "categoryId": "cat-earrings",
+    "categorySlug": "earrings",
+    "images": [],
+    "primaryMaterial": "gold-plated",
+    "minPrice": 1600,
+    "materials": ["Gold-plated brass", "Amber glass", "Hypoallergenic posts"],
+    "careInstructions": "Wipe after wear. Store in earring box.",
+    "featured": false,
+    "occasion": ["Daily wear", "Office", "Casual outings"],
+    "process": [
+      {
+        "title": "Post preparation",
+        "description": "Hypoallergenic posts are soldered to stud bases and tested for nickel content."
+      },
+      {
+        "title": "Drop attachment",
+        "description": "Glass drops are linked with micro jump rings for subtle movement."
+      },
+      {
+        "title": "Plating",
+        "description": "Final gold plate applied in a thin, even coat for longevity."
+      }
+    ],
+    "relatedSlugs": ["chandni-jhumka", "gulmohar-kada"],
+    "variants": [
+      {
+        "id": "var-008-a",
+        "sku": "ADS-GLD-AMB",
+        "material": "Gold-plated",
+        "price": { "amount": 1600, "currency": "INR" },
+        "stock": 30
+      }
+    ]
+  },
+  {
+    "id": "prod-009",
+    "slug": "sangam-bangle-set",
+    "name": "Sangam Bangle Set",
+    "description": "A set of three thin silver bangles with hand-hammered texture — named for the confluence of rivers, meant to be worn stacked or shared among sisters.",
+    "shortDescription": "Hammered silver bangle trio",
+    "categoryId": "cat-bracelets",
+    "categorySlug": "bracelets",
+    "images": [],
+    "primaryMaterial": "silver",
+    "minPrice": 5400,
+    "materials": ["Sterling silver", "Hand-hammered finish"],
+    "careInstructions": "Polish with silver cloth. Store in anti-tarnish pouch.",
+    "featured": false,
+    "occasion": ["Sibling gifts", "Festive stacking", "Heritage celebrations"],
+    "process": [
+      {
+        "title": "Bangle forming",
+        "description": "Silver rod is shaped into three matching circumferences."
+      },
+      {
+        "title": "Hammer texture",
+        "description": "Each bangle receives random hammer strikes for organic shimmer."
+      },
+      {
+        "title": "Set matching",
+        "description": "Bangles are grouped by weight and tone before packaging as a set."
+      }
+    ],
+    "relatedSlugs": ["sitar-strings-bracelet", "gulmohar-kada"],
+    "variants": [
+      {
+        "id": "var-009-a",
+        "sku": "SBS-SLV-2.6",
+        "size": "2.6 in diameter",
+        "material": "Sterling silver",
+        "price": { "amount": 5400, "currency": "INR" },
+        "stock": 8
+      }
+    ]
+  },
+  {
+    "id": "prod-010",
+    "slug": "vardaan-tikka",
+    "name": "Vardaan Tikka",
+    "description": "A forehead tikka with a central kundan teardrop and fine chain sides — adjustable for different parting widths. The piece that completes a bridal look without shouting.",
+    "shortDescription": "Adjustable kundan bridal tikka",
+    "categoryId": "cat-clothing-jewellery",
+    "categorySlug": "clothing-jewellery",
+    "images": [],
+    "primaryMaterial": "kundan",
+    "minPrice": 3200,
+    "materials": ["Kundan glass", "Gold-plated chain", "Adjustable hook"],
+    "careInstructions": "Store flat. Handle chain delicately to avoid kinks.",
+    "featured": true,
+    "occasion": ["Bridal", "Engagement", "Festive portraits"],
+    "process": [
+      {
+        "title": "Teardrop setting",
+        "description": "The central kundan teardrop is set in a closed-back bezel for stability."
+      },
+      {
+        "title": "Chain measurement",
+        "description": "Side chains are cut to adjustable lengths with micro clasps."
+      },
+      {
+        "title": "Fit testing",
+        "description": "Tested on multiple head forms for comfortable forehead contact."
+      }
+    ],
+    "relatedSlugs": ["meera-choker", "gajra-hair-pin"],
+    "variants": [
+      {
+        "id": "var-010-a",
+        "sku": "VT-KUN-ADJ",
+        "material": "Gold-plated",
+        "price": { "amount": 3200, "currency": "INR" },
+        "stock": 11
+      }
+    ]
+  }
+]

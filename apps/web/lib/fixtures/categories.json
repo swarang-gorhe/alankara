@@ -1,0 +1,22 @@
+[
+  {
+    "slug": "earrings",
+    "name": "Earrings",
+    "description": "Hand-finished drops, jhumkas, and studs for every occasion."
+  },
+  {
+    "slug": "necklaces",
+    "name": "Necklaces",
+    "description": "Layered chains, chokers, and statement haars with heirloom presence."
+  },
+  {
+    "slug": "bracelets",
+    "name": "Bracelets",
+    "description": "Delicate kadas and charm bracelets woven with intention."
+  },
+  {
+    "slug": "clothing-jewellery",
+    "name": "Clothing Jewellery",
+    "description": "Brooches, hair adornments, and textile jewellery for festive dressing."
+  }
+]
