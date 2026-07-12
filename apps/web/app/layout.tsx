@@ -39,7 +39,7 @@ export default function RootLayout({
       lang="en"
       className={`${playfair.variable} ${cormorant.variable} ${sourceSans.variable}`}
     >
-      <body className="min-h-screen bg-cream font-body text-charcoal antialiased">
+      <body className="min-h-screen bg-linen font-body text-ink antialiased">
         <LenisProvider>
           <LuxuryCursorProvider>
             <CartProvider>

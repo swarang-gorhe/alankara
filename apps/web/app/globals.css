@@ -4,19 +4,43 @@
 
 @layer base {
   :root {
-    --background: 36 52% 88%;
-    --foreground: 20 18% 15%;
-    --primary: 16 65% 26%;
-    --primary-foreground: 36 52% 94%;
-    --secondary: 36 40% 82%;
-    --secondary-foreground: 16 65% 26%;
-    --muted: 36 30% 85%;
-    --muted-foreground: 20 12% 40%;
-    --accent: 36 55% 51%;
-    --accent-foreground: 16 65% 20%;
-    --border: 36 35% 75%;
-    --input: 36 35% 80%;
-    --ring: 36 55% 51%;
+    /* Brand palette */
+    --ivory: #faf3e7;
+    --linen: #f3e4cd;
+    --champagne-gold: #c9932f;
+    --muted-maroon: #6f2317;
+    --olive: #6b7353;
+    --warm-brown: #7a2e1c;
+    --sage: #a8ad96;
+    --cotton: #efe7d8;
+    --ink: #2b231c;
+
+    /* Semantic status — muted, within palette */
+    --success: #6b7353;
+    --success-muted: #a8ad96;
+    --error: #7a2e1c;
+    --error-muted: #9b4a38;
+
+    /* Motion tokens */
+    --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
+    --duration-fast: 200ms;
+    --duration-base: 500ms;
+    --duration-slow: 900ms;
+
+    /* shadcn semantic mapping */
+    --background: 36 52% 94%;
+    --foreground: 24 18% 14%;
+    --primary: 9 65% 26%;
+    --primary-foreground: 36 52% 96%;
+    --secondary: 36 40% 88%;
+    --secondary-foreground: 9 65% 26%;
+    --muted: 36 30% 90%;
+    --muted-foreground: 24 10% 38%;
+    --accent: 38 62% 48%;
+    --accent-foreground: 9 65% 20%;
+    --border: 36 35% 78%;
+    --input: 36 35% 82%;
+    --ring: 38 62% 48%;
     --radius: 0.25rem;
   }
 
@@ -25,7 +49,7 @@
   }
 
   body {
-    @apply bg-cream text-charcoal leading-relaxed;
+    @apply bg-linen font-body text-base text-ink leading-relaxed;
   }
 
   h1,
@@ -38,7 +62,7 @@
   }
 
   :focus-visible {
-    @apply outline-none ring-2 ring-gold ring-offset-2 ring-offset-cream;
+    @apply outline-none ring-2 ring-champagne ring-offset-2 ring-offset-linen;
   }
 
   a:focus-visible,
@@ -46,7 +70,7 @@
   input:focus-visible,
   select:focus-visible,
   textarea:focus-visible {
-    @apply outline-none ring-2 ring-gold ring-offset-2 ring-offset-cream;
+    @apply outline-none ring-2 ring-champagne ring-offset-2 ring-offset-linen;
   }
 }
 
@@ -55,13 +79,29 @@
     text-wrap: balance;
   }
 
+  .ease-luxury {
+    transition-timing-function: var(--ease-luxury);
+  }
+
+  .duration-fast {
+    transition-duration: var(--duration-fast);
+  }
+
+  .duration-base {
+    transition-duration: var(--duration-base);
+  }
+
+  .duration-slow {
+    transition-duration: var(--duration-slow);
+  }
+
   .hairline-gold {
     background: linear-gradient(
       90deg,
       transparent 0%,
-      #c9932f 20%,
-      #b98a4a 50%,
-      #c9932f 80%,
+      var(--champagne-gold) 20%,
+      color-mix(in srgb, var(--champagne-gold) 70%, var(--warm-brown)) 50%,
+      var(--champagne-gold) 80%,
       transparent 100%
     );
     height: 1px;
@@ -69,11 +109,16 @@
 
   .paper-card {
     background-image:
-      radial-gradient(ellipse at 20% 0%, rgba(201, 147, 47, 0.04) 0%, transparent 50%),
-      linear-gradient(135deg, #f8ecd9 0%, #f3e4cd 100%);
+      radial-gradient(ellipse at 20% 0%, rgba(201, 147, 47, 0.05) 0%, transparent 50%),
+      linear-gradient(135deg, var(--ivory) 0%, var(--linen) 100%);
     box-shadow:
-      0 1px 2px rgba(44, 36, 32, 0.04),
+      0 1px 2px rgba(43, 35, 28, 0.04),
       0 4px 16px rgba(111, 35, 23, 0.06);
+  }
+
+  .magnetic-ready {
+    --magnetic-strength: 0.35;
+    will-change: transform;
   }
 }
 
