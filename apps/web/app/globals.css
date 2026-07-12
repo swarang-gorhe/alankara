@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 36 52% 88%;
+    --foreground: 20 18% 15%;
+    --primary: 16 65% 26%;
+    --primary-foreground: 36 52% 94%;
+    --secondary: 36 40% 82%;
+    --secondary-foreground: 16 65% 26%;
+    --muted: 36 30% 85%;
+    --muted-foreground: 20 12% 40%;
+    --accent: 36 55% 51%;
+    --accent-foreground: 16 65% 20%;
+    --border: 36 35% 75%;
+    --input: 36 35% 80%;
+    --ring: 36 55% 51%;
+    --radius: 0.25rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-cream text-charcoal leading-relaxed;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-display text-maroon;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .hairline-gold {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      #c9932f 20%,
+      #b98a4a 50%,
+      #c9932f 80%,
+      transparent 100%
+    );
+    height: 1px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

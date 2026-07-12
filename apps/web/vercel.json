@@ -1,0 +1,6 @@
+{
+  "installCommand": "cd ../.. && pnpm install",
+  "buildCommand": "cd ../.. && pnpm turbo run build --filter=@alankara/web",
+  "framework": "nextjs",
+  "outputDirectory": ".next"
+}

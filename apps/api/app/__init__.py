@@ -1,0 +1,1 @@
+"""Alankara API — FastAPI application."""
