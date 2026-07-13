@@ -1,7 +1,10 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { AnimatedLogo } from "@/components/brand/AnimatedLogo";
 import { useCart } from "@/components/providers/CartProvider";
 import { Button } from "@/components/ui/button";
@@ -61,8 +64,22 @@ type HeaderProps = {
 export function Header({ className }: HeaderProps) {
   const pathname = usePathname();
   const scrolled = useScrollMorph(32);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const logoSize = scrolled ? 64 : 76;
+
+  useEffect(() => {
+    setMobileNavOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileNavOpen]);
 
   return (
     <header
@@ -114,6 +131,16 @@ export function Header({ className }: HeaderProps) {
         </nav>
 
         <div className="flex items-center gap-2 sm:gap-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={() => setMobileNavOpen((open) => !open)}
+            aria-expanded={mobileNavOpen}
+            aria-label={mobileNavOpen ? "Close menu" : "Open menu"}
+          >
+            {mobileNavOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
           <Button variant="ghost" size="sm" asChild className="hidden text-ink-muted sm:inline-flex" data-magnetic>
             <Link href="/account">Account</Link>
           </Button>
@@ -127,6 +154,42 @@ export function Header({ className }: HeaderProps) {
           <CartLink />
         </div>
       </div>
+
+      <AnimatePresence>
+        {mobileNavOpen && (
+          <motion.nav
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden border-t border-champagne/10 bg-ivory/98 lg:hidden"
+            aria-label="Mobile navigation"
+          >
+            <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4 sm:px-6">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={cn(
+                    "rounded-sm px-3 py-3 font-body text-sm uppercase tracking-[0.18em] transition-colors",
+                    pathname === link.href
+                      ? "bg-maroon/6 text-maroon"
+                      : "text-ink-muted hover:bg-linen/60 hover:text-maroon",
+                  )}
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <Link
+                href="/account"
+                className="rounded-sm px-3 py-3 font-body text-sm uppercase tracking-[0.18em] text-ink-muted transition-colors hover:bg-linen/60 hover:text-maroon"
+              >
+                Account
+              </Link>
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
     </header>
   );
 }

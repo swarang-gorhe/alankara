@@ -1,3 +1,6 @@
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+
 export function ShopEmptyState() {
   return (
     <div className="mx-auto max-w-md py-20 text-center">
@@ -27,6 +30,9 @@ export function ShopEmptyState() {
       <p className="mt-3 font-body text-sm text-ink-muted">
         Try adjusting your filters — our full catalogue of fabric and thread pieces awaits.
       </p>
+      <Button variant="outline" className="mt-8" asChild>
+        <Link href="/shop">View all pieces</Link>
+      </Button>
     </div>
   );
 }
