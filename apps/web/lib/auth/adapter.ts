@@ -1,4 +1,5 @@
 import { getAdminToken } from "@/lib/admin/auth";
+import { getCustomerToken } from "@/lib/auth/customer";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 
 export type AuthProvider = "jwt" | "supabase";
@@ -25,7 +26,7 @@ export async function getAccessToken(): Promise<string | null> {
     const { data } = await supabase.auth.getSession();
     return data.session?.access_token ?? null;
   }
-  return getAdminToken();
+  return getCustomerToken() ?? getAdminToken();
 }
 
 /**

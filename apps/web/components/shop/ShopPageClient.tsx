@@ -26,15 +26,30 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
   const [isPending, startTransition] = useTransition();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [showSkeleton, setShowSkeleton] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<"name" | "price_asc" | "price_desc">("name");
 
   const [filters, setFilters] = useState<ShopFiltersState>(() =>
     filtersFromSearchParams(searchParams),
   );
 
-  const filteredProducts = useMemo(
-    () => filterProducts(products, filters),
-    [products, filters],
-  );
+  const filteredProducts = useMemo(() => {
+    let list = filterProducts(products, filters);
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase();
+      list = list.filter(
+        (p) =>
+          p.name.toLowerCase().includes(q) ||
+          p.description.toLowerCase().includes(q) ||
+          p.categorySlug.includes(q),
+      );
+    }
+    return [...list].sort((a, b) => {
+      if (sortBy === "price_asc") return a.minPrice - b.minPrice;
+      if (sortBy === "price_desc") return b.minPrice - a.minPrice;
+      return a.name.localeCompare(b.name);
+    });
+  }, [products, filters, searchQuery, sortBy]);
 
   const syncUrl = useCallback(
     (next: ShopFiltersState) => {
@@ -100,11 +115,30 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
         {/* Champagne gold tinted filter strip */}
         <div
           className={cn(
-            "sticky top-[4.5rem] z-20 -mx-1 mb-8 rounded-sm border border-champagne/25 px-4 py-4 shadow-luxury backdrop-blur-md transition-shadow duration-base ease-luxury md:top-20 md:mb-12 md:px-6 md:py-5",
-            "bg-gradient-to-r from-champagne/12 via-ivory/95 to-champagne/12",
-            "supports-[backdrop-filter]:from-champagne/10 supports-[backdrop-filter]:via-ivory/92",
+            "sticky top-16 z-20 -mx-1 mb-8 space-y-4 rounded-sm border border-champagne/25 px-4 py-4 shadow-luxury backdrop-blur-md md:top-[4.25rem] md:mb-12 md:px-6 md:py-5",
+            "bg-ivory/95",
           )}
         >
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <input
+              type="search"
+              placeholder="Search cloth jewellery…"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="flex-1 rounded-sm border border-sage/30 bg-ivory px-4 py-2.5 font-body text-sm text-ink placeholder:text-ink-muted focus:border-champagne focus:outline-none"
+              aria-label="Search products"
+            />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+              className="rounded-sm border border-sage/30 bg-ivory px-3 py-2.5 font-body text-sm text-ink"
+              aria-label="Sort products"
+            >
+              <option value="name">Name</option>
+              <option value="price_asc">Price: low to high</option>
+              <option value="price_desc">Price: high to low</option>
+            </select>
+          </div>
           <ShopChipFilters
             filters={filters}
             onChange={handleFilterChange}

@@ -3,9 +3,22 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError
 
 from app.auth.jwt import decode_access_token, is_admin_claim
+from app.auth.supabase_jwt import decode_supabase_access_token
+from app.config import get_settings
 from app.schemas.auth import UserClaims
 
 bearer_scheme = HTTPBearer(auto_error=False)
+
+
+def _claims_from_payload(payload: dict) -> UserClaims:
+    role = payload.get("role")
+    if not role:
+        app_meta = payload.get("app_metadata") or {}
+        user_meta = payload.get("user_metadata") or {}
+        role = app_meta.get("role") or user_meta.get("role") or "customer"
+    email = payload.get("email") or ""
+    sub = payload.get("sub") or ""
+    return UserClaims(sub=sub, email=email, role=role)
 
 
 async def get_current_user_optional(
@@ -13,15 +26,25 @@ async def get_current_user_optional(
 ) -> UserClaims | None:
     if credentials is None:
         return None
+    token = credentials.credentials
+    settings = get_settings()
+
+    # Try FastAPI dev JWT first
     try:
-        payload = decode_access_token(credentials.credentials)
-        return UserClaims(
-            sub=payload["sub"],
-            email=payload["email"],
-            role=payload.get("role", "customer"),
-        )
+        payload = decode_access_token(token)
+        return _claims_from_payload(payload)
     except (JWTError, KeyError):
-        return None
+        pass
+
+    # Supabase JWT when configured
+    if settings.supabase_jwt_secret:
+        try:
+            payload = decode_supabase_access_token(token)
+            return _claims_from_payload(payload)
+        except JWTError:
+            return None
+
+    return None
 
 
 async def get_current_user(

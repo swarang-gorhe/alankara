@@ -1,17 +1,15 @@
 "use client";
 
-import { SectionDivider } from "@/components/ui/SectionDivider";
-import { UnwrapIntro } from "./intro/UnwrapIntro";
 import { Chapter5Hero } from "./chapters/Chapter5Hero";
+import { ChapterBrandStatement } from "./chapters/ChapterBrandStatement";
 import { ChapterCrafted } from "./chapters/ChapterCrafted";
 import { ChapterCollections } from "./chapters/ChapterCollections";
 import { ChapterCustomerStories } from "./chapters/ChapterCustomerStories";
-import { ChapterDetailsMatter } from "./chapters/ChapterDetailsMatter";
 import { ChapterFooter } from "./chapters/ChapterFooter";
-import { ChapterInstagram } from "./chapters/ChapterInstagram";
 import { ChapterMeetMakers } from "./chapters/ChapterMeetMakers";
 import { ChapterNewsletter } from "./chapters/ChapterNewsletter";
 import { ChapterThreadToTreasure } from "./chapters/ChapterThreadToTreasure";
+import { UnwrapIntro } from "./intro/UnwrapIntro";
 
 function SkipToContentLink() {
   return (
@@ -24,27 +22,19 @@ function SkipToContentLink() {
   );
 }
 
+/** Pitch homepage — seven sections, restrained motion */
 export function HomePage() {
   return (
     <>
       <SkipToContentLink />
       <UnwrapIntro>
         <Chapter5Hero />
-        <SectionDivider />
+        <ChapterBrandStatement />
         <ChapterCrafted />
-        <SectionDivider />
         <ChapterThreadToTreasure />
-        <SectionDivider />
         <ChapterMeetMakers />
-        <SectionDivider />
         <ChapterCollections />
-        <SectionDivider />
-        <ChapterDetailsMatter />
-        <SectionDivider />
         <ChapterCustomerStories />
-        <SectionDivider />
-        <ChapterInstagram />
-        <SectionDivider />
         <ChapterNewsletter />
         <ChapterFooter />
       </UnwrapIntro>

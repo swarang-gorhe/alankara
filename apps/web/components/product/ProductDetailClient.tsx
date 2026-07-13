@@ -5,11 +5,13 @@ import Link from "next/link";
 import { FabricStitchReveal } from "@/components/product/FabricStitchReveal";
 import { EditorialProductCard } from "@/components/shop/EditorialProductCard";
 import { useCart } from "@/components/providers/CartProvider";
+import { useAuth } from "@/components/providers/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { fetchProductReviewSummary } from "@/lib/api/ai";
+import { addToWishlist } from "@/lib/api/wishlist";
 import { formatPrice, MATERIAL_LABELS } from "@/lib/fixtures";
 import type { ProductFixture, ReviewFixture } from "@/lib/fixtures/types";
 import { gsap, registerGsap } from "@/lib/gsap";
@@ -58,12 +60,16 @@ function StorySection({
 export function ProductDetailClient({
   product,
   relatedProducts,
+  productReviews,
 }: ProductDetailClientProps) {
   const { addToCart } = useCart();
+  const { user } = useAuth();
   const [selectedVariantId, setSelectedVariantId] = useState(product.variants[0]?.id ?? "");
   const [adding, setAdding] = useState(false);
+  const [wishlistSaving, setWishlistSaving] = useState(false);
   const [addError, setAddError] = useState<string | null>(null);
   const [added, setAdded] = useState(false);
+  const [wishlisted, setWishlisted] = useState(false);
   const [reviewSummary, setReviewSummary] = useState<string | null>(null);
   const sectionsRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -119,6 +125,22 @@ export function ProductDetailClient({
       setAddError(err instanceof Error ? err.message : "Could not add to cart");
     } finally {
       setAdding(false);
+    }
+  };
+
+  const handleWishlist = async () => {
+    if (!user) {
+      window.location.href = `/login?redirect=/product/${product.slug}`;
+      return;
+    }
+    setWishlistSaving(true);
+    try {
+      await addToWishlist(product.id, selectedVariant?.id);
+      setWishlisted(true);
+    } catch (err) {
+      setAddError(err instanceof Error ? err.message : "Could not save to wishlist");
+    } finally {
+      setWishlistSaving(false);
     }
   };
 
@@ -190,8 +212,12 @@ export function ProductDetailClient({
                       ? "Add to cart"
                       : "Out of stock"}
               </Button>
-              <Button variant="outline" disabled title="Available when wishlist is wired">
-                Save to wishlist
+              <Button
+                variant="outline"
+                disabled={wishlistSaving || wishlisted}
+                onClick={() => void handleWishlist()}
+              >
+                {wishlisted ? "Saved" : wishlistSaving ? "Saving…" : "Save to wishlist"}
               </Button>
             </div>
             {addError && <p className="mt-3 font-body text-xs text-error">{addError}</p>}

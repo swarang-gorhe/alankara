@@ -1,22 +1,35 @@
+from datetime import UTC, datetime
 import math
+import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from pydantic import BaseModel, Field
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from app.auth.deps import get_current_user
 from app.database import get_db
 from app.models.category import Category
 from app.models.product import Product
 from app.models.review import Review
 from app.schemas.ai import AIInsightsSchema
+from app.schemas.auth import UserClaims
 from app.schemas.review import PaginatedReviewsSchema, ReviewSchema
 from app.services.ai.chains.insights_chain import get_global_insights
 
 router = APIRouter(prefix="/reviews", tags=["reviews"])
 
 DbSession = Annotated[AsyncSession, Depends(get_db)]
+CurrentUser = Annotated[UserClaims, Depends(get_current_user)]
+
+
+class ReviewCreate(BaseModel):
+    productId: str = Field(min_length=1)
+    rating: int = Field(ge=1, le=5)
+    text: str = Field(min_length=10, max_length=2000)
+    authorName: str | None = Field(None, max_length=128)
 
 
 @router.get("", response_model=PaginatedReviewsSchema)
@@ -81,3 +94,46 @@ async def list_reviews(
 async def review_insights(db: DbSession) -> AIInsightsSchema:
     data = await get_global_insights(db)
     return AIInsightsSchema(**data)
+
+
+@router.post("", response_model=ReviewSchema, status_code=status.HTTP_201_CREATED)
+async def submit_review(
+    body: ReviewCreate, db: DbSession, user: CurrentUser
+) -> ReviewSchema:
+    product = await db.get(Product, body.productId)
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    review = Review(
+        id=f"rev-{uuid.uuid4().hex[:12]}",
+        product_id=body.productId,
+        user_id=user.sub,
+        author_name=body.authorName or user.email.split("@")[0],
+        rating=body.rating,
+        text=body.text,
+        created_at=datetime.now(UTC),
+        approved=False,
+    )
+    db.add(review)
+    await db.commit()
+
+    result = await db.execute(
+        select(Review)
+        .options(selectinload(Review.product).selectinload(Product.category))
+        .where(Review.id == review.id)
+    )
+    review = result.scalar_one()
+
+    return ReviewSchema(
+        id=review.id,
+        productId=review.product_id,
+        productSlug=review.product.slug,
+        productName=review.product.name,
+        categorySlug=review.product.category.slug if review.product.category else "",
+        userId=review.user_id,
+        authorName=review.author_name,
+        rating=review.rating,
+        text=review.text,
+        createdAt=review.created_at,
+        approved=review.approved,
+    )

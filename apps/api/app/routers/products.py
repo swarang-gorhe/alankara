@@ -59,6 +59,7 @@ async def list_products(
     material: str | None = None,
     min_price: int | None = None,
     max_price: int | None = None,
+    sort: str | None = Query(None, pattern="^(price_asc|price_desc|newest|name)$"),
 ) -> PaginatedProductsSchema:
     base = select(Product).options(
         selectinload(Product.variants),
@@ -77,7 +78,14 @@ async def list_products(
     total = (await db.execute(count_stmt)).scalar_one()
 
     offset = (page - 1) * page_size
-    stmt = filtered.order_by(Product.name).offset(offset).limit(page_size)
+    order = Product.name
+    if sort == "price_asc":
+        order = Product.min_price.asc()
+    elif sort == "price_desc":
+        order = Product.min_price.desc()
+    elif sort == "newest":
+        order = Product.id.desc()
+    stmt = filtered.order_by(order).offset(offset).limit(page_size)
     result = await db.execute(stmt)
     products = result.scalars().unique().all()
 

@@ -6,6 +6,7 @@ import {
   createAdminProduct,
   deleteAdminProduct,
   fetchAdminProducts,
+  updateAdminProduct,
   type AdminProduct,
 } from "@/lib/api/admin";
 import { formatPrice } from "@/lib/fixtures";
@@ -27,6 +28,7 @@ export default function AdminProductsPage() {
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState({
     slug: "",
     name: "",
@@ -70,6 +72,28 @@ export default function AdminProductsPage() {
     load();
   };
 
+  const startEdit = (product: AdminProduct) => {
+    setEditingId(product.id);
+    setShowForm(false);
+    setForm({
+      slug: product.slug,
+      name: product.name,
+      description: product.description,
+      categoryId: product.categoryId,
+      primaryMaterial: product.primaryMaterial,
+      minPrice: product.minPrice,
+      featured: product.featured,
+    });
+  };
+
+  const handleUpdate = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!editingId) return;
+    await updateAdminProduct(editingId, { ...form, minPrice: Number(form.minPrice) });
+    setEditingId(null);
+    load();
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-4">
@@ -85,6 +109,51 @@ export default function AdminProductsPage() {
           {showForm ? "Cancel" : "New product"}
         </button>
       </div>
+
+      {editingId && (
+        <form
+          onSubmit={(e) => void handleUpdate(e)}
+          className="grid gap-4 rounded-lg border border-admin-accent/40 bg-admin-surface p-5 sm:grid-cols-2"
+        >
+          <p className="sm:col-span-2 font-display text-lg text-admin-text">Edit product</p>
+          <label className="block">
+            <span className="text-xs uppercase tracking-widest text-admin-muted">Name</span>
+            <input
+              required
+              value={form.name}
+              onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+              className="mt-1 w-full rounded border border-admin-border bg-admin-elevated px-3 py-2 text-sm text-admin-text"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs uppercase tracking-widest text-admin-muted">Min price (paise)</span>
+            <input
+              type="number"
+              value={form.minPrice}
+              onChange={(e) => setForm((f) => ({ ...f, minPrice: Number(e.target.value) }))}
+              className="mt-1 w-full rounded border border-admin-border bg-admin-elevated px-3 py-2 text-sm text-admin-text"
+            />
+          </label>
+          <label className="block sm:col-span-2">
+            <span className="text-xs uppercase tracking-widest text-admin-muted">Description</span>
+            <textarea
+              required
+              value={form.description}
+              onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+              className="mt-1 w-full rounded border border-admin-border bg-admin-elevated px-3 py-2 text-sm text-admin-text"
+              rows={3}
+            />
+          </label>
+          <div className="flex gap-3 sm:col-span-2">
+            <button type="submit" className="rounded bg-admin-accent px-4 py-2 text-xs uppercase tracking-widest text-admin-bg">
+              Save changes
+            </button>
+            <button type="button" onClick={() => setEditingId(null)} className="text-xs uppercase tracking-widest text-admin-muted">
+              Cancel
+            </button>
+          </div>
+        </form>
+      )}
 
       {showForm && (
         <form
@@ -193,7 +262,14 @@ export default function AdminProductsPage() {
                 <AdminTableCell>
                   <span className={totalStock <= 5 ? "text-admin-danger" : ""}>{totalStock}</span>
                 </AdminTableCell>
-                <AdminTableCell>
+                <AdminTableCell className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => startEdit(product)}
+                    className="text-xs uppercase tracking-widest text-admin-accent hover:underline"
+                  >
+                    Edit
+                  </button>
                   <button
                     type="button"
                     onClick={() => void handleDelete(product.id)}

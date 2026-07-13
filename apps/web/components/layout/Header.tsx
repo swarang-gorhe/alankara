@@ -6,10 +6,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AnimatedLogo } from "@/components/brand/AnimatedLogo";
+import { useAuth } from "@/components/providers/AuthProvider";
 import { useCart } from "@/components/providers/CartProvider";
 import { Button } from "@/components/ui/button";
-import { useScrollMorph } from "@/hooks/useScrollMorph";
-import { useIsMobile } from "@/hooks/useIsMobile";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -24,13 +23,7 @@ function CartLink() {
   const count = cart?.itemCount ?? 0;
 
   return (
-    <Button
-      variant="outline"
-      size="sm"
-      asChild
-      className="relative border-champagne/30 bg-ivory/70 hover:border-champagne/55"
-      data-magnetic
-    >
+    <Button variant="ghost" size="icon" asChild className="relative text-ink-muted hover:text-maroon">
       <Link href="/cart" aria-label={count > 0 ? `Cart, ${count} items` : "Cart"}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -38,7 +31,7 @@ function CartLink() {
           fill="none"
           stroke="currentColor"
           strokeWidth="1.5"
-          className="mr-1.5 h-4 w-4"
+          className="h-5 w-5"
           aria-hidden
         >
           <path
@@ -47,9 +40,8 @@ function CartLink() {
             d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z"
           />
         </svg>
-        <span className="hidden sm:inline">Cart</span>
         {count > 0 && (
-          <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-maroon px-1 text-[10px] font-medium text-ivory">
+          <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-maroon px-0.5 text-[9px] font-medium text-ivory">
             {count > 99 ? "99+" : count}
           </span>
         )}
@@ -64,11 +56,9 @@ type HeaderProps = {
 
 export function Header({ className }: HeaderProps) {
   const pathname = usePathname();
-  const scrolled = useScrollMorph(32);
-  const isMobile = useIsMobile();
+  const { user } = useAuth();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
-
-  const logoSize = isMobile ? (scrolled ? 64 : 72) : scrolled ? 80 : 96;
+  const accountHref = user ? "/account" : "/login";
 
   useEffect(() => {
     setMobileNavOpen(false);
@@ -86,45 +76,30 @@ export function Header({ className }: HeaderProps) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 border-b border-champagne/20 bg-ivory/96 shadow-[0_2px_0_rgba(201,147,47,0.1)] backdrop-blur-xl transition-all duration-base ease-luxury",
+        "sticky top-0 z-50 border-b border-champagne/15 bg-ivory/80 backdrop-blur-md supports-[backdrop-filter]:bg-ivory/70",
         className,
       )}
     >
-      <div
-        className={cn(
-          "mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 transition-all duration-base ease-luxury sm:gap-4 sm:px-6",
-          scrolled ? "h-[4.5rem] md:h-20" : "h-[5.25rem] md:h-24",
-        )}
-      >
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 md:h-[4.25rem]">
         <Link
           href="/"
-          className="flex min-w-0 shrink-0 items-center gap-2.5 sm:gap-3 md:gap-4"
+          className="flex shrink-0 items-center gap-3"
           aria-label="Alankara home"
-          data-magnetic
         >
-          <AnimatedLogo size={logoSize} idlePulse playEntrance={false} priority />
-          <div className="min-w-0">
-            <span className="block font-display text-base tracking-[0.14em] text-maroon sm:text-lg md:text-xl">
-              ALANKARA
-            </span>
-            <p className="truncate font-script text-[10px] italic text-warm-brown sm:text-xs md:text-sm">
-              Crafted for little moments.
-            </p>
-          </div>
+          <AnimatedLogo size={48} playEntrance={false} priority />
+          <span className="hidden font-display text-sm tracking-[0.18em] text-maroon sm:block md:text-base">
+            ALANKARA
+          </span>
         </Link>
 
-        <nav className="hidden items-center gap-7 lg:flex" aria-label="Main navigation">
+        <nav className="hidden items-center gap-8 lg:flex" aria-label="Main navigation">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              data-magnetic
-              data-cursor-sparkle
               className={cn(
-                "relative font-body text-[11px] uppercase tracking-[0.22em] transition-colors duration-base ease-luxury hover:text-maroon",
-                pathname === link.href
-                  ? "text-maroon after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:bg-champagne"
-                  : "text-ink-muted",
+                "font-body text-[11px] uppercase tracking-[0.22em] transition-colors duration-base hover:text-maroon",
+                pathname === link.href ? "text-maroon" : "text-ink-muted",
               )}
             >
               {link.label}
@@ -132,7 +107,18 @@ export function Header({ className }: HeaderProps) {
           ))}
         </nav>
 
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1">
+          <Button variant="ghost" size="sm" asChild className="hidden text-ink-muted sm:inline-flex">
+            <Link href={accountHref}>{user ? "Account" : "Sign in"}</Link>
+          </Button>
+          <Button variant="ghost" size="icon" asChild className="sm:hidden text-ink-muted">
+            <Link href={accountHref} aria-label={user ? "Account" : "Sign in"}>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-5 w-5" aria-hidden>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+              </svg>
+            </Link>
+          </Button>
+          <CartLink />
           <Button
             variant="ghost"
             size="icon"
@@ -143,17 +129,6 @@ export function Header({ className }: HeaderProps) {
           >
             {mobileNavOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </Button>
-          <Button variant="ghost" size="sm" asChild className="hidden text-ink-muted sm:inline-flex" data-magnetic>
-            <Link href="/account">Account</Link>
-          </Button>
-          <Button variant="ghost" size="icon" asChild className="sm:hidden" data-magnetic>
-            <Link href="/account" aria-label="Account">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-5 w-5" aria-hidden>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-              </svg>
-            </Link>
-          </Button>
-          <CartLink />
         </div>
       </div>
 
@@ -163,8 +138,8 @@ export function Header({ className }: HeaderProps) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden border-t border-champagne/15 bg-ivory/98 lg:hidden"
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+            className="overflow-hidden border-t border-champagne/10 bg-ivory/95 lg:hidden"
             aria-label="Mobile navigation"
           >
             <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4 sm:px-6">
@@ -183,10 +158,10 @@ export function Header({ className }: HeaderProps) {
                 </Link>
               ))}
               <Link
-                href="/account"
+                href={accountHref}
                 className="rounded-sm px-3 py-3 font-body text-sm uppercase tracking-[0.18em] text-ink-muted transition-colors hover:bg-linen/60 hover:text-maroon"
               >
-                Account
+                {user ? "Account" : "Sign in"}
               </Link>
             </div>
           </motion.nav>

@@ -68,12 +68,16 @@ async function cartFetch<T>(path: string, init?: RequestInit): Promise<T> {
     throw new Error("Cart API is not configured (NEXT_PUBLIC_API_URL is unset)");
   }
 
+  const { getAccessToken } = await import("@/lib/auth/adapter");
+  const token = await getAccessToken();
+
   const res = await fetch(`${API_URL}${path}`, {
     ...init,
     credentials: "include",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...init?.headers,
     },
     cache: "no-store",

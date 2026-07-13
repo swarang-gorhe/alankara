@@ -2,7 +2,6 @@
 
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { SKIP_INTRO_DELAY_MS } from "@/lib/intro/constants";
 
 type SkipIntroButtonProps = {
   onSkip: () => void;
@@ -21,7 +20,7 @@ export function SkipIntroButton({ onSkip, visible, className }: SkipIntroButtonP
       )}
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: visible ? 1 : 0, y: visible ? 0 : 12 }}
-      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: SKIP_INTRO_DELAY_MS / 1000 }}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
       aria-label="Skip intro and go to homepage"
     >
       Skip Intro

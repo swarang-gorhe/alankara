@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 import { IntroProvider } from "@/contexts/IntroContext";
 import { CartProvider } from "@/components/providers/CartProvider";
 import { LenisProvider } from "@/components/providers/LenisProvider";
@@ -14,13 +15,15 @@ type AppProvidersProps = {
 export function AppProviders({ children }: AppProvidersProps) {
   return (
     <IntroProvider>
-      <LenisProvider>
+      <AuthProvider>
+        <LenisProvider>
         <LuxuryCursorProvider>
           <CartProvider>
             <SiteChrome>{children}</SiteChrome>
           </CartProvider>
         </LuxuryCursorProvider>
-      </LenisProvider>
+        </LenisProvider>
+      </AuthProvider>
     </IntroProvider>
   );
 }
