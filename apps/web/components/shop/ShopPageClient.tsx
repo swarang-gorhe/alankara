@@ -3,7 +3,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { BotanicalSprig, GoldDivider, PaperTexture, PearlScatter, PromotionalBanner } from "@/components/decor";
+import { EditorialFrame } from "@/components/editorial";
+import { GoldDivider, PromotionalBanner } from "@/components/decor";
 import { EditorialProductCard } from "@/components/shop/EditorialProductCard";
 import { ShopChipFilters, filterProducts } from "@/components/shop/ShopChipFilters";
 import { ShopEmptyState } from "@/components/shop/ShopEmptyState";
@@ -69,27 +70,29 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
   const isLoading = isPending || showSkeleton;
 
   return (
-    <div className="relative overflow-hidden">
-      <PaperTexture variant="cream" />
-
-      {/* Hero banner with pearl + botanical framing */}
+    <div className="relative overflow-hidden bg-ivory">
       <section className="relative border-b border-champagne/15">
-        <PearlScatter density="medium" corners="top" className="z-[1]" />
-        <BotanicalSprig position="top-left" size={100} className="z-[1] opacity-80" />
-        <BotanicalSprig position="top-right" size={100} className="z-[1] opacity-80" />
-
-        <div className="relative z-10 mx-auto max-w-7xl px-4 pb-12 pt-14 sm:px-6 md:pb-16 md:pt-20">
-          <p className="text-center font-script text-xl italic text-warm-brown md:text-left md:text-2xl">
-            The catalogue
-          </p>
-          <h1 className="mt-3 max-w-3xl text-center font-display text-4xl text-maroon md:text-left md:text-5xl text-balance">
-            Cloth &amp; thread jewellery
-          </h1>
-          <GoldDivider width="md" className="mx-auto my-6 md:mx-0" />
-          <p className="mx-auto max-w-2xl text-center font-body text-base leading-relaxed text-ink-muted md:mx-0 md:text-left md:text-lg">
-            Hand-finished fabric earrings, embroidered collars, pearl-thread necklaces, and hair
-            adornments — photographed in natural light, one artisan batch at a time.
-          </p>
+        <div className="mx-auto grid max-w-7xl lg:grid-cols-2">
+          <div className="relative z-10 flex flex-col justify-center px-4 py-14 sm:px-6 md:py-20 lg:px-10">
+            <p className="font-script text-xl italic text-warm-brown md:text-2xl">The catalogue</p>
+            <h1 className="mt-3 max-w-xl font-display text-4xl text-maroon md:text-5xl text-balance">
+              Cloth &amp; thread jewellery
+            </h1>
+            <GoldDivider width="md" className="my-6" />
+            <p className="max-w-lg font-body text-base leading-relaxed text-ink-muted md:text-lg">
+              Fabric earrings, embroidered collars, pearl-thread necklaces, and hair adornments —
+              photographed in natural light, one small batch at a time.
+            </p>
+          </div>
+          <EditorialFrame
+            src="/editorial/cotton-pouch.webp"
+            alt="Alankara cotton drawstring pouch in kraft gift packaging"
+            caption="Sealed with care"
+            className="min-h-[280px] rounded-none border-0 border-l border-champagne/15 shadow-none lg:min-h-[360px]"
+            imageClassName="min-h-[280px] lg:min-h-[360px]"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            vignette="bottom"
+          />
         </div>
       </section>
 

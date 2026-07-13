@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -41,6 +42,13 @@ const collections = [
     accent: "from-warm-brown/8 to-linen",
   },
 ];
+
+const collectionImages: Record<string, string> = {
+  earrings: "/products/navy-jhumkas.webp",
+  necklaces: "/products/pearl-choker-necklace.webp",
+  hair: "/products/floral-hair-barrette.webp",
+  sets: "/products/maroon-chandbali-hoops.webp",
+};
 
 export function ChapterCollections() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -91,11 +99,23 @@ export function ChapterCollections() {
                 onMouseEnter={() => setHoveredId(collection.id)}
                 onMouseLeave={() => setHoveredId(null)}
               >
+                <Image
+                  src={collectionImages[collection.id]}
+                  alt=""
+                  fill
+                  className="object-cover transition-transform duration-slow ease-luxury group-hover:scale-[1.04]"
+                  sizes="(max-width: 768px) 100vw, 40vw"
+                  aria-hidden="true"
+                />
+                <div
+                  className="absolute inset-0 bg-gradient-to-t from-ivory via-ivory/75 to-ivory/20"
+                  aria-hidden="true"
+                />
                 <div
                   className={cn(
                     "absolute inset-0 bg-gradient-to-br transition-opacity duration-slow ease-luxury",
                     collection.accent,
-                    isHovered ? "opacity-100" : "opacity-60",
+                    isHovered ? "opacity-30" : "opacity-10",
                   )}
                   aria-hidden="true"
                 />

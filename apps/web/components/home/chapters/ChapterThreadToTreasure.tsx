@@ -1,88 +1,69 @@
 "use client";
 
+import Image from "next/image";
 import { useRef } from "react";
-import { PaperTexture } from "@/components/decor";
-import { FabricTexture } from "@/components/ui/FabricTexture";
+import { PROCESS_STEPS } from "@/lib/editorial/story-images";
 import { useChapterReveal } from "@/hooks/useChapterReveal";
+import { cn } from "@/lib/utils";
 
-const processSteps = [
-  {
-    id: "thread",
-    title: "Thread selection",
-    description: "Cotton, silk, and zari threads are chosen for weight, drape, and how they catch afternoon light.",
-    icon: "🧵",
-  },
-  {
-    id: "embroidery",
-    title: "Hand embroidery",
-    description: "Motifs are sketched on butter paper, then stitched frame by frame — running stitch, satin, and French knots.",
-    icon: "✿",
-  },
-  {
-    id: "pearls",
-    title: "Pearl & ghungroo",
-    description: "Freshwater pearls and tiny ghungroos are knotted by hand so each strand moves with you.",
-    icon: "○",
-  },
-  {
-    id: "finish",
-    title: "Finishing touch",
-    description: "Every clasp is tested, every edge bound in cotton tape. Pieces ship in a reusable fabric pouch.",
-    icon: "◈",
-  },
-];
-
+/** Process chapter — sequential editorial frames instead of emoji cards */
 export function ChapterThreadToTreasure() {
   const sectionRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
 
-  useChapterReveal({ trigger: sectionRef, targets: gridRef, variant: "mask-left", stagger: 0.15 });
+  useChapterReveal({ trigger: sectionRef, targets: gridRef, variant: "mask-left", stagger: 0.12 });
 
   return (
     <section
       ref={sectionRef}
-      className="section-cotton relative px-6 py-24 md:py-32"
+      className="relative bg-cotton/60 px-6 py-24 md:py-32"
       aria-label="Our Story — the craft"
     >
-      <PaperTexture variant="cotton" />
-      <FabricTexture id="thread" opacity={0.05} />
-
       <div className="mx-auto max-w-6xl">
-        <div className="mb-16 max-w-2xl">
+        <div className="mb-14 max-w-2xl">
           <p className="font-body text-xs uppercase tracking-[0.3em] text-olive">The craft</p>
           <h2 className="mt-4 font-display text-3xl text-maroon md:text-5xl">
             From thread to treasure
           </h2>
           <p className="mt-4 font-body text-ink-muted">
-            Four stages from raw thread to finished treasure — the same journey every piece in our
-            collection follows.
+            Four quiet stages — the same journey every piece in our collection follows.
           </p>
         </div>
 
-        <div ref={gridRef} className="grid gap-8 md:grid-cols-2">
-          {processSteps.map((step, index) => (
+        <div ref={gridRef} className="space-y-10 md:space-y-14">
+          {PROCESS_STEPS.map((step, index) => (
             <article
               key={step.id}
               data-reveal
-              className="paper-card relative overflow-hidden rounded-sm border border-sage/30 p-8"
+              className="grid items-center gap-8 md:grid-cols-2 md:gap-12"
             >
-              <div
-                className="absolute -right-4 -top-4 font-display text-8xl text-champagne/15"
-                aria-hidden="true"
-              >
-                {String(index + 1).padStart(2, "0")}
+              <div className={index % 2 === 1 ? "md:order-2" : undefined}>
+                <span className="font-body text-xs uppercase tracking-[0.35em] text-champagne">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <h3 className="mt-2 font-display text-2xl text-maroon md:text-3xl">{step.title}</h3>
+                <p className="mt-4 font-body text-sm leading-relaxed text-ink-muted md:text-base">
+                  {step.description}
+                </p>
               </div>
               <div
-                className="mb-4 flex h-16 w-16 items-center justify-center rounded-full border border-champagne/40 bg-cotton font-display text-2xl text-maroon"
-                aria-hidden="true"
+                className={cn(
+                  "relative aspect-[4/3] overflow-hidden rounded-sm border border-champagne/20 shadow-luxury",
+                  index % 2 === 1 ? "md:order-1" : undefined,
+                )}
               >
-                {step.icon}
+                <Image
+                  src={step.image}
+                  alt={step.alt}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+                <div
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/15 to-transparent"
+                  aria-hidden="true"
+                />
               </div>
-              <h3 className="font-display text-xl text-maroon">{step.title}</h3>
-              <p className="mt-3 font-body text-sm text-ink-muted leading-relaxed">
-                {step.description}
-              </p>
-              <div className="mt-6 h-px w-full bg-gradient-to-r from-champagne/50 via-sage/30 to-transparent" />
             </article>
           ))}
         </div>

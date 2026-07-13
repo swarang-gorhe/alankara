@@ -1,11 +1,17 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { artisans } from "@/lib/fixtures";
-import { FabricTexture } from "@/components/ui/FabricTexture";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { gsap, registerGsap } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
+
+const studioImages = [
+  "/editorial/studio-morning.webp",
+  "/editorial/stitch-detail.webp",
+  "/editorial/pearl-threading.webp",
+];
 
 export function ChapterMeetMakers() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -44,16 +50,31 @@ export function ChapterMeetMakers() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-gradient-to-b from-maroon/[0.06] via-cotton to-ivory px-6 py-24 md:py-32"
+      className="relative overflow-hidden bg-gradient-to-b from-ivory via-linen/40 to-cotton px-6 py-24 md:py-32"
       aria-label="The Artisans"
     >
-      <FabricTexture id="makers" opacity={0.04} />
-
       <div className="mx-auto max-w-6xl">
-        <p className="font-body text-xs uppercase tracking-[0.3em] text-olive">Meet the makers</p>
-        <h2 className="mt-4 font-display text-3xl text-maroon md:text-5xl">
-          Hands behind the thread
-        </h2>
+        <div className="grid gap-10 lg:grid-cols-2 lg:items-end">
+          <div>
+            <p className="font-body text-xs uppercase tracking-[0.3em] text-olive">Meet the makers</p>
+            <h2 className="mt-4 font-display text-3xl text-maroon md:text-5xl">
+              Voices from the studio
+            </h2>
+            <p className="mt-4 max-w-md font-body text-sm leading-relaxed text-ink-muted">
+              The artisans behind Alankara — each with a signature stitch, a favourite thread, and a
+              table by the window.
+            </p>
+          </div>
+          <div className="relative aspect-[16/9] overflow-hidden rounded-sm border border-champagne/20 shadow-luxury">
+            <Image
+              src="/editorial/studio-morning.webp"
+              alt="Sunlit studio table with scissors, thread, and embroidered linen"
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+            />
+          </div>
+        </div>
 
         <div className="mt-12 overflow-hidden">
           <div
@@ -65,29 +86,42 @@ export function ChapterMeetMakers() {
               <article
                 key={maker.id}
                 className={cn(
-                  "paper-card w-[min(85vw,380px)] shrink-0 rounded-sm border border-sage/30 p-8 transition-all duration-base ease-luxury",
+                  "w-[min(85vw,380px)] shrink-0 overflow-hidden rounded-sm border border-sage/30 bg-ivory/90 transition-all duration-base ease-luxury",
                   !prefersReducedMotion && index === activeIndex
                     ? "scale-[1.02] border-champagne/50 shadow-luxury-lg"
-                    : "opacity-80",
+                    : "opacity-85",
                 )}
               >
-                <span className="font-body text-xs uppercase tracking-widest text-champagne">
-                  {maker.location}
-                </span>
-                <h3 className="mt-2 font-display text-2xl text-maroon">{maker.name}</h3>
-                <p className="mt-1 font-body text-sm text-olive">{maker.title}</p>
-                <p className="mt-4 font-body text-sm text-ink-muted leading-relaxed line-clamp-4">
-                  {maker.bio}
-                </p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {maker.specialty.slice(0, 3).map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-full border border-sage/40 bg-ivory px-3 py-1 font-body text-xs text-ink"
-                    >
-                      {tag}
-                    </span>
-                  ))}
+                <div className="relative h-36 w-full">
+                  <Image
+                    src={studioImages[index % studioImages.length]}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    sizes="380px"
+                    aria-hidden="true"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-ivory via-ivory/20 to-transparent" />
+                </div>
+                <div className="p-8 pt-4">
+                  <span className="font-body text-xs uppercase tracking-widest text-champagne">
+                    {maker.location}
+                  </span>
+                  <h3 className="mt-2 font-display text-2xl text-maroon">{maker.name}</h3>
+                  <p className="mt-1 font-body text-sm text-olive">{maker.title}</p>
+                  <p className="mt-4 font-body text-sm text-ink-muted leading-relaxed line-clamp-4">
+                    {maker.bio}
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {maker.specialty.slice(0, 3).map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full border border-sage/40 bg-cotton px-3 py-1 font-body text-xs text-ink"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </article>
             ))}

@@ -7,10 +7,10 @@ import { artisans } from "@/lib/fixtures";
 import { createPageMetadata } from "@/lib/seo/metadata";
 
 const artisanImages = [
-  "/products/disc-necklace.webp",
-  "/products/navy-jhumkas.webp",
-  "/products/floral-hair-barrette.webp",
-  "/products/beaded-bracelet.webp",
+  "/editorial/studio-morning.webp",
+  "/editorial/pearl-threading.webp",
+  "/editorial/stitch-detail.webp",
+  "/editorial/ghungroo-detail.webp",
 ];
 
 export const metadata: Metadata = createPageMetadata({
@@ -24,15 +24,28 @@ export default function ArtisansPage() {
   return (
     <div className="bg-gradient-to-b from-ivory via-linen/25 to-cotton/40">
       <section className="border-b border-champagne/10 bg-ivory/90">
-        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 md:py-24">
-          <p className="font-script text-xl italic text-champagne md:text-2xl">Meet the crafters</p>
-          <h1 className="mt-4 max-w-3xl font-display text-4xl leading-tight text-maroon md:text-5xl">
-            The artisan collective
-          </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-muted">
-            Alankara is a bridge between workshop floors and your wardrobe. Each artisan brings
-            decades of textile technique — and a voice we are proud to amplify.
-          </p>
+        <div className="mx-auto grid max-w-7xl lg:grid-cols-2">
+          <div className="flex flex-col justify-center px-4 py-14 sm:px-6 md:py-24 lg:px-10">
+            <p className="font-script text-xl italic text-champagne md:text-2xl">Meet the crafters</p>
+            <h1 className="mt-4 max-w-3xl font-display text-4xl leading-tight text-maroon md:text-5xl">
+              The artisan collective
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-muted">
+              Alankara is a bridge between workshop floors and your wardrobe. Each artisan brings
+              decades of textile technique — and a voice we are proud to amplify.
+            </p>
+          </div>
+          <div className="relative min-h-[280px] lg:min-h-[360px]">
+            <Image
+              src="/editorial/studio-morning.webp"
+              alt="Sunlit studio table with scissors, thread, and embroidered linen"
+              fill
+              className="object-cover"
+              sizes="(max-width: 1024px) 100vw, 50vw"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-ink/20 to-transparent" />
+          </div>
         </div>
       </section>
 

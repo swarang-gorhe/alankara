@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { EditorialFrame } from "@/components/editorial";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { Button } from "@/components/ui/button";
 import { ourStory } from "@/lib/fixtures";
@@ -19,15 +20,23 @@ export default function OurStoryPage() {
   return (
     <div className="bg-gradient-to-b from-ivory via-linen/30 to-cotton/40">
       <section className="relative overflow-hidden border-b border-champagne/10">
-        <div className="absolute inset-0 bg-gradient-to-br from-maroon/[0.04] via-transparent to-sage/10" aria-hidden="true" />
-        <div className="relative mx-auto max-w-5xl px-4 py-16 text-center sm:px-6 md:py-28">
-          <p className="font-script text-xl italic text-champagne md:text-2xl">{hero.eyebrow}</p>
-          <h1 className="mt-6 font-display text-4xl leading-tight text-maroon md:text-6xl text-balance">
-            {hero.title}
-          </h1>
-          <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-ink-muted md:text-xl">
-            {hero.subtitle}
-          </p>
+        <div className="mx-auto grid max-w-6xl lg:grid-cols-2">
+          <div className="relative z-10 flex flex-col justify-center px-4 py-16 sm:px-6 md:py-24 lg:px-10">
+            <p className="font-script text-xl italic text-champagne md:text-2xl">{hero.eyebrow}</p>
+            <h1 className="mt-6 font-display text-4xl leading-tight text-maroon md:text-5xl text-balance">
+              {hero.title}
+            </h1>
+            <p className="mt-8 max-w-xl text-lg leading-relaxed text-ink-muted">{hero.subtitle}</p>
+          </div>
+          <EditorialFrame
+            src="/editorial/embroidery-hoop.webp"
+            alt="Embroidery hoop with layered fabric flowers"
+            caption="Where every piece begins"
+            className="min-h-[320px] rounded-none border-0 shadow-none lg:min-h-full"
+            imageClassName="min-h-[320px] lg:min-h-full"
+            priority
+            sizes="(max-width: 1024px) 100vw, 50vw"
+          />
         </div>
       </section>
 
@@ -78,7 +87,7 @@ export default function OurStoryPage() {
             className="mx-auto opacity-80"
           />
           <p className="mt-8 font-script text-lg italic text-champagne md:text-xl">
-            Meet the hands behind the thread
+            Meet the voices behind the thread
           </p>
           <Button asChild variant="outline" className="mt-6">
             <Link href="/artisans">Our artisans</Link>

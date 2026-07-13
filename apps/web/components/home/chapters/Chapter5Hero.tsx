@@ -1,135 +1,103 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { AnimatedLogo } from "@/components/brand/AnimatedLogo";
-import {
-  BotanicalSprig,
-  GhungrooScatter,
-  GoldDivider,
-  HeartsDivider,
-  PaperTexture,
-  PearlScatter,
-} from "@/components/decor";
+import { EditorialFrame } from "@/components/editorial";
+import { GoldDivider } from "@/components/decor";
 import { useChapterReveal } from "@/hooks/useChapterReveal";
 import { useIntro } from "@/contexts/IntroContext";
-import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { gsap, registerGsap } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
 
-/**
- * Chapter 5 — Welcome hero matching the welcome poster aesthetic.
- */
+/** Welcome hero — editorial split layout with studio photography */
 export function Chapter5Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const prefersReducedMotion = usePrefersReducedMotion();
   const isMobile = useIsMobile();
   const { phase } = useIntro();
   const introComplete = phase === "complete" || phase === "exiting";
 
-  const logoSize = isMobile ? 100 : 120;
+  const logoSize = isMobile ? 88 : 104;
 
-  useChapterReveal({ trigger: sectionRef, targets: contentRef, variant: "scale-in" });
-
-  useEffect(() => {
-    registerGsap();
-    if (prefersReducedMotion || !sectionRef.current) return;
-
-    const ctx = gsap.context(() => {
-      gsap.to("[data-hero-pearl]", {
-        y: -30,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom top",
-          scrub: 1,
-        },
-      });
-    }, sectionRef);
-
-    return () => ctx.revert();
-  }, [prefersReducedMotion]);
+  useChapterReveal({ trigger: sectionRef, targets: contentRef, variant: "mask-left" });
 
   return (
     <section
       ref={sectionRef}
       id="main-content"
-      className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-6 py-24"
+      className="relative min-h-[100svh] overflow-hidden bg-ivory"
       aria-label="Welcome to Alankara"
       tabIndex={-1}
     >
-      <PaperTexture variant="cream" />
-
-      <PearlScatter density="rich" className="z-[1]" />
-      <GhungrooScatter count={5} className="z-[1]" />
-      <BotanicalSprig position="top-left" size={isMobile ? 90 : 130} className="z-[1]" />
-      <BotanicalSprig position="top-right" size={isMobile ? 90 : 130} className="z-[1]" />
-      <BotanicalSprig position="bottom-right" size={isMobile ? 70 : 100} className="z-[1] opacity-70" />
-
-      <div
-        data-hero-pearl
-        className="pointer-events-none absolute bottom-[18%] left-[8%] z-[1] h-4 w-4 rounded-full bg-gradient-to-br from-white to-cotton shadow-[2px_3px_8px_rgba(43,35,28,0.15)]"
-        aria-hidden="true"
-      />
-      <div
-        data-hero-pearl
-        className="pointer-events-none absolute bottom-[22%] right-[10%] z-[1] h-3 w-3 rounded-full bg-gradient-to-br from-white to-ivory shadow-[2px_3px_6px_rgba(43,35,28,0.12)]"
-        aria-hidden="true"
-      />
-
-      <div
-        ref={contentRef}
-        className={cn(
-          "relative z-10 flex max-w-2xl flex-col items-center text-center transition-opacity duration-slow ease-luxury",
-          introComplete ? "opacity-100" : "opacity-0",
-        )}
-      >
-        <AnimatedLogo
-          variant="full"
-          size={logoSize}
-          showTagline={false}
-          playEntrance={false}
-          priority
-          className="mb-2 min-w-[240px] md:min-w-[288px]"
-        />
-
-        <p data-reveal className="mt-2 font-body text-xs uppercase tracking-[0.2em] text-ink-muted">
-          Our promise is simple —
-        </p>
-        <p data-reveal className="mt-1 font-script text-2xl italic text-warm-brown md:text-3xl">
-          Crafted for little moments.
-        </p>
-
-        <HeartsDivider className="my-5" />
-
-        <p data-reveal className="max-w-md font-body text-sm leading-relaxed text-ink-muted md:text-base">
-          Thank you for being here from the very beginning.
-        </p>
-
-        <GoldDivider width="sm" className="my-6" />
-
-        <h1 data-reveal className="font-display text-3xl text-maroon md:text-4xl">
-          Welcome to Alankara.
-        </h1>
-
-        <p
-          data-reveal
-          className="mt-6 max-w-lg font-body text-sm uppercase tracking-[0.3em] text-olive"
+      <div className="mx-auto grid min-h-[100svh] max-w-7xl lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)]">
+        {/* Copy column */}
+        <div
+          ref={contentRef}
+          className={cn(
+            "relative z-10 flex flex-col justify-center px-6 py-20 transition-opacity duration-slow ease-luxury lg:px-10 lg:py-24 xl:px-14",
+            introComplete ? "opacity-100" : "opacity-0",
+          )}
         >
-          Cloth &amp; thread jewellery
-        </p>
-      </div>
+          <AnimatedLogo
+            variant="full"
+            size={logoSize}
+            showTagline={false}
+            playEntrance={false}
+            priority
+            className="mb-6 min-w-[220px] md:min-w-[260px]"
+          />
 
-      <div
-        className={cn(
-          "absolute bottom-10 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-ink-muted transition-opacity duration-slow",
-          introComplete ? "opacity-100" : "opacity-0",
-        )}
-      >
-        <span className="font-body text-xs uppercase tracking-[0.3em]">Scroll to discover</span>
-        <span className="h-8 w-px bg-gradient-to-b from-champagne to-transparent motion-safe:animate-pulse" />
+          <p data-reveal className="font-body text-xs uppercase tracking-[0.28em] text-olive">
+            Cloth &amp; thread jewellery
+          </p>
+          <h1
+            data-reveal
+            className="mt-4 max-w-md font-display text-4xl leading-[1.1] text-maroon md:text-5xl lg:text-[3.25rem] text-balance"
+          >
+            Welcome to Alankara.
+          </h1>
+          <p data-reveal className="mt-5 max-w-md font-script text-2xl italic text-warm-brown">
+            Crafted for little moments.
+          </p>
+
+          <GoldDivider width="sm" className="my-8" />
+
+          <p data-reveal className="max-w-md font-body text-base leading-relaxed text-ink-muted">
+            Fabric earrings, embroidered collars, pearl-thread necklaces, and hair adornments —
+            finished in small batches with the patience of a studio morning.
+          </p>
+
+          <p
+            data-reveal
+            className="mt-8 font-body text-xs uppercase tracking-[0.3em] text-ink-muted/80"
+          >
+            Scroll to discover
+          </p>
+        </div>
+
+        {/* Editorial image column */}
+        <div
+          data-reveal
+          className={cn(
+            "relative min-h-[42vh] lg:min-h-[100svh]",
+            introComplete ? "opacity-100" : "opacity-0",
+          )}
+        >
+          <EditorialFrame
+            src="/editorial/embroidery-hoop.webp"
+            alt="Embroidery hoop with layered fabric flowers and pearl centres"
+            caption="Embroidery in progress"
+            className="h-full min-h-[42vh] rounded-none border-0 shadow-none lg:min-h-[100svh]"
+            imageClassName="min-h-[42vh] lg:min-h-[100svh]"
+            priority
+            vignette="bottom"
+            sizes="(max-width: 1024px) 100vw, 55vw"
+          />
+          <div
+            className="pointer-events-none absolute inset-y-0 left-0 hidden w-24 bg-gradient-to-r from-ivory to-transparent lg:block"
+            aria-hidden="true"
+          />
+        </div>
       </div>
     </section>
   );
