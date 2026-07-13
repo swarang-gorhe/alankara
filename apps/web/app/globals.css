@@ -16,6 +16,13 @@
     --cotton: #ede5d6;
     --ink: #2b231c;
 
+    /* Dark luxury register */
+    --deep-wine: #3d1520;
+    --aged-burgundy: #4a1a24;
+    --antique-gold: #c9a227;
+    --dusty-rose: #b98277;
+    --kraft-cream: #ede1ce;
+
     /* Semantic status — muted, within palette */
     --success: #6b7353;
     --success-muted: #a8ad96;

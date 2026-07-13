@@ -38,6 +38,3 @@ class CollectionProduct(Base):
     sort_order: Mapped[int] = mapped_column(Integer, default=0)
 
     collection: Mapped["Collection"] = relationship(back_populates="products")
-
-
-from app.models.product import Product  # noqa: E402

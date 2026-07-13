@@ -4,3 +4,7 @@ export { BotanicalSprig } from "./BotanicalSprig";
 export { GoldDivider, HeartsDivider } from "./GoldDivider";
 export { PaperTexture } from "./PaperTexture";
 export { CraftPillars, ScissorsIcon, LeafSprigIcon, SpoolIcon } from "./CraftPillarIcons";
+export { WaxSeal } from "./WaxSeal";
+export { DarkLuxuryTexture } from "./DarkLuxuryTexture";
+export { DustyRoseDivider } from "./DustyRoseDivider";
+export { PromotionalBanner } from "./PromotionalBanner";

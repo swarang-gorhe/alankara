@@ -25,6 +25,12 @@ const config: Config = {
           DEFAULT: "#2B231C",
           muted: "#5C5248",
         },
+        /* Dark luxury register — hero variants, packaging, promotional */
+        "deep-wine": "#3D1520",
+        "aged-burgundy": "#4A1A24",
+        "antique-gold": "#C9A227",
+        "dusty-rose": "#B98277",
+        "kraft-cream": "#EDE1CE",
         success: {
           DEFAULT: "#6B7353",
           foreground: "#FAF3E7",

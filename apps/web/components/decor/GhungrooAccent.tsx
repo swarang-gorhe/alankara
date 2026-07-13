@@ -43,12 +43,12 @@ type GhungrooScatterProps = {
 };
 
 const SCATTER_POSITIONS = [
-  { left: "7%", top: "28%", size: 14, rotate: -12 },
-  { left: "91%", top: "35%", size: 12, rotate: 18 },
-  { left: "11%", top: "78%", size: 13, rotate: 8 },
-  { left: "87%", top: "72%", size: 15, rotate: -15 },
-  { left: "18%", top: "48%", size: 10, rotate: 22 },
-  { left: "82%", top: "52%", size: 11, rotate: -8 },
+  { left: "7%", top: "28%", size: 14, rotate: -8 },
+  { left: "92%", top: "22%", size: 12, rotate: 0 },
+  { left: "11%", top: "78%", size: 13, rotate: 6 },
+  { left: "88%", top: "74%", size: 15, rotate: 0 },
+  { left: "18%", top: "48%", size: 10, rotate: 10 },
+  { left: "84%", top: "50%", size: 11, rotate: 0 },
 ];
 
 export function GhungrooScatter({ className, count = 4 }: GhungrooScatterProps) {
@@ -63,6 +63,7 @@ export function GhungrooScatter({ className, count = 4 }: GhungrooScatterProps) 
             left: pos.left,
             top: pos.top,
             transform: `rotate(${pos.rotate}deg)`,
+            transformOrigin: "center center",
           }}
         />
       ))}

@@ -88,14 +88,26 @@ def upgrade() -> None:
     # Seed default collections for cloth/fabric jewellery
     op.execute(
         """
-        INSERT INTO collections (id, slug, name, description, featured, published, sort_order, created_at, updated_at)
+        INSERT INTO collections (
+            id, slug, name, description, featured, published,
+            sort_order, created_at, updated_at
+        )
         VALUES
-          ('col-festive-textiles', 'festive-textiles', 'Festive Textiles',
-           'Coordinated fabric jewellery for celebrations — mirror work, brocade, and zari.', true, true, 1, NOW(), NOW()),
-          ('col-everyday-fabric', 'everyday-fabric', 'Everyday Fabric',
-           'Lightweight cloth earrings, rings, and cuffs for daily wear.', false, true, 2, NOW(), NOW()),
-          ('col-sustainable-edit', 'sustainable-edit', 'Sustainable Edit',
-           'Upcycled and zero-waste textile accessories.', false, true, 3, NOW(), NOW())
+          (
+            'col-festive-textiles', 'festive-textiles', 'Festive Textiles',
+            'Coordinated fabric jewellery for celebrations — mirror work, brocade, and zari.',
+            true, true, 1, NOW(), NOW()
+          ),
+          (
+            'col-everyday-fabric', 'everyday-fabric', 'Everyday Fabric',
+            'Lightweight cloth earrings, rings, and cuffs for daily wear.',
+            false, true, 2, NOW(), NOW()
+          ),
+          (
+            'col-sustainable-edit', 'sustainable-edit', 'Sustainable Edit',
+            'Upcycled and zero-waste textile accessories.',
+            false, true, 3, NOW(), NOW()
+          )
         ON CONFLICT DO NOTHING
         """
     )

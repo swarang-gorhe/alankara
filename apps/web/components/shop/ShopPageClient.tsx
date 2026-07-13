@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { BotanicalSprig, GoldDivider, PaperTexture, PearlScatter } from "@/components/decor";
+import { BotanicalSprig, GoldDivider, PaperTexture, PearlScatter, PromotionalBanner } from "@/components/decor";
 import { EditorialProductCard } from "@/components/shop/EditorialProductCard";
 import { ShopChipFilters, filterProducts } from "@/components/shop/ShopChipFilters";
 import { ShopEmptyState } from "@/components/shop/ShopEmptyState";
@@ -111,6 +111,8 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
             onMobileOpenChange={setMobileFiltersOpen}
           />
         </div>
+
+        <PromotionalBanner className="mb-10" />
 
         <AnimatePresence mode="wait">
           {isLoading ? (

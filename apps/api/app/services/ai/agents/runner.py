@@ -129,7 +129,10 @@ def resolve_action_prompt(agent_type: str, action: str | None, prompt: str | Non
         actions = AGENT_ACTIONS.get(agent_type, {})
         if action not in actions:
             available = ", ".join(actions.keys()) or "none"
-            raise ValueError(f"Unknown action '{action}' for agent '{agent_type}'. Available: {available}")
+            raise ValueError(
+                f"Unknown action '{action}' for agent '{agent_type}'. "
+                f"Available: {available}"
+            )
         return actions[action]
     if prompt:
         return prompt
@@ -197,6 +200,9 @@ async def run_admin_agent(
 
 def list_agent_actions() -> dict[str, list[dict[str, str]]]:
     return {
-        agent_type: [{"id": action_id, "label": action_id.replace("-", " ").title()} for action_id in actions]
+        agent_type: [
+            {"id": action_id, "label": action_id.replace("-", " ").title()}
+            for action_id in actions
+        ]
         for agent_type, actions in AGENT_ACTIONS.items()
     }

@@ -12,7 +12,16 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import async_session_maker, engine
-from app.models import Artisan, Category, Discount, FaqEntry, Product, ProductVariant, Review, ReviewSummary
+from app.models import (
+    Artisan,
+    Category,
+    Discount,
+    FaqEntry,
+    Product,
+    ProductVariant,
+    Review,
+    ReviewSummary,
+)
 
 FIXTURES_DIR = Path(__file__).resolve().parents[2] / "web" / "lib" / "fixtures"
 
@@ -145,21 +154,25 @@ async def seed_faq(session: AsyncSession) -> None:
         (
             "shipping-time",
             "How long does shipping take?",
-            "Domestic orders ship within 3–5 business days. Express delivery is available in metro cities.",
+            "Domestic orders ship within 3–5 business days. "
+            "Express delivery is available in metro cities.",
             "shipping",
             1,
         ),
         (
             "returns-policy",
             "What is your returns policy?",
-            "Unworn pieces in original packaging may be returned within 14 days. Custom pieces are final sale.",
+            "Unworn pieces in original packaging may be returned within 14 days. "
+            "Custom pieces are final sale.",
             "returns",
             2,
         ),
         (
             "textile-jewellery-care",
             "How should I care for my Alankara textile pieces?",
-            "Store in the provided pouch, avoid water and perfume contact, and spot clean gently with a damp cloth. Never machine wash fabric jewellery.",
+            "Store in the provided pouch, avoid water and perfume contact, "
+            "and spot clean gently with a damp cloth. "
+            "Never machine wash fabric jewellery.",
             "care",
             3,
         ),

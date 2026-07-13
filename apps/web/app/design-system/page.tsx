@@ -2,6 +2,13 @@
 
 import { useState } from "react";
 import { AnimatedLogo, LOGO_SHOWCASE_SIZE } from "@/components/brand/AnimatedLogo";
+import {
+  DarkLuxuryTexture,
+  DustyRoseDivider,
+  GoldDivider,
+  PromotionalBanner,
+  WaxSeal,
+} from "@/components/decor";
 import { Chip } from "@/components/ui/chip";
 import { FabricTexture } from "@/components/ui/FabricTexture";
 import { Input } from "@/components/ui/input";
@@ -19,6 +26,11 @@ const palette = [
   { name: "Sage", token: "sage", hex: "#A8AD96" },
   { name: "Cotton", token: "cotton", hex: "#EFE7D8" },
   { name: "Ink", token: "ink", hex: "#2B231C" },
+  { name: "Deep Wine", token: "deep-wine", hex: "#3D1520" },
+  { name: "Aged Burgundy", token: "aged-burgundy", hex: "#4A1A24" },
+  { name: "Antique Gold", token: "antique-gold", hex: "#C9A227" },
+  { name: "Dusty Rose", token: "dusty-rose", hex: "#B98277" },
+  { name: "Kraft Cream", token: "kraft-cream", hex: "#EDE1CE" },
   { name: "Success", token: "success", hex: "#6B7353" },
   { name: "Error", token: "error", hex: "#7A2E1C" },
 ] as const;
@@ -202,6 +214,39 @@ export default function DesignSystemPage() {
               <div className="relative flex h-full items-center justify-center">
                 <p className="font-display text-xl text-maroon">Texture overlay</p>
               </div>
+            </div>
+          </ShowcaseSection>
+
+          <SectionDivider />
+
+          <ShowcaseSection
+            title="Dark luxury register"
+            description="Deep-wine backgrounds with antique-gold type — for hero variants, packaging chapters, and promotional moments. Does not replace the primary ivory/linen palette."
+          >
+            <div className="relative overflow-hidden rounded-sm border border-antique-gold/20 bg-deep-wine px-8 py-12">
+              <DarkLuxuryTexture />
+              <div className="relative z-10 space-y-6">
+                <p className="font-body text-xs uppercase tracking-[0.3em] text-antique-gold/80">
+                  Packaging chapter
+                </p>
+                <h3 className="font-display text-3xl text-antique-gold">The details matter</h3>
+                <GoldDivider width="sm" tone="antique" />
+                <DustyRoseDivider width="sm" />
+                <div className="flex flex-wrap items-center gap-6">
+                  <WaxSeal size={56} />
+                  <div className="rounded-sm border border-antique-gold/25 bg-kraft-cream px-6 py-4">
+                    <p className="font-display text-sm text-deep-wine">Kraft-cream gift pouch</p>
+                    <p className="mt-1 font-body text-xs text-ink-muted">Embossed seal · tissue wrap</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="mt-6">
+              <PromotionalBanner
+                title="Festival thread collection"
+                subtitle="Mirror work, brocade thread, and hand-stitched zari — limited small batches."
+                href="/shop"
+              />
             </div>
           </ShowcaseSection>
 

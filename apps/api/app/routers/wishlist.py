@@ -46,7 +46,11 @@ async def list_wishlist(db: DbSession, user: CurrentUser) -> list[WishlistItemSc
     return items
 
 
-@router.post("/{product_id}", response_model=WishlistItemSchema, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/{product_id}",
+    response_model=WishlistItemSchema,
+    status_code=status.HTTP_201_CREATED,
+)
 async def add_to_wishlist(
     product_id: str,
     db: DbSession,

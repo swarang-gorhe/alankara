@@ -25,7 +25,7 @@ type AnimatedLogoProps = {
   variant?: "mark" | "full";
   /** Show script tagline beneath the medallion */
   showTagline?: boolean;
-  /** Brief idle micro-rotate every ~20s when in view */
+  /** Brief idle micro-rotate flourish every ~20s when in view — always settles at 0° */
   idlePulse?: boolean;
   /** Run full entrance sequence on mount */
   playEntrance?: boolean;
@@ -44,7 +44,7 @@ export function AnimatedLogo({
   const prefersReducedMotion = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
-  const [idleKey, setIdleKey] = useState(0);
+  const [idleFlourish, setIdleFlourish] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [entranceDone, setEntranceDone] = useState(!playEntrance);
 
@@ -74,7 +74,7 @@ export function AnimatedLogo({
     if (!idlePulse || prefersReducedMotion || !isInView) return;
 
     const interval = setInterval(() => {
-      setIdleKey((k) => k + 1);
+      setIdleFlourish(true);
     }, 20000);
 
     return () => clearInterval(interval);
@@ -91,7 +91,20 @@ export function AnimatedLogo({
     ? { duration: 0.6, ease: "easeOut" as const }
     : { duration: 1.4, ease: LUXURY_EASE };
 
-  const idleRotate = idlePulse && isInView && !reduced ? (idleKey % 2 === 0 ? 4 : -4) : 0;
+  const logoRotate = (() => {
+    if (reduced) return 0;
+    if (playEntrance && !entranceDone) return [0, 360];
+    if (idleFlourish) return [0, 12, -6, 0];
+    return 0;
+  })();
+
+  const logoTransition = (() => {
+    if (playEntrance && !entranceDone && !reduced) return spinTransition;
+    if (idleFlourish && !reduced) {
+      return { duration: 1.2, ease: LUXURY_EASE };
+    }
+    return { duration: 0 };
+  })();
 
   return (
     <div
@@ -115,6 +128,7 @@ export function AnimatedLogo({
               style={{
                 width: imageHeight * (0.55 + index * 0.12),
                 height: imageHeight * (0.55 + index * 0.12),
+                transformOrigin: "center center",
               }}
               initial={playEntrance ? { scale: 0.5, opacity: 0 } : false}
               animate={{
@@ -131,19 +145,18 @@ export function AnimatedLogo({
           ))}
 
         <motion.div
-          key={idlePulse ? `idle-${idleKey}` : "logo-spin"}
           className="relative z-10"
-          initial={playEntrance && !reduced ? { rotate: 0 } : false}
-          animate={{
-            rotate: reduced ? 0 : playEntrance && !entranceDone ? 360 : idleRotate,
-          }}
-          transition={
-            playEntrance && !entranceDone && !reduced
-              ? spinTransition
-              : { duration: 0.8, ease: LUXURY_EASE }
-          }
+          style={{ transformOrigin: "center center" }}
+          initial={playEntrance && !reduced ? { rotate: 0 } : { rotate: 0 }}
+          animate={{ rotate: logoRotate }}
+          transition={logoTransition}
           onAnimationComplete={() => {
-            if (playEntrance && !entranceDone) setEntranceDone(true);
+            if (playEntrance && !entranceDone) {
+              setEntranceDone(true);
+            }
+            if (idleFlourish) {
+              setIdleFlourish(false);
+            }
           }}
           aria-hidden="true"
         >
@@ -170,6 +183,7 @@ export function AnimatedLogo({
                 width: imageWidth,
                 height: imageHeight,
                 transform: isHovered && !reduced ? "scale(1.06)" : "scale(1)",
+                transformOrigin: "center center",
               }}
               sizes={isFull ? "(max-width: 768px) 280px, 360px" : `${size}px`}
             />

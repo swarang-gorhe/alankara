@@ -3,6 +3,8 @@ import { cn } from "@/lib/utils";
 type GoldDividerProps = {
   className?: string;
   width?: "sm" | "md" | "lg" | "full";
+  /** champagne on light surfaces; antique on deep-wine sections */
+  tone?: "champagne" | "antique";
 };
 
 const widthClasses = {
@@ -12,8 +14,19 @@ const widthClasses = {
   full: "max-w-full",
 };
 
-/** Thin champagne gold line with centre dot — from poster dividers */
-export function GoldDivider({ className, width = "md" }: GoldDividerProps) {
+const toneGradients = {
+  champagne:
+    "linear-gradient(90deg, transparent 0%, #C9932F 18%, #E8C56A 50%, #C9932F 82%, transparent 100%)",
+  antique:
+    "linear-gradient(90deg, transparent 0%, #C9A227 18%, #E8D48A 50%, #C9A227 82%, transparent 100%)",
+};
+
+/** Thin gold line with centre dot — from poster dividers */
+export function GoldDivider({
+  className,
+  width = "md",
+  tone = "champagne",
+}: GoldDividerProps) {
   return (
     <div
       className={cn(
@@ -25,12 +38,14 @@ export function GoldDivider({ className, width = "md" }: GoldDividerProps) {
     >
       <div
         className="h-px w-full"
-        style={{
-          background:
-            "linear-gradient(90deg, transparent 0%, #C9932F 18%, #E8C56A 50%, #C9932F 82%, transparent 100%)",
-        }}
+        style={{ background: toneGradients[tone] }}
       />
-      <div className="absolute h-2 w-2 rounded-full bg-champagne shadow-[0_0_8px_rgba(201,147,47,0.5)]" />
+      <div
+        className={cn(
+          "absolute h-2 w-2 rounded-full shadow-[0_0_8px_rgba(201,147,47,0.5)]",
+          tone === "antique" ? "bg-antique-gold" : "bg-champagne",
+        )}
+      />
     </div>
   );
 }
