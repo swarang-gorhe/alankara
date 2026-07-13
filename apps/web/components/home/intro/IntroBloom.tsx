@@ -30,7 +30,7 @@ export function IntroBloom({ onComplete, className }: IntroBloomProps) {
       aria-label="Welcome back"
     >
       <FabricTexture id="intro-bloom" opacity={0.06} />
-      <AnimatedLogo size={120} playEntrance showTagline />
+      <AnimatedLogo variant="full" size={140} playEntrance showTagline />
     </div>
   );
 }

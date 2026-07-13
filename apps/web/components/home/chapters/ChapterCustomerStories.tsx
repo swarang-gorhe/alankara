@@ -46,7 +46,7 @@ export function ChapterCustomerStories() {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-ivory px-6 py-24 md:py-32"
+      className="relative bg-gradient-to-b from-ivory via-linen/40 to-sage/10 px-6 py-24 md:py-32"
       aria-label="Customer stories"
     >
       <FabricTexture id="reviews" opacity={0.04} />
@@ -64,7 +64,7 @@ export function ChapterCustomerStories() {
 
         <div className="paper-card mt-10 rounded-sm border border-champagne/30 p-6 md:p-8">
           <p className="font-body text-[10px] uppercase tracking-widest text-champagne">
-            AI summary placeholder
+            What wearers are saying
           </p>
           <p className="mt-3 font-body text-sm text-ink leading-relaxed md:text-base">{summary}</p>
         </div>

@@ -1,13 +1,22 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useCallback, useEffect, useState } from "react";
 import { useIntro } from "@/contexts/IntroContext";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { markIntroSeen, hasSeenIntro } from "@/lib/intro/storage";
 import { IntroAudioProvider } from "./IntroAudioProvider";
-import { IntroBloom } from "./IntroBloom";
-import { OpeningSequence } from "./OpeningSequence";
 import { SkipIntroButton } from "./SkipIntroButton";
+
+const OpeningSequence = dynamic(
+  () => import("./OpeningSequence").then((mod) => mod.OpeningSequence),
+  { ssr: false },
+);
+
+const IntroBloom = dynamic(
+  () => import("./IntroBloom").then((mod) => mod.IntroBloom),
+  { ssr: false },
+);
 
 type UnwrapIntroProps = {
   children: React.ReactNode;

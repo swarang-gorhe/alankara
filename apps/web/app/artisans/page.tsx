@@ -1,9 +1,17 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { Button } from "@/components/ui/button";
 import { artisans } from "@/lib/fixtures";
 import { createPageMetadata } from "@/lib/seo/metadata";
+
+const artisanImages = [
+  "/products/disc-necklace.webp",
+  "/products/navy-jhumkas.webp",
+  "/products/floral-hair-barrette.webp",
+  "/products/beaded-bracelet.webp",
+];
 
 export const metadata: Metadata = createPageMetadata({
   title: "Artisans",
@@ -14,43 +22,41 @@ export const metadata: Metadata = createPageMetadata({
 
 export default function ArtisansPage() {
   return (
-    <div>
-      <section className="mx-auto max-w-7xl px-6 py-16 md:py-24">
-        <p className="font-script text-xl italic text-champagne md:text-2xl">Meet the crafters</p>
-        <h1 className="mt-4 max-w-3xl font-display text-4xl leading-tight text-maroon md:text-5xl">
-          The artisan collective
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg text-ink-muted">
-          Alankara is a bridge between workshop floors and your wardrobe. Each artisan brings
-          decades of textile technique — and a voice we are proud to amplify.
-        </p>
+    <div className="bg-gradient-to-b from-ivory via-linen/25 to-cotton/40">
+      <section className="border-b border-champagne/10 bg-ivory/90">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 md:py-24">
+          <p className="font-script text-xl italic text-champagne md:text-2xl">Meet the crafters</p>
+          <h1 className="mt-4 max-w-3xl font-display text-4xl leading-tight text-maroon md:text-5xl">
+            The artisan collective
+          </h1>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-muted">
+            Alankara is a bridge between workshop floors and your wardrobe. Each artisan brings
+            decades of textile technique — and a voice we are proud to amplify.
+          </p>
+        </div>
       </section>
 
-      <SectionDivider />
-
-      <section className="mx-auto max-w-7xl px-6 pb-24">
-        <div className="space-y-20">
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-20">
+        <div className="space-y-24 md:space-y-32">
           {artisans.map((artisan, index) => (
             <article
               key={artisan.id}
-              className="grid gap-8 md:grid-cols-12 md:gap-12"
+              className="grid items-center gap-10 md:grid-cols-12 md:gap-14"
             >
-              <div
-                className={`md:col-span-5 ${index % 2 === 1 ? "md:order-2" : ""}`}
-              >
-                <div className="relative aspect-[4/5] overflow-hidden rounded-sm border border-sage/30 bg-gradient-to-br from-linen via-ivory to-cotton">
-                  <div className="absolute inset-0 flex items-center justify-center p-8">
-                    <div className="text-center">
-                      <p className="font-display text-5xl text-maroon/20 md:text-6xl">
-                        {artisan.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </p>
-                      <span className="mt-4 inline-block rounded-sm border border-champagne/40 bg-ivory/80 px-2 py-0.5 font-body text-[10px] uppercase tracking-widest text-ink-muted">
-                        portrait pending
-                      </span>
-                    </div>
+              <div className={`md:col-span-5 ${index % 2 === 1 ? "md:order-2" : ""}`}>
+                <div className="relative aspect-[4/5] overflow-hidden rounded-sm border border-sage/25 bg-ivory shadow-luxury">
+                  <Image
+                    src={artisanImages[index % artisanImages.length]}
+                    alt={`Craft detail by ${artisan.name}`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 40vw"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-maroon/30 via-transparent to-transparent" />
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <p className="font-body text-[10px] uppercase tracking-widest text-ivory/90">
+                      Studio detail
+                    </p>
                   </div>
                 </div>
               </div>
@@ -61,15 +67,13 @@ export default function ArtisansPage() {
                 <p className="font-body text-xs uppercase tracking-widest text-champagne">
                   {artisan.location} · {artisan.yearsExperience} years
                 </p>
-                <h2 className="mt-2 font-display text-3xl text-maroon md:text-4xl">
-                  {artisan.name}
-                </h2>
+                <h2 className="mt-2 font-display text-3xl text-maroon md:text-4xl">{artisan.name}</h2>
                 <p className="mt-1 text-sm italic text-ink-muted">{artisan.title}</p>
 
-                <p className="mt-6 leading-relaxed text-ink">{artisan.bio}</p>
+                <p className="mt-6 text-base leading-[1.8] text-ink md:text-lg">{artisan.bio}</p>
 
-                <blockquote className="mt-6 border-l-2 border-champagne pl-4">
-                  <p className="font-script text-lg italic text-champagne">
+                <blockquote className="mt-8 border-l-2 border-champagne pl-5">
+                  <p className="font-script text-lg italic text-champagne md:text-xl">
                     &ldquo;{artisan.quote}&rdquo;
                   </p>
                 </blockquote>
@@ -78,7 +82,7 @@ export default function ArtisansPage() {
                   {artisan.specialty.map((skill) => (
                     <span
                       key={skill}
-                      className="rounded-sm border border-sage/40 bg-linen px-3 py-1 text-xs text-ink-muted"
+                      className="rounded-full border border-sage/40 bg-ivory px-3 py-1 text-xs text-ink-muted"
                     >
                       {skill}
                     </span>
@@ -89,9 +93,9 @@ export default function ArtisansPage() {
           ))}
         </div>
 
-        <div className="mt-20 text-center">
+        <div className="mt-24 text-center md:mt-32">
           <SectionDivider />
-          <p className="mt-12 font-script text-lg italic text-champagne">
+          <p className="mt-12 font-script text-lg italic text-champagne md:text-xl">
             Every piece carries their signature
           </p>
           <Button asChild className="mt-6">

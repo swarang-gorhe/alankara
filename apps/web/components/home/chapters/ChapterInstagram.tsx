@@ -23,7 +23,7 @@ export function ChapterInstagram() {
   return (
     <section
       ref={sectionRef}
-      className="relative px-6 py-24 md:py-32"
+      className="relative bg-gradient-to-b from-cotton/50 via-ivory to-linen/60 px-6 py-24 md:py-32"
       aria-label="Instagram"
     >
       <FabricTexture id="instagram" opacity={0.04} />

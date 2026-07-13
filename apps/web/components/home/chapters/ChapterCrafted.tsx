@@ -55,7 +55,7 @@ export function ChapterCrafted() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[80vh] overflow-hidden bg-linen px-6 py-24 md:py-32"
+      className="relative min-h-[80vh] overflow-hidden bg-gradient-to-b from-linen via-linen to-cotton/50 px-6 py-24 md:py-32"
       aria-label="Our Story"
     >
       <FabricTexture id="crafted" opacity={0.04} />

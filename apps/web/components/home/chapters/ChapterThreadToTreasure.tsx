@@ -40,7 +40,7 @@ export function ChapterThreadToTreasure() {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-ivory px-6 py-24 md:py-32"
+      className="relative bg-gradient-to-b from-cotton via-ivory to-linen/40 px-6 py-24 md:py-32"
       aria-label="Our Story — the craft"
     >
       <FabricTexture id="thread" opacity={0.05} />
@@ -52,8 +52,8 @@ export function ChapterThreadToTreasure() {
             From thread to treasure
           </h2>
           <p className="mt-4 font-body text-ink-muted">
-            Illustrations of our process — no product photography yet, only the hands and
-            materials behind each piece.
+            Four stages from raw thread to finished treasure — the same journey every piece in our
+            collection follows.
           </p>
         </div>
 

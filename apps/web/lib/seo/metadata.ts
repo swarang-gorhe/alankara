@@ -51,7 +51,7 @@ export function createPageMetadata({
   title,
   description = DEFAULT_DESCRIPTION,
   path = "",
-  image = "/brand/logo.svg",
+  image = "/brand/logo-mark.png",
   noIndex = false,
 }: PageMetadataOptions): Metadata {
   const siteUrl = getSiteUrl();

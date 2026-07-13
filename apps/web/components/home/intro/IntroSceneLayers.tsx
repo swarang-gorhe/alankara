@@ -24,7 +24,7 @@ export function IntroChapterText({ progress }: IntroChapterTextProps) {
         {showArrival && (
           <motion.p
             key="arrival"
-            className="max-w-md font-display text-xl text-maroon md:text-2xl text-balance"
+            className="max-w-lg font-display text-2xl tracking-wide text-maroon md:text-3xl text-balance"
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -12 }}
@@ -88,7 +88,7 @@ export function TreasureParticles({ progress, mobile }: TreasureParticlesProps) 
 
   if (openingProgress <= 0) return null;
 
-  const count = mobile ? 6 : 12;
+  const count = mobile ? 4 : 8;
 
   return (
     <div className="pointer-events-none absolute inset-0 z-10 overflow-hidden" aria-hidden="true">

@@ -13,27 +13,33 @@ import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const TAGLINE = "Crafted for little moments.";
-
-const PETAL_COUNT = 6;
 const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
+
+export const LOGO_MARK_SRC = "/brand/logo-mark.png";
+export const LOGO_FULL_SRC = "/brand/logo-full.png";
 
 type AnimatedLogoProps = {
   size?: number;
   className?: string;
+  /** Mark for header; full lockup for brand reveal */
+  variant?: "mark" | "full";
   /** Show script tagline beneath the medallion */
   showTagline?: boolean;
   /** Brief idle micro-rotate every ~20s when in view */
   idlePulse?: boolean;
   /** Run full entrance sequence on mount */
   playEntrance?: boolean;
+  priority?: boolean;
 };
 
 export function AnimatedLogo({
   size = 100,
   className,
+  variant = "mark",
   showTagline = false,
   idlePulse = false,
   playEntrance = true,
+  priority = false,
 }: AnimatedLogoProps) {
   const prefersReducedMotion = useReducedMotion();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -47,6 +53,10 @@ export function AnimatedLogo({
   const smoothFloatY = useSpring(floatY, { stiffness: 120, damping: 28 });
 
   const hoverSpread = useMotionValue(1);
+  const isFull = variant === "full";
+  const src = isFull ? LOGO_FULL_SRC : LOGO_MARK_SRC;
+  const imageWidth = isFull ? Math.round(size * 2.4) : size;
+  const imageHeight = size;
 
   useEffect(() => {
     const node = containerRef.current;
@@ -75,6 +85,7 @@ export function AnimatedLogo({
   }, [isHovered, hoverSpread, prefersReducedMotion]);
 
   const reduced = prefersReducedMotion === true;
+  const petalCount = isFull ? 4 : 6;
 
   const spinTransition = reduced
     ? { duration: 0.6, ease: "easeOut" as const }
@@ -91,20 +102,19 @@ export function AnimatedLogo({
     >
       <motion.div
         className="relative inline-flex items-center justify-center"
-        style={{ y: smoothFloatY, width: size, height: size }}
+        style={{ y: smoothFloatY, width: imageWidth, height: imageHeight }}
         initial={playEntrance && !reduced ? { opacity: 0 } : false}
         animate={{ opacity: 1 }}
         transition={{ duration: reduced ? 0.5 : 0.3, ease: LUXURY_EASE }}
       >
-        {/* Sequential petal bloom rings */}
         {!reduced &&
-          Array.from({ length: PETAL_COUNT }).map((_, index) => (
+          Array.from({ length: petalCount }).map((_, index) => (
             <motion.span
               key={`petal-${index}`}
               className="pointer-events-none absolute rounded-full border border-champagne/30"
               style={{
-                width: size * (0.55 + index * 0.12),
-                height: size * (0.55 + index * 0.12),
+                width: imageHeight * (0.55 + index * 0.12),
+                height: imageHeight * (0.55 + index * 0.12),
               }}
               initial={playEntrance ? { scale: 0.5, opacity: 0 } : false}
               animate={{
@@ -150,17 +160,18 @@ export function AnimatedLogo({
             transition={{ duration: 0.9, ease: LUXURY_EASE, delay: reduced ? 0 : 0.4 }}
           >
             <Image
-              src="/brand/logo.svg"
+              src={src}
               alt=""
-              width={size}
-              height={size}
-              priority
+              width={imageWidth}
+              height={imageHeight}
+              priority={priority}
               className="object-contain transition-transform duration-base ease-luxury"
               style={{
-                width: size,
-                height: size,
+                width: imageWidth,
+                height: imageHeight,
                 transform: isHovered && !reduced ? "scale(1.06)" : "scale(1)",
               }}
+              sizes={isFull ? "(max-width: 768px) 280px, 360px" : `${size}px`}
             />
           </motion.div>
         </motion.div>
@@ -184,5 +195,5 @@ export function AnimatedLogo({
   );
 }
 
-/** Default showcase size — ~250% of the 40px header logo */
-export const LOGO_SHOWCASE_SIZE = 100;
+/** Default showcase size for brand reveal */
+export const LOGO_SHOWCASE_SIZE = 140;

@@ -7,7 +7,6 @@ import { EditorialProductCard } from "@/components/shop/EditorialProductCard";
 import { useCart } from "@/components/providers/CartProvider";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
-import { FabricTexture } from "@/components/ui/FabricTexture";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { fetchProductReviewSummary } from "@/lib/api/ai";
@@ -22,19 +21,34 @@ type ProductDetailClientProps = {
   productReviews: ReviewFixture[];
 };
 
+const sectionBackgrounds = [
+  "bg-ivory",
+  "bg-gradient-to-b from-linen/60 to-cotton/40",
+  "bg-ivory",
+  "bg-gradient-to-b from-cotton/50 to-ivory",
+  "bg-linen/40",
+  "bg-ivory",
+  "bg-gradient-to-b from-sage/10 to-ivory",
+];
+
 function StorySection({
   id,
   title,
   children,
   className,
+  bgClass,
 }: {
   id: string;
   title: string;
   children: React.ReactNode;
   className?: string;
+  bgClass?: string;
 }) {
   return (
-    <section id={id} className={cn("mx-auto max-w-4xl px-6 py-16 md:py-20", className)}>
+    <section
+      id={id}
+      className={cn("mx-auto max-w-4xl px-4 py-14 sm:px-6 md:py-20", bgClass, className)}
+    >
       <p className="font-body text-xs uppercase tracking-[0.3em] text-olive">{title}</p>
       <div className="mt-6">{children}</div>
     </section>
@@ -108,22 +122,29 @@ export function ProductDetailClient({
     }
   };
 
+  let sectionIndex = 0;
+
   return (
-    <div className="relative">
-      <FabricTexture id="product" className="fixed inset-0" opacity={0.03} />
+    <div className="relative bg-gradient-to-b from-ivory via-linen/20 to-cotton/30">
+      <section className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 md:py-16">
+        <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
+          <FabricStitchReveal
+            name={product.name}
+            image={image}
+            className="lg:min-h-[min(70vh,640px)]"
+          />
 
-      {/* Hero + purchase */}
-      <section className="relative mx-auto max-w-7xl px-6 py-12 md:py-20">
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-20">
-          <FabricStitchReveal name={product.name} image={image} className="lg:min-h-[520px]" />
-
-          <div className="flex flex-col justify-center">
-            <p className="font-body text-xs uppercase tracking-widest text-champagne">
+          <div className="flex flex-col justify-center lg:py-8">
+            <p className="font-body text-xs uppercase tracking-[0.25em] text-champagne">
               {product.categorySlug.replace(/-/g, " ")}
             </p>
-            <h1 className="mt-3 font-display text-4xl text-maroon md:text-5xl">{product.name}</h1>
-            <p className="mt-4 font-body text-lg text-ink-muted">{product.shortDescription}</p>
-            <p className="mt-6 font-display text-2xl text-maroon">
+            <h1 className="mt-3 font-display text-3xl leading-tight text-maroon sm:text-4xl md:text-5xl">
+              {product.name}
+            </h1>
+            <p className="mt-4 font-body text-base leading-relaxed text-ink-muted md:text-lg">
+              {product.shortDescription}
+            </p>
+            <p className="mt-6 font-display text-2xl text-maroon md:text-3xl">
               {selectedVariant && formatPrice(selectedVariant.price.amount)}
             </p>
 
@@ -159,6 +180,7 @@ export function ProductDetailClient({
                 disabled={!inStock || adding}
                 onClick={() => void handleAddToCart()}
                 data-magnetic
+                className="min-w-[140px]"
               >
                 {adding
                   ? "Adding…"
@@ -187,7 +209,7 @@ export function ProductDetailClient({
       <div ref={sectionsRef}>
         <SectionDivider />
 
-        <StorySection id="story" title="The story">
+        <StorySection id="story" title="The story" bgClass={sectionBackgrounds[sectionIndex++]}>
           <div data-story-section>
             <p className="font-body text-lg leading-relaxed text-ink md:text-xl">
               {product.description}
@@ -197,8 +219,8 @@ export function ProductDetailClient({
 
         <SectionDivider />
 
-        <StorySection id="materials" title="Materials">
-          <div data-story-section className="paper-card rounded-sm border border-sage/25 p-8">
+        <StorySection id="materials" title="Materials" bgClass={sectionBackgrounds[sectionIndex++]}>
+          <div data-story-section className="rounded-sm border border-sage/25 bg-ivory/90 p-6 shadow-luxury md:p-8">
             <ul className="space-y-3">
               {product.materials?.map((material) => (
                 <li
@@ -217,18 +239,18 @@ export function ProductDetailClient({
 
         <SectionDivider />
 
-        <StorySection id="craft" title="How we craft">
+        <StorySection id="craft" title="How we craft" bgClass={sectionBackgrounds[sectionIndex++]}>
           <div data-story-section className="grid gap-6 md:grid-cols-3">
             {product.process.map((step, index) => (
               <article
                 key={step.title}
-                className="rounded-sm border border-sage/25 bg-ivory p-6"
+                className="rounded-sm border border-sage/25 bg-ivory/90 p-6 shadow-luxury"
               >
                 <span className="font-display text-4xl text-champagne/30">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <h3 className="mt-2 font-display text-xl text-maroon">{step.title}</h3>
-                <p className="mt-3 font-body text-sm text-ink-muted leading-relaxed">
+                <p className="mt-3 font-body text-sm leading-relaxed text-ink-muted">
                   {step.description}
                 </p>
               </article>
@@ -238,7 +260,7 @@ export function ProductDetailClient({
 
         <SectionDivider />
 
-        <StorySection id="comfort" title="Comfort">
+        <StorySection id="comfort" title="Comfort" bgClass={sectionBackgrounds[sectionIndex++]}>
           <div data-story-section>
             <p className="font-body text-lg leading-relaxed text-ink-muted">
               {product.comfort ??
@@ -249,7 +271,7 @@ export function ProductDetailClient({
 
         <SectionDivider />
 
-        <StorySection id="perfect-for" title="Perfect for">
+        <StorySection id="perfect-for" title="Perfect for" bgClass={sectionBackgrounds[sectionIndex++]}>
           <div data-story-section className="flex flex-wrap gap-3">
             {product.occasion.map((occ) => (
               <Chip key={occ} variant="outline" className="pointer-events-none">
@@ -261,9 +283,9 @@ export function ProductDetailClient({
 
         <SectionDivider />
 
-        <StorySection id="packaging" title="Packaging">
-          <div data-story-section className="paper-card rounded-sm border border-sage/25 p-8">
-            <p className="font-body text-ink-muted leading-relaxed">
+        <StorySection id="packaging" title="Packaging" bgClass={sectionBackgrounds[sectionIndex++]}>
+          <div data-story-section className="rounded-sm border border-sage/25 bg-ivory/90 p-6 shadow-luxury md:p-8">
+            <p className="font-body leading-relaxed text-ink-muted">
               {product.packaging ??
                 "Each piece arrives wrapped in tissue, nestled in a hand-stitched cotton pouch you can reuse for travel storage."}
             </p>
@@ -272,9 +294,9 @@ export function ProductDetailClient({
 
         <SectionDivider />
 
-        <StorySection id="care" title="Care">
+        <StorySection id="care" title="Care" bgClass={sectionBackgrounds[sectionIndex++]}>
           <div data-story-section>
-            <p className="font-body text-ink-muted leading-relaxed">{product.careInstructions}</p>
+            <p className="font-body leading-relaxed text-ink-muted">{product.careInstructions}</p>
           </div>
         </StorySection>
 
@@ -284,9 +306,9 @@ export function ProductDetailClient({
             <StorySection id="reviews" title="What wearers say">
               <div data-story-section className="rounded-sm border border-champagne/30 bg-cotton/50 p-6">
                 <p className="font-body text-[10px] uppercase tracking-widest text-champagne">
-                  AI review summary
+                  Review highlights
                 </p>
-                <p className="mt-2 font-body text-sm leading-relaxed text-ink">{reviewSummary}</p>
+                <p className="mt-2 font-body text-sm leading-relaxed text-ink md:text-base">{reviewSummary}</p>
               </div>
             </StorySection>
           </>
@@ -296,15 +318,11 @@ export function ProductDetailClient({
       {relatedProducts.length > 0 && (
         <>
           <SectionDivider />
-          <section className="mx-auto max-w-7xl px-6 pb-24 pt-12">
-            <h2 className="font-display text-3xl text-maroon">Related collection</h2>
-            <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {relatedProducts.map((related, index) => (
-                <EditorialProductCard
-                  key={related.id}
-                  product={related}
-                  variant={index % 3 === 0 ? "fold" : index % 3 === 1 ? "shadow" : "thread"}
-                />
+          <section className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 md:pb-28">
+            <h2 className="font-display text-3xl text-maroon">You may also love</h2>
+            <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8">
+              {relatedProducts.map((related) => (
+                <EditorialProductCard key={related.id} product={related} variant="shadow" />
               ))}
             </div>
           </section>

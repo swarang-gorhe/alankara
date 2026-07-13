@@ -45,7 +45,7 @@ export function Chapter5Hero() {
     <section
       ref={sectionRef}
       id="main-content"
-      className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-linen via-ivory to-cotton/50 px-6 py-24"
+      className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-ivory via-ivory to-linen/60 px-6 py-24"
       aria-label="Crafted for little moments"
       tabIndex={-1}
     >

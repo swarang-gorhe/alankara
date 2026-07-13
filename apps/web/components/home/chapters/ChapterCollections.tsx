@@ -52,7 +52,7 @@ export function ChapterCollections() {
   return (
     <section
       ref={sectionRef}
-      className="relative px-6 py-24 md:py-32"
+      className="relative bg-gradient-to-b from-sage/10 via-ivory to-linen/50 px-6 py-24 md:py-32"
       aria-label="The Collection"
     >
       <FabricTexture id="collections" opacity={0.04} />

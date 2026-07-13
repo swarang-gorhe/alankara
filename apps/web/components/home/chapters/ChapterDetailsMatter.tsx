@@ -36,7 +36,7 @@ export function ChapterDetailsMatter() {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-linen px-6 py-24 md:py-32"
+      className="relative bg-gradient-to-b from-linen/80 via-ivory to-cotton/60 px-6 py-24 md:py-32"
       aria-label="The details matter"
     >
       <FabricTexture id="details" opacity={0.05} />

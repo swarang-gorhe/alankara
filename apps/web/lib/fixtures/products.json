@@ -3,24 +3,40 @@
     "id": "prod-001",
     "slug": "chandni-fabric-jhumka",
     "name": "Chandni Fabric Jhumka",
-    "description": "Moonlit fabric jhumkas with hand-embroidered cotton petals and freshwater pearl drops. Each pair is stitched over three days — layered, knotted, and finished by a single artisan so the sway feels almost breathing.",
+    "description": "Moonlit fabric jhumkas with hand-embroidered cotton petals and freshwater pearl drops. Each pair is stitched over three days \u2014 layered, knotted, and finished by a single artisan so the sway feels almost breathing.",
     "shortDescription": "Embroidered cotton jhumkas with pearl drops",
     "categoryId": "cat-cloth-earrings",
     "categorySlug": "cloth-earrings",
-    "images": [],
+    "images": [
+      "/products/navy-jhumkas.webp"
+    ],
     "primaryMaterial": "embroidery",
-    "styleTags": ["embroidery", "pearls", "statement", "traditional"],
+    "styleTags": [
+      "embroidery",
+      "pearls",
+      "statement",
+      "traditional"
+    ],
     "minPrice": 2800,
-    "materials": ["Cotton base", "Silk embroidery thread", "Freshwater pearls", "Hypoallergenic hooks"],
+    "materials": [
+      "Cotton base",
+      "Silk embroidery thread",
+      "Freshwater pearls",
+      "Hypoallergenic hooks"
+    ],
     "careInstructions": "Store in the provided cotton pouch. Avoid perfume directly on fabric. Spot clean only.",
-    "comfort": "Lightweight cotton construction with soft backing — comfortable for all-day wear.",
+    "comfort": "Lightweight cotton construction with soft backing \u2014 comfortable for all-day wear.",
     "packaging": "Arrives in a hand-stitched cotton pouch with tissue wrap.",
     "featured": true,
-    "occasion": ["Festive gatherings", "Evening outings", "Cultural events"],
+    "occasion": [
+      "Festive gatherings",
+      "Evening outings",
+      "Cultural events"
+    ],
     "process": [
       {
         "title": "Sketch & silhouette",
-        "description": "The bell curve is drawn freehand on butter paper — no two pairs are identical by design."
+        "description": "The bell curve is drawn freehand on butter paper \u2014 no two pairs are identical by design."
       },
       {
         "title": "Embroidery",
@@ -31,20 +47,29 @@
         "description": "Pearls are knotted onto silk thread; each jhumka is weighed for balanced sway."
       }
     ],
-    "relatedSlugs": ["meera-pearl-choker", "gulmohar-thread-kada"],
+    "relatedSlugs": [
+      "meera-pearl-choker",
+      "gulmohar-thread-kada"
+    ],
     "variants": [
       {
         "id": "var-001-a",
         "sku": "CFJ-EMB-IV",
         "material": "Ivory cotton",
-        "price": { "amount": 2800, "currency": "INR" },
+        "price": {
+          "amount": 2800,
+          "currency": "INR"
+        },
         "stock": 12
       },
       {
         "id": "var-001-b",
         "sku": "CFJ-EMB-CR",
         "material": "Cream cotton",
-        "price": { "amount": 2800, "currency": "INR" },
+        "price": {
+          "amount": 2800,
+          "currency": "INR"
+        },
         "stock": 8
       }
     ]
@@ -57,16 +82,31 @@
     "shortDescription": "Pearl choker with embroidered medallion",
     "categoryId": "cat-fabric-necklaces",
     "categorySlug": "fabric-necklaces",
-    "images": [],
+    "images": [
+      "/products/pearl-choker-necklace.webp"
+    ],
     "primaryMaterial": "pearls",
-    "styleTags": ["pearls", "minimal", "pastel", "traditional"],
+    "styleTags": [
+      "pearls",
+      "minimal",
+      "pastel",
+      "traditional"
+    ],
     "minPrice": 4200,
-    "materials": ["Freshwater pearls", "Silk thread", "Embroidered cotton medallion"],
+    "materials": [
+      "Freshwater pearls",
+      "Silk thread",
+      "Embroidered cotton medallion"
+    ],
     "careInstructions": "Lay flat when storing. Keep away from moisture.",
     "comfort": "Silk-lined closure sits flat against the neck without pinching.",
     "packaging": "Hung on a cotton-covered card inside a reusable pouch.",
     "featured": true,
-    "occasion": ["Anniversary dinners", "Classical performances", "Quiet celebrations"],
+    "occasion": [
+      "Anniversary dinners",
+      "Classical performances",
+      "Quiet celebrations"
+    ],
     "process": [
       {
         "title": "Pearl selection",
@@ -81,13 +121,19 @@
         "description": "Silk thread is waxed and knotted between each pearl for durability and drape."
       }
     ],
-    "relatedSlugs": ["chandni-fabric-jhumka", "noor-thread-haar"],
+    "relatedSlugs": [
+      "chandni-fabric-jhumka",
+      "noor-thread-haar"
+    ],
     "variants": [
       {
         "id": "var-002-a",
         "sku": "MPC-PR-IV",
         "material": "Ivory thread",
-        "price": { "amount": 4200, "currency": "INR" },
+        "price": {
+          "amount": 4200,
+          "currency": "INR"
+        },
         "stock": 6
       }
     ]
@@ -96,20 +142,35 @@
     "id": "prod-003",
     "slug": "gulmohar-thread-kada",
     "name": "Gulmohar Thread Kada",
-    "description": "A hinged fabric cuff with embroidered gulmohar blooms along the band — flame-tree red thread on natural cotton. Opens with a concealed fabric clasp so the floral story stays uninterrupted.",
+    "description": "A hinged fabric cuff with embroidered gulmohar blooms along the band \u2014 flame-tree red thread on natural cotton. Opens with a concealed fabric clasp so the floral story stays uninterrupted.",
     "shortDescription": "Embroidered floral fabric cuff",
     "categoryId": "cat-fabric-bracelets",
     "categorySlug": "fabric-bracelets",
-    "images": [],
+    "images": [
+      "/products/maroon-beaded-strand.webp"
+    ],
     "primaryMaterial": "embroidery",
-    "styleTags": ["embroidery", "cotton", "statement", "earthy"],
+    "styleTags": [
+      "embroidery",
+      "cotton",
+      "statement",
+      "earthy"
+    ],
     "minPrice": 2200,
-    "materials": ["Cotton base", "Silk embroidery thread", "Concealed fabric clasp"],
+    "materials": [
+      "Cotton base",
+      "Silk embroidery thread",
+      "Concealed fabric clasp"
+    ],
     "careInstructions": "Avoid impact on embroidery. Store flat in cotton pouch.",
-    "comfort": "Padded cotton interior — no rigid edges against the wrist.",
+    "comfort": "Padded cotton interior \u2014 no rigid edges against the wrist.",
     "packaging": "Wrapped in tissue inside a cotton drawstring pouch.",
     "featured": false,
-    "occasion": ["Daily elegance", "Office wear", "Festive stacking"],
+    "occasion": [
+      "Daily elegance",
+      "Office wear",
+      "Festive stacking"
+    ],
     "process": [
       {
         "title": "Band forming",
@@ -124,14 +185,20 @@
         "description": "The hidden fabric hinge is tested for five hundred open-close cycles."
       }
     ],
-    "relatedSlugs": ["chandni-fabric-jhumka", "sitar-thread-bracelet"],
+    "relatedSlugs": [
+      "chandni-fabric-jhumka",
+      "sitar-thread-bracelet"
+    ],
     "variants": [
       {
         "id": "var-003-a",
         "sku": "GTK-EMB-S",
         "size": "Small (2.4 in)",
         "material": "Natural cotton",
-        "price": { "amount": 2200, "currency": "INR" },
+        "price": {
+          "amount": 2200,
+          "currency": "INR"
+        },
         "stock": 15
       },
       {
@@ -139,7 +206,10 @@
         "sku": "GTK-EMB-M",
         "size": "Medium (2.6 in)",
         "material": "Natural cotton",
-        "price": { "amount": 2200, "currency": "INR" },
+        "price": {
+          "amount": 2200,
+          "currency": "INR"
+        },
         "stock": 10
       }
     ]
@@ -148,20 +218,35 @@
     "id": "prod-004",
     "slug": "noor-thread-haar",
     "name": "Noor Thread Haar",
-    "description": "A long strand of graduated pearl stations linked by cotton cord — light enough to wear from morning chai to midnight dessert. Named for the glow it leaves along the neckline.",
+    "description": "A long strand of graduated pearl stations linked by cotton cord \u2014 light enough to wear from morning chai to midnight dessert. Named for the glow it leaves along the neckline.",
     "shortDescription": "Graduated pearl long necklace",
     "categoryId": "cat-fabric-necklaces",
     "categorySlug": "fabric-necklaces",
-    "images": [],
+    "images": [
+      "/products/disc-necklace.webp"
+    ],
     "primaryMaterial": "pearls",
-    "styleTags": ["pearls", "traditional", "statement", "boho"],
+    "styleTags": [
+      "pearls",
+      "traditional",
+      "statement",
+      "boho"
+    ],
     "minPrice": 5600,
-    "materials": ["Freshwater pearls", "Waxed cotton cord", "Silk thread knots"],
+    "materials": [
+      "Freshwater pearls",
+      "Waxed cotton cord",
+      "Silk thread knots"
+    ],
     "careInstructions": "Store hung vertically. Detangle gently with fingers, never a brush.",
-    "comfort": "Lightweight cord construction — no metal weight on the neck.",
+    "comfort": "Lightweight cord construction \u2014 no metal weight on the neck.",
     "packaging": "Coiled in tissue within a cotton travel pouch.",
     "featured": true,
-    "occasion": ["Sangeet nights", "Festive portraits", "Evening gatherings"],
+    "occasion": [
+      "Sangeet nights",
+      "Festive portraits",
+      "Evening gatherings"
+    ],
     "process": [
       {
         "title": "Station layout",
@@ -176,13 +261,19 @@
         "description": "The haar is draped on a bust form and inspected for symmetry under warm light."
       }
     ],
-    "relatedSlugs": ["meera-pearl-choker", "chandni-fabric-jhumka"],
+    "relatedSlugs": [
+      "meera-pearl-choker",
+      "chandni-fabric-jhumka"
+    ],
     "variants": [
       {
         "id": "var-004-a",
         "sku": "NTH-PR-NT",
         "material": "Natural cotton cord",
-        "price": { "amount": 5600, "currency": "INR" },
+        "price": {
+          "amount": 5600,
+          "currency": "INR"
+        },
         "stock": 5
       }
     ]
@@ -195,16 +286,31 @@
     "shortDescription": "Silk thread charm bracelet",
     "categoryId": "cat-fabric-bracelets",
     "categorySlug": "fabric-bracelets",
-    "images": [],
+    "images": [
+      "/products/beaded-bracelet.webp"
+    ],
     "primaryMaterial": "silk-thread",
-    "styleTags": ["minimal", "boho", "earthy", "cotton"],
+    "styleTags": [
+      "minimal",
+      "boho",
+      "earthy",
+      "cotton"
+    ],
     "minPrice": 1400,
-    "materials": ["Silk thread", "Wooden beads", "Adjustable cotton tie"],
+    "materials": [
+      "Silk thread",
+      "Wooden beads",
+      "Adjustable cotton tie"
+    ],
     "careInstructions": "Keep dry. Store coiled in cotton pouch.",
-    "comfort": "Soft tie closure — no metal against skin.",
+    "comfort": "Soft tie closure \u2014 no metal against skin.",
     "packaging": "Coiled and tucked into a small cotton sachet.",
     "featured": false,
-    "occasion": ["Creative gatherings", "Gift giving", "Casual layering"],
+    "occasion": [
+      "Creative gatherings",
+      "Gift giving",
+      "Casual layering"
+    ],
     "process": [
       {
         "title": "Thread twisting",
@@ -216,16 +322,22 @@
       },
       {
         "title": "Sizing",
-        "description": "Finished with an adjustable cotton tie for wrist sizes 5.5–7 in."
+        "description": "Finished with an adjustable cotton tie for wrist sizes 5.5\u20137 in."
       }
     ],
-    "relatedSlugs": ["gulmohar-thread-kada", "raag-brooch"],
+    "relatedSlugs": [
+      "gulmohar-thread-kada",
+      "raag-brooch"
+    ],
     "variants": [
       {
         "id": "var-005-a",
         "sku": "STB-SLK-ADJ",
         "material": "Silk thread",
-        "price": { "amount": 1400, "currency": "INR" },
+        "price": {
+          "amount": 1400,
+          "currency": "INR"
+        },
         "stock": 20
       }
     ]
@@ -234,20 +346,35 @@
     "id": "prod-006",
     "slug": "raag-brooch",
     "name": "Raag Brooch",
-    "description": "A textile jewellery brooch — zari thread embroidered on silk with a cotton-backed pin. Designed to anchor a dupatta fold or brighten a lapel.",
+    "description": "A textile jewellery brooch \u2014 zari thread embroidered on silk with a cotton-backed pin. Designed to anchor a dupatta fold or brighten a lapel.",
     "shortDescription": "Zari embroidered silk brooch",
     "categoryId": "cat-embroidered-textile-jewellery",
     "categorySlug": "embroidered-textile-jewellery",
-    "images": [],
+    "images": [
+      "/products/maroon-embroidered-studs.webp"
+    ],
     "primaryMaterial": "zari",
-    "styleTags": ["embroidery", "traditional", "statement", "earthy"],
+    "styleTags": [
+      "embroidery",
+      "traditional",
+      "statement",
+      "earthy"
+    ],
     "minPrice": 1200,
-    "materials": ["Silk base", "Zari thread", "Cotton-backed pin"],
+    "materials": [
+      "Silk base",
+      "Zari thread",
+      "Cotton-backed pin"
+    ],
     "careInstructions": "Spot clean only. Pin through sturdy fabric layers.",
-    "comfort": "Lightweight — sits flat without pulling fabric.",
+    "comfort": "Lightweight \u2014 sits flat without pulling fabric.",
     "packaging": "Pinned to a cotton card inside a small pouch.",
     "featured": false,
-    "occasion": ["Festive sarees", "Heritage events", "Evening dressing"],
+    "occasion": [
+      "Festive sarees",
+      "Heritage events",
+      "Evening dressing"
+    ],
     "process": [
       {
         "title": "Silk mounting",
@@ -262,14 +389,20 @@
         "description": "A secure pin back is covered with felt to protect fabric."
       }
     ],
-    "relatedSlugs": ["gajra-hair-pin", "sitar-thread-bracelet"],
+    "relatedSlugs": [
+      "gajra-hair-pin",
+      "sitar-thread-bracelet"
+    ],
     "variants": [
       {
         "id": "var-006-a",
         "sku": "RB-ZRI-MG",
         "color": "Maroon & champagne",
         "material": "Zari on silk",
-        "price": { "amount": 1200, "currency": "INR" },
+        "price": {
+          "amount": 1200,
+          "currency": "INR"
+        },
         "stock": 18
       },
       {
@@ -277,7 +410,10 @@
         "sku": "RB-ZRI-IV",
         "color": "Ivory & champagne",
         "material": "Zari on silk",
-        "price": { "amount": 1200, "currency": "INR" },
+        "price": {
+          "amount": 1200,
+          "currency": "INR"
+        },
         "stock": 14
       }
     ]
@@ -286,20 +422,35 @@
     "id": "prod-007",
     "slug": "gajra-hair-pin",
     "name": "Gajra Hair Pin",
-    "description": "A silk-thread gajra wound around a cotton-wrapped hair pin — jasmine-scented thread optional on request. For braids, buns, and the last touch before stepping out.",
+    "description": "A silk-thread gajra wound around a cotton-wrapped hair pin \u2014 jasmine-scented thread optional on request. For braids, buns, and the last touch before stepping out.",
     "shortDescription": "Silk gajra hair adornment",
     "categoryId": "cat-hair-accessories",
     "categorySlug": "hair-accessories",
-    "images": [],
+    "images": [
+      "/products/floral-hair-barrette.webp"
+    ],
     "primaryMaterial": "silk-thread",
-    "styleTags": ["traditional", "pastel", "pearls", "boho"],
+    "styleTags": [
+      "traditional",
+      "pastel",
+      "pearls",
+      "boho"
+    ],
     "minPrice": 900,
-    "materials": ["Silk thread", "Cotton-wrapped pin", "Optional jasmine essence"],
+    "materials": [
+      "Silk thread",
+      "Cotton-wrapped pin",
+      "Optional jasmine essence"
+    ],
     "careInstructions": "Store in a dry place. Fluff gently before wearing.",
-    "comfort": "Lightweight pin with rounded cotton tip — gentle on the scalp.",
+    "comfort": "Lightweight pin with rounded cotton tip \u2014 gentle on the scalp.",
     "packaging": "Tucked into a slim cotton sleeve.",
     "featured": true,
-    "occasion": ["Festive braids", "Classical dance", "Garden gatherings"],
+    "occasion": [
+      "Festive braids",
+      "Classical dance",
+      "Garden gatherings"
+    ],
     "process": [
       {
         "title": "Thread winding",
@@ -314,14 +465,20 @@
         "description": "Optional jasmine essence is applied sparingly to thread ends."
       }
     ],
-    "relatedSlugs": ["raag-brooch", "chandni-fabric-jhumka"],
+    "relatedSlugs": [
+      "raag-brooch",
+      "chandni-fabric-jhumka"
+    ],
     "variants": [
       {
         "id": "var-007-a",
         "sku": "GHP-SLK-WHT",
         "color": "White",
         "material": "Silk thread",
-        "price": { "amount": 900, "currency": "INR" },
+        "price": {
+          "amount": 900,
+          "currency": "INR"
+        },
         "stock": 25
       },
       {
@@ -329,7 +486,10 @@
         "sku": "GHP-SLK-CRM",
         "color": "Cream",
         "material": "Silk thread",
-        "price": { "amount": 900, "currency": "INR" },
+        "price": {
+          "amount": 900,
+          "currency": "INR"
+        },
         "stock": 22
       }
     ]
@@ -338,20 +498,35 @@
     "id": "prod-008",
     "slug": "cotton-pearl-studs",
     "name": "Cotton Pearl Studs",
-    "description": "Petite cotton-wrapped studs with freshwater pearl centres — everyday pieces that still feel considered. Hypoallergenic posts for sensitive ears.",
+    "description": "Petite cotton-wrapped studs with freshwater pearl centres \u2014 everyday pieces that still feel considered. Hypoallergenic posts for sensitive ears.",
     "shortDescription": "Everyday cotton pearl studs",
     "categoryId": "cat-cloth-earrings",
     "categorySlug": "cloth-earrings",
-    "images": [],
+    "images": [
+      "/products/petal-hoop-earrings.webp"
+    ],
     "primaryMaterial": "cotton",
-    "styleTags": ["cotton", "pearls", "minimal", "pastel"],
+    "styleTags": [
+      "cotton",
+      "pearls",
+      "minimal",
+      "pastel"
+    ],
     "minPrice": 1100,
-    "materials": ["Cotton wrap", "Freshwater pearls", "Hypoallergenic posts"],
+    "materials": [
+      "Cotton wrap",
+      "Freshwater pearls",
+      "Hypoallergenic posts"
+    ],
     "careInstructions": "Wipe after wear. Store in cotton pouch.",
-    "comfort": "Featherlight — among our lightest earrings.",
+    "comfort": "Featherlight \u2014 among our lightest earrings.",
     "packaging": "Pair tucked into a mini cotton pouch.",
     "featured": false,
-    "occasion": ["Daily wear", "Office", "Casual outings"],
+    "occasion": [
+      "Daily wear",
+      "Office",
+      "Casual outings"
+    ],
     "process": [
       {
         "title": "Cotton wrapping",
@@ -359,20 +534,26 @@
       },
       {
         "title": "Pearl setting",
-        "description": "Pearls are secured with silk thread — no glue, no metal bezels."
+        "description": "Pearls are secured with silk thread \u2014 no glue, no metal bezels."
       },
       {
         "title": "Post testing",
         "description": "Hypoallergenic posts are tested for nickel content before shipping."
       }
     ],
-    "relatedSlugs": ["chandni-fabric-jhumka", "gulmohar-thread-kada"],
+    "relatedSlugs": [
+      "chandni-fabric-jhumka",
+      "gulmohar-thread-kada"
+    ],
     "variants": [
       {
         "id": "var-008-a",
         "sku": "CPS-CTN-PR",
         "material": "Natural cotton",
-        "price": { "amount": 1100, "currency": "INR" },
+        "price": {
+          "amount": 1100,
+          "currency": "INR"
+        },
         "stock": 30
       }
     ]
@@ -381,20 +562,35 @@
     "id": "prod-009",
     "slug": "sangam-bangle-set",
     "name": "Sangam Bangle Set",
-    "description": "A set of three thin cotton-wrapped bangles with hand-embroidered texture — named for the confluence of rivers, meant to be worn stacked or shared among sisters.",
+    "description": "A set of three thin cotton-wrapped bangles with hand-embroidered texture \u2014 named for the confluence of rivers, meant to be worn stacked or shared among sisters.",
     "shortDescription": "Embroidered cotton bangle trio",
     "categoryId": "cat-jewellery-sets",
     "categorySlug": "jewellery-sets",
-    "images": [],
+    "images": [
+      "/products/maroon-chandbali-hoops.webp"
+    ],
     "primaryMaterial": "cotton",
-    "styleTags": ["cotton", "embroidery", "traditional", "earthy"],
+    "styleTags": [
+      "cotton",
+      "embroidery",
+      "traditional",
+      "earthy"
+    ],
     "minPrice": 3200,
-    "materials": ["Cotton wrap", "Silk embroidery thread", "Fabric lining"],
+    "materials": [
+      "Cotton wrap",
+      "Silk embroidery thread",
+      "Fabric lining"
+    ],
     "careInstructions": "Keep dry. Store stacked in cotton pouch.",
-    "comfort": "Flexible cotton construction — no rigid metal.",
+    "comfort": "Flexible cotton construction \u2014 no rigid metal.",
     "packaging": "Set of three nested in a cotton roll.",
     "featured": false,
-    "occasion": ["Sibling gifts", "Festive stacking", "Heritage celebrations"],
+    "occasion": [
+      "Sibling gifts",
+      "Festive stacking",
+      "Heritage celebrations"
+    ],
     "process": [
       {
         "title": "Bangle forming",
@@ -409,14 +605,20 @@
         "description": "Bangles are grouped by weight and tone before packaging as a set."
       }
     ],
-    "relatedSlugs": ["sitar-thread-bracelet", "gulmohar-thread-kada"],
+    "relatedSlugs": [
+      "sitar-thread-bracelet",
+      "gulmohar-thread-kada"
+    ],
     "variants": [
       {
         "id": "var-009-a",
         "sku": "SBS-CTN-2.6",
         "size": "2.6 in diameter",
         "material": "Natural cotton",
-        "price": { "amount": 3200, "currency": "INR" },
+        "price": {
+          "amount": 3200,
+          "currency": "INR"
+        },
         "stock": 8
       }
     ]
@@ -425,20 +627,35 @@
     "id": "prod-010",
     "slug": "vardaan-embroidered-tikka",
     "name": "Vardaan Embroidered Tikka",
-    "description": "A forehead piece with a central embroidered cotton teardrop and fine thread sides — adjustable for different parting widths. Hand-stitched, not cast.",
+    "description": "A forehead piece with a central embroidered cotton teardrop and fine thread sides \u2014 adjustable for different parting widths. Hand-stitched, not cast.",
     "shortDescription": "Adjustable embroidered fabric tikka",
     "categoryId": "cat-hair-accessories",
     "categorySlug": "hair-accessories",
-    "images": [],
+    "images": [
+      "/products/tassel-earrings.webp"
+    ],
     "primaryMaterial": "embroidery",
-    "styleTags": ["embroidery", "traditional", "statement", "pastel"],
+    "styleTags": [
+      "embroidery",
+      "traditional",
+      "statement",
+      "pastel"
+    ],
     "minPrice": 1800,
-    "materials": ["Embroidered cotton", "Silk thread chain", "Adjustable cotton hook"],
+    "materials": [
+      "Embroidered cotton",
+      "Silk thread chain",
+      "Adjustable cotton hook"
+    ],
     "careInstructions": "Store flat. Handle thread chains delicately to avoid kinks.",
-    "comfort": "Soft cotton backing — no metal against the forehead.",
+    "comfort": "Soft cotton backing \u2014 no metal against the forehead.",
     "packaging": "Laid flat in tissue within a cotton envelope.",
     "featured": true,
-    "occasion": ["Festive portraits", "Cultural performances", "Celebration styling"],
+    "occasion": [
+      "Festive portraits",
+      "Cultural performances",
+      "Celebration styling"
+    ],
     "process": [
       {
         "title": "Teardrop embroidery",
@@ -453,13 +670,19 @@
         "description": "Tested on multiple head forms for comfortable forehead contact."
       }
     ],
-    "relatedSlugs": ["meera-pearl-choker", "gajra-hair-pin"],
+    "relatedSlugs": [
+      "meera-pearl-choker",
+      "gajra-hair-pin"
+    ],
     "variants": [
       {
         "id": "var-010-a",
         "sku": "VET-EMB-ADJ",
         "material": "Ivory cotton",
-        "price": { "amount": 1800, "currency": "INR" },
+        "price": {
+          "amount": 1800,
+          "currency": "INR"
+        },
         "stock": 11
       }
     ]
