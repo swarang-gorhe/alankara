@@ -65,7 +65,7 @@ export async function fetchProducts(pageSize = 100): Promise<ProductFixture[]> {
   const data = await apiFetch<Paginated<ProductFixture>>(
     `/products?page_size=${pageSize}`,
   );
-  return data.items;
+  return data.items ?? [];
 }
 
 export type ProductDetailResponse = ProductFixture & {
@@ -97,7 +97,7 @@ export async function fetchReviewsForProduct(productId: string): Promise<ReviewF
   const data = await apiFetch<Paginated<ReviewFixture>>(
     `/reviews?product_id=${encodeURIComponent(productId)}&page_size=50`,
   );
-  return data.items;
+  return data.items ?? [];
 }
 
 export async function fetchArtisans(): Promise<ArtisanFixture[]> {

@@ -30,28 +30,49 @@ export async function getProductPageData(slug: string): Promise<{
     if (!detail) {
       return null;
     }
-    const { relatedProducts, ...product } = detail;
+    const { relatedProducts = [], ...product } = detail;
     const productReviews = await fetchReviewsForProduct(product.id).catch(() =>
       getReviewsForProduct(product.id),
     );
-    return { product, relatedProducts, productReviews };
+    return {
+      product: normalizeProduct(product),
+      relatedProducts,
+      productReviews: productReviews ?? [],
+    };
   } catch {
     const product = getFixtureProduct(slug);
     if (!product) {
       return null;
     }
     return {
-      product,
-      relatedProducts: getRelatedProducts(product.relatedSlugs),
+      product: normalizeProduct(product),
+      relatedProducts: getRelatedProducts(product.relatedSlugs ?? []),
       productReviews: getReviewsForProduct(product.id),
     };
   }
 }
 
+function normalizeProduct(product: ProductFixture): ProductFixture {
+  return {
+    ...product,
+    images: product.images ?? [],
+    variants: product.variants ?? [],
+    materials: product.materials ?? [],
+    occasion: product.occasion ?? [],
+    process: product.process ?? [],
+    relatedSlugs: product.relatedSlugs ?? [],
+    styleTags: product.styleTags ?? [],
+  };
+}
+
 export async function getAllProductSlugs(): Promise<string[]> {
   try {
-    return await fetchProductSlugs();
+    const slugs = await fetchProductSlugs();
+    if (slugs.length > 0) {
+      return slugs;
+    }
   } catch {
-    return fixtureProducts.map((p) => p.slug);
+    // fall through to fixtures
   }
+  return fixtureProducts.map((p) => p.slug);
 }

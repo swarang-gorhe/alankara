@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     title: product.name,
     description: product.shortDescription ?? product.description,
     path: `/product/${slug}`,
-    image: product.images[0] ?? "/brand/logo-mark.png",
+    image: product.images?.[0] ?? "/brand/logo-mark.png",
   });
 }
 

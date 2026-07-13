@@ -703,6 +703,8 @@
     "careInstructions": "Store in cotton pouch. Spot clean only.",
     "featured": false,
     "occasion": ["Pitch demo"],
+    "process": [],
+    "relatedSlugs": [],
     "variants": [
       {
         "id": "var-demo-a",

@@ -51,8 +51,8 @@ export function getProductsByCategory(categorySlug: CategorySlug): ProductFixtur
   return products.filter((p) => p.categorySlug === categorySlug);
 }
 
-export function getRelatedProducts(slugs: string[]): ProductFixture[] {
-  return slugs
+export function getRelatedProducts(slugs: string[] | undefined): ProductFixture[] {
+  return (slugs ?? [])
     .map((slug) => getProductBySlug(slug))
     .filter((p): p is ProductFixture => p !== undefined);
 }

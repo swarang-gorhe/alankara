@@ -295,7 +295,7 @@ export function ProductDetailClient({
 
         <StorySection id="craft" title="How we craft" bgClass={sectionBackgrounds[sectionIndex++]}>
           <div data-story-section className="grid gap-6 md:grid-cols-3">
-            {product.process.map((step, index) => (
+            {product.process?.map((step, index) => (
               <article
                 key={step.title}
                 className="rounded-sm border border-sage/25 bg-ivory/90 p-6 shadow-luxury"
@@ -308,7 +308,7 @@ export function ProductDetailClient({
                   {step.description}
                 </p>
               </article>
-            ))}
+            )) ?? null}
           </div>
         </StorySection>
 
