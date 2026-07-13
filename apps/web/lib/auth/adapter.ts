@@ -1,6 +1,6 @@
 import { getAdminToken } from "@/lib/admin/auth";
 import { getCustomerToken } from "@/lib/auth/customer";
-import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { getSupabaseBrowserClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
 export type AuthProvider = "jwt" | "supabase";
 
@@ -10,6 +10,12 @@ export type AuthProvider = "jwt" | "supabase";
  */
 export function getAuthProvider(): AuthProvider {
   if (process.env.NEXT_PUBLIC_AUTH_PROVIDER === "supabase") {
+    return "supabase";
+  }
+  if (process.env.NEXT_PUBLIC_AUTH_PROVIDER === "jwt") {
+    return "jwt";
+  }
+  if (isSupabaseConfigured()) {
     return "supabase";
   }
   return "jwt";

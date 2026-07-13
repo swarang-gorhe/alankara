@@ -17,7 +17,6 @@ import {
 } from "@/lib/auth/customer";
 import { getAuthProvider } from "@/lib/auth/adapter";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
-import { API_URL } from "@/lib/api/client";
 
 type AuthContextValue = {
   user: CustomerUser | null;
@@ -31,20 +30,31 @@ type AuthContextValue = {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 async function devJwtLogin(email: string, password: string): Promise<CustomerUser> {
-  if (!API_URL) throw new Error("API is not configured");
-  const res = await fetch(`${API_URL}/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
-  });
+  let res: Response;
+  try {
+    res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+  } catch {
+    throw new Error(
+      "Could not reach the server. If using dev auth, ensure the API is running and NEXT_PUBLIC_API_URL is set on Vercel.",
+    );
+  }
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
     throw new Error((err as { detail?: string }).detail ?? "Login failed");
   }
   const data = (await res.json()) as { access_token: string };
-  const meRes = await fetch(`${API_URL}/auth/me`, {
-    headers: { Authorization: `Bearer ${data.access_token}` },
-  });
+  let meRes: Response;
+  try {
+    meRes = await fetch("/api/auth/me", {
+      headers: { Authorization: `Bearer ${data.access_token}` },
+    });
+  } catch {
+    throw new Error("Could not load profile — API unreachable.");
+  }
   if (!meRes.ok) throw new Error("Could not load profile");
   const me = (await meRes.json()) as CustomerUser;
   setCustomerSession(data.access_token, me);
@@ -110,13 +120,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const provider = getAuthProvider();
     if (provider === "supabase") {
       const supabase = getSupabaseBrowserClient();
-      if (!supabase) throw new Error("Supabase is not configured");
-      const { error } = await supabase.auth.signUp({ email, password });
+      if (!supabase) {
+        throw new Error(
+          "Supabase is not configured. Add NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+        );
+      }
+      const { data, error } = await supabase.auth.signUp({ email, password });
       if (error) throw error;
+      if (!data.session) {
+        throw new Error("Check your email to confirm your account, then sign in.");
+      }
       await refreshSession();
       return;
     }
-    // Dev: any email + password "customer-dev" works via login endpoint
     const me = await devJwtLogin(email, password);
     setUser(me);
   }, [refreshSession]);

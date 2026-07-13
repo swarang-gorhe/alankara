@@ -1,12 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import { useRef } from "react";
+import { EditorialFrame } from "@/components/editorial";
 import { PROCESS_STEPS } from "@/lib/editorial/story-images";
 import { useChapterReveal } from "@/hooks/useChapterReveal";
 import { cn } from "@/lib/utils";
 
-/** Process chapter — four stages, one image each */
+/** Process chapter — four stages, one image each at natural aspect */
 export function ChapterThreadToTreasure() {
   const sectionRef = useRef<HTMLElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
@@ -43,17 +43,14 @@ export function ChapterThreadToTreasure() {
                   {step.description}
                 </p>
               </div>
-              <div
-                className={cn(
-                  "relative aspect-[4/3] overflow-hidden rounded-sm",
-                  index % 2 === 1 ? "md:order-1" : undefined,
-                )}
-              >
-                <Image
+              <div className={cn(index % 2 === 1 ? "md:order-1" : undefined)}>
+                <EditorialFrame
                   src={step.image}
                   alt={step.alt}
-                  fill
-                  className="object-cover"
+                  width={step.width}
+                  height={step.height}
+                  className="w-full"
+                  vignette="none"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>

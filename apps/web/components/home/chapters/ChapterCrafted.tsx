@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { EditorialFrame } from "@/components/editorial";
+import { StoryMasonry } from "@/components/editorial";
 import { useChapterReveal } from "@/hooks/useChapterReveal";
 
 const craftPillars = [
@@ -19,7 +19,7 @@ const craftPillars = [
   },
 ];
 
-/** Our Craft — one idea: slow, tactile making */
+/** Our Craft — editorial collage + three pillars */
 export function ChapterCrafted() {
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -27,37 +27,22 @@ export function ChapterCrafted() {
   useChapterReveal({ trigger: sectionRef, targets: contentRef, variant: "fade-up", stagger: 0.1 });
 
   return (
-    <section
-      ref={sectionRef}
-      className="bg-ivory px-6 py-28 md:py-36"
-      aria-label="Our Craft"
-    >
+    <section ref={sectionRef} className="bg-ivory px-6 py-28 md:py-36" aria-label="Our Craft">
       <div ref={contentRef} className="mx-auto max-w-6xl">
-        <div className="grid gap-16 lg:grid-cols-2 lg:items-center lg:gap-20">
-          <div>
-            <p data-reveal className="font-body text-xs uppercase tracking-[0.3em] text-olive">
-              Our craft
-            </p>
-            <h2 data-reveal className="mt-5 font-display text-4xl text-maroon md:text-5xl lg:text-6xl">
-              Made slowly, worn often
-            </h2>
-            <p data-reveal className="mt-6 max-w-md font-body text-lg leading-relaxed text-ink-muted">
-              Alankara pieces begin as thread on linen. We work in fabric, pearl, and ghungroo
-              because they move with you.
-            </p>
-          </div>
-
-          <div data-reveal>
-            <EditorialFrame
-              src="/editorial/studio-morning.webp"
-              alt="Morning light across a linen-covered studio table with scissors and thread"
-              className="aspect-[4/5]"
-              imageClassName="aspect-[4/5]"
-              vignette="none"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-            />
-          </div>
+        <div className="max-w-xl">
+          <p data-reveal className="font-body text-xs uppercase tracking-[0.3em] text-olive">
+            Our craft
+          </p>
+          <h2 data-reveal className="mt-5 font-display text-4xl text-maroon md:text-5xl lg:text-6xl">
+            Made slowly, worn often
+          </h2>
+          <p data-reveal className="mt-6 max-w-md font-body text-lg leading-relaxed text-ink-muted">
+            Alankara pieces begin as thread on linen. We work in fabric, pearl, and ghungroo because
+            they move with you.
+          </p>
         </div>
+
+        <StoryMasonry className="mt-16" />
 
         <div className="mt-20 grid gap-8 md:grid-cols-3 md:gap-10">
           {craftPillars.map((pillar) => (

@@ -18,28 +18,24 @@ export function StoryMasonry({ className, ids }: StoryMasonryProps) {
 
   useChapterReveal({ trigger: sectionRef, targets: gridRef, variant: "scale-in", stagger: 0.07 });
 
-  const images = ids
-    ? STORY_IMAGES.filter((img) => ids.includes(img.id))
-    : STORY_IMAGES;
+  const images = ids ? STORY_IMAGES.filter((img) => ids.includes(img.id)) : STORY_IMAGES;
 
   return (
     <div ref={sectionRef} className={className}>
       <div
         ref={gridRef}
-        className="grid auto-rows-[minmax(140px,auto)] grid-cols-2 gap-3 md:auto-rows-[minmax(160px,auto)] md:grid-cols-4 md:gap-4"
+        className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4"
+        style={{ gridAutoRows: "minmax(0, auto)" }}
       >
         {images.map((item, index) => (
-          <div
-            key={item.id}
-            data-reveal
-            className={cn("relative min-h-[140px]", item.span)}
-          >
+          <div key={item.id} data-reveal className={cn("min-w-0", item.span)}>
             <EditorialFrame
               src={item.src}
               alt={item.alt}
               caption={item.caption}
-              className={cn("h-full", item.aspect)}
-              imageClassName={cn("min-h-[140px]", item.aspect)}
+              width={item.width}
+              height={item.height}
+              className="w-full"
               priority={index < 2}
               sizes="(max-width: 768px) 50vw, 25vw"
             />

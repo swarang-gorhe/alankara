@@ -1,5 +1,4 @@
 from jose import jwt
-from jose.exceptions import JWTError
 
 from app.config import get_settings
 

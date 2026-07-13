@@ -83,7 +83,7 @@ export default function SignupPage() {
           </div>
           {!isSupabase && (
             <p className="font-body text-xs text-ink-muted">
-              Dev mode: use password <code className="text-ink">customer-dev</code>
+              Dev mode: any email with password <code className="text-ink">customer-dev</code>
             </p>
           )}
           {error && <p className="font-body text-sm text-error">{error}</p>}

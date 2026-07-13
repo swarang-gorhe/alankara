@@ -3,15 +3,12 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { artisans } from "@/lib/fixtures";
+import { STORY_IMAGES } from "@/lib/editorial/story-images";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { gsap, registerGsap } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
 
-const studioImages = [
-  "/editorial/studio-morning.webp",
-  "/editorial/stitch-detail.webp",
-  "/editorial/pearl-threading.webp",
-];
+const studioImages = STORY_IMAGES.filter((img) => ["studio", "stitch", "pearls"].includes(img.id));
 
 export function ChapterMeetMakers() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -65,12 +62,13 @@ export function ChapterMeetMakers() {
               table by the window.
             </p>
           </div>
-          <div className="relative aspect-[16/9] overflow-hidden rounded-sm border border-champagne/20 shadow-luxury">
+          <div className="overflow-hidden rounded-sm border border-champagne/20 shadow-luxury">
             <Image
-              src="/editorial/studio-morning.webp"
+              src={studioImages[0].src}
               alt="Sunlit studio table with scissors, thread, and embroidered linen"
-              fill
-              className="object-cover"
+              width={studioImages[0].width}
+              height={studioImages[0].height}
+              className="h-auto w-full"
               sizes="(max-width: 1024px) 100vw, 50vw"
             />
           </div>
@@ -92,16 +90,17 @@ export function ChapterMeetMakers() {
                     : "opacity-85",
                 )}
               >
-                <div className="relative h-36 w-full">
+                <div className="overflow-hidden">
                   <Image
-                    src={studioImages[index % studioImages.length]}
+                    src={studioImages[index % studioImages.length].src}
                     alt=""
-                    fill
-                    className="object-cover"
+                    width={studioImages[index % studioImages.length].width}
+                    height={studioImages[index % studioImages.length].height}
+                    className="h-auto w-full"
                     sizes="380px"
                     aria-hidden="true"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-ivory via-ivory/20 to-transparent" />
+                  <div className="h-2 bg-gradient-to-t from-ivory to-transparent" aria-hidden="true" />
                 </div>
                 <div className="p-8 pt-4">
                   <span className="font-body text-xs uppercase tracking-widest text-champagne">
