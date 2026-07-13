@@ -9,6 +9,7 @@ import { AnimatedLogo } from "@/components/brand/AnimatedLogo";
 import { useCart } from "@/components/providers/CartProvider";
 import { Button } from "@/components/ui/button";
 import { useScrollMorph } from "@/hooks/useScrollMorph";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
@@ -27,7 +28,7 @@ function CartLink() {
       variant="outline"
       size="sm"
       asChild
-      className="relative border-champagne/25 bg-ivory/60 hover:border-champagne/50"
+      className="relative border-champagne/30 bg-ivory/70 hover:border-champagne/55"
       data-magnetic
     >
       <Link href="/cart" aria-label={count > 0 ? `Cart, ${count} items` : "Cart"}>
@@ -64,9 +65,10 @@ type HeaderProps = {
 export function Header({ className }: HeaderProps) {
   const pathname = usePathname();
   const scrolled = useScrollMorph(32);
+  const isMobile = useIsMobile();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
-  const logoSize = scrolled ? 64 : 76;
+  const logoSize = isMobile ? (scrolled ? 64 : 72) : scrolled ? 80 : 96;
 
   useEffect(() => {
     setMobileNavOpen(false);
@@ -84,28 +86,28 @@ export function Header({ className }: HeaderProps) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 border-b border-champagne/15 bg-ivory/95 shadow-[0_1px_0_rgba(201,147,47,0.08)] backdrop-blur-xl transition-all duration-base ease-luxury",
+        "sticky top-0 z-50 border-b border-champagne/20 bg-ivory/96 shadow-[0_2px_0_rgba(201,147,47,0.1)] backdrop-blur-xl transition-all duration-base ease-luxury",
         className,
       )}
     >
       <div
         className={cn(
-          "mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 transition-all duration-base ease-luxury sm:px-6",
-          scrolled ? "h-16" : "h-[4.75rem] md:h-20",
+          "mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 transition-all duration-base ease-luxury sm:gap-4 sm:px-6",
+          scrolled ? "h-[4.5rem] md:h-20" : "h-[5.25rem] md:h-24",
         )}
       >
         <Link
           href="/"
-          className="flex shrink-0 items-center gap-3 md:gap-4"
+          className="flex min-w-0 shrink-0 items-center gap-2.5 sm:gap-3 md:gap-4"
           aria-label="Alankara home"
           data-magnetic
         >
           <AnimatedLogo size={logoSize} idlePulse playEntrance={false} priority />
-          <div className="hidden min-w-0 sm:block">
-            <span className="font-display text-lg tracking-[0.12em] text-maroon md:text-xl">
-              Alankara
+          <div className="min-w-0">
+            <span className="block font-display text-base tracking-[0.14em] text-maroon sm:text-lg md:text-xl">
+              ALANKARA
             </span>
-            <p className="truncate font-script text-xs italic text-warm-brown md:text-sm">
+            <p className="truncate font-script text-[10px] italic text-warm-brown sm:text-xs md:text-sm">
               Crafted for little moments.
             </p>
           </div>
@@ -162,7 +164,7 @@ export function Header({ className }: HeaderProps) {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden border-t border-champagne/10 bg-ivory/98 lg:hidden"
+            className="overflow-hidden border-t border-champagne/15 bg-ivory/98 lg:hidden"
             aria-label="Mobile navigation"
           >
             <div className="mx-auto flex max-w-7xl flex-col gap-1 px-4 py-4 sm:px-6">

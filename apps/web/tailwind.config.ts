@@ -11,7 +11,7 @@ const config: Config = {
     extend: {
       colors: {
         ivory: "#FAF3E7",
-        linen: "#F3E4CD",
+        linen: "#F0E0C8",
         champagne: "#C9932F",
         maroon: {
           DEFAULT: "#6F2317",
@@ -20,7 +20,7 @@ const config: Config = {
         olive: "#6B7353",
         "warm-brown": "#7A2E1C",
         sage: "#A8AD96",
-        cotton: "#EFE7D8",
+        cotton: "#EDE5D6",
         ink: {
           DEFAULT: "#2B231C",
           muted: "#5C5248",

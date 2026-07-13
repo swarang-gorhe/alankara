@@ -1,23 +1,34 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { FabricTexture } from "@/components/ui/FabricTexture";
+import { AnimatedLogo } from "@/components/brand/AnimatedLogo";
+import {
+  BotanicalSprig,
+  GhungrooScatter,
+  GoldDivider,
+  HeartsDivider,
+  PaperTexture,
+  PearlScatter,
+} from "@/components/decor";
 import { useChapterReveal } from "@/hooks/useChapterReveal";
 import { useIntro } from "@/contexts/IntroContext";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { gsap, registerGsap } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
 
 /**
- * Chapter 5 — The First Hero
- * Headline "Crafted for little moments." Nav appears after intro completes.
+ * Chapter 5 — Welcome hero matching the welcome poster aesthetic.
  */
 export function Chapter5Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const isMobile = useIsMobile();
   const { phase } = useIntro();
   const introComplete = phase === "complete" || phase === "exiting";
+
+  const logoSize = isMobile ? 100 : 120;
 
   useChapterReveal({ trigger: sectionRef, targets: contentRef, variant: "scale-in" });
 
@@ -27,7 +38,7 @@ export function Chapter5Hero() {
 
     const ctx = gsap.context(() => {
       gsap.to("[data-hero-pearl]", {
-        y: -40,
+        y: -30,
         ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -45,49 +56,67 @@ export function Chapter5Hero() {
     <section
       ref={sectionRef}
       id="main-content"
-      className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-ivory via-ivory to-linen/60 px-6 py-24"
-      aria-label="Crafted for little moments"
+      className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-hidden px-6 py-24"
+      aria-label="Welcome to Alankara"
       tabIndex={-1}
     >
-      <FabricTexture id="hero" opacity={0.05} />
+      <PaperTexture variant="cream" />
+
+      <PearlScatter density="rich" className="z-[1]" />
+      <GhungrooScatter count={5} className="z-[1]" />
+      <BotanicalSprig position="top-left" size={isMobile ? 90 : 130} className="z-[1]" />
+      <BotanicalSprig position="top-right" size={isMobile ? 90 : 130} className="z-[1]" />
+      <BotanicalSprig position="bottom-right" size={isMobile ? 70 : 100} className="z-[1] opacity-70" />
 
       <div
         data-hero-pearl
-        className="pointer-events-none absolute left-[12%] top-[20%] h-3 w-3 rounded-full bg-ivory/80 shadow-luxury"
+        className="pointer-events-none absolute bottom-[18%] left-[8%] z-[1] h-4 w-4 rounded-full bg-gradient-to-br from-white to-cotton shadow-[2px_3px_8px_rgba(43,35,28,0.15)]"
         aria-hidden="true"
       />
       <div
         data-hero-pearl
-        className="pointer-events-none absolute right-[18%] top-[35%] h-2 w-2 rounded-full bg-cotton"
-        aria-hidden="true"
-      />
-      <div
-        data-hero-pearl
-        className="pointer-events-none absolute bottom-[30%] left-[25%] h-2.5 w-2.5 rounded-full bg-linen"
+        className="pointer-events-none absolute bottom-[22%] right-[10%] z-[1] h-3 w-3 rounded-full bg-gradient-to-br from-white to-ivory shadow-[2px_3px_6px_rgba(43,35,28,0.12)]"
         aria-hidden="true"
       />
 
       <div
         ref={contentRef}
         className={cn(
-          "relative z-10 flex flex-col items-center text-center transition-opacity duration-slow ease-luxury",
+          "relative z-10 flex max-w-2xl flex-col items-center text-center transition-opacity duration-slow ease-luxury",
           introComplete ? "opacity-100" : "opacity-0",
         )}
       >
-        <p data-reveal className="font-script text-2xl text-warm-brown md:text-3xl">
+        <AnimatedLogo
+          variant="full"
+          size={logoSize}
+          showTagline={false}
+          playEntrance={false}
+          priority
+          className="mb-2 min-w-[240px] md:min-w-[288px]"
+        />
+
+        <p data-reveal className="mt-2 font-body text-xs uppercase tracking-[0.2em] text-ink-muted">
+          Our promise is simple —
+        </p>
+        <p data-reveal className="mt-1 font-script text-2xl italic text-warm-brown md:text-3xl">
           Crafted for little moments.
         </p>
 
-        <h1
-          data-reveal
-          className="mt-6 max-w-4xl font-display text-display text-maroon text-balance"
-        >
-          Wearable art for little moments
+        <HeartsDivider className="my-5" />
+
+        <p data-reveal className="max-w-md font-body text-sm leading-relaxed text-ink-muted md:text-base">
+          Thank you for being here from the very beginning.
+        </p>
+
+        <GoldDivider width="sm" className="my-6" />
+
+        <h1 data-reveal className="font-display text-3xl text-maroon md:text-4xl">
+          Welcome to Alankara.
         </h1>
 
         <p
           data-reveal
-          className="mt-6 max-w-lg font-body text-sm uppercase tracking-[0.35em] text-olive"
+          className="mt-6 max-w-lg font-body text-sm uppercase tracking-[0.3em] text-olive"
         >
           Cloth &amp; thread jewellery
         </p>

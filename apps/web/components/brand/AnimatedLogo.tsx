@@ -195,5 +195,6 @@ export function AnimatedLogo({
   );
 }
 
-/** Default showcase size for brand reveal */
-export const LOGO_SHOWCASE_SIZE = 140;
+/** Default showcase size for brand reveal — full lockup width = size × 2.4 (min 240px at 100) */
+export const LOGO_SHOWCASE_SIZE = 100;
+export const LOGO_INTRO_DESKTOP_SIZE = 120;

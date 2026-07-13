@@ -4,10 +4,10 @@ import { FabricTexture } from "@/components/ui/FabricTexture";
 
 type ProductPlaceholderProps = {
   name: string;
-  /** Swap for real product image in Phase 4+ */
   image?: string;
   className?: string;
   aspectRatio?: "square" | "portrait" | "landscape";
+  priority?: boolean;
 };
 
 const aspectClasses = {
@@ -21,16 +21,18 @@ export function ProductPlaceholder({
   image,
   className,
   aspectRatio = "square",
+  priority = false,
 }: ProductPlaceholderProps) {
   if (image) {
     return (
-      <div className={cn("relative overflow-hidden", aspectClasses[aspectRatio], className)}>
+      <div className={cn("relative overflow-hidden bg-ivory", aspectClasses[aspectRatio], className)}>
         <Image
           src={image}
           alt={name}
           fill
           className="object-cover"
-          sizes="(max-width: 768px) 100vw, 33vw"
+          sizes="(max-width: 768px) 50vw, 25vw"
+          priority={priority}
         />
       </div>
     );

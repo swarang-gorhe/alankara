@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { PaperTexture } from "@/components/decor";
 import { FabricTexture } from "@/components/ui/FabricTexture";
 import { useChapterReveal } from "@/hooks/useChapterReveal";
 
@@ -40,9 +41,10 @@ export function ChapterThreadToTreasure() {
   return (
     <section
       ref={sectionRef}
-      className="relative bg-gradient-to-b from-cotton via-ivory to-linen/40 px-6 py-24 md:py-32"
+      className="section-cotton relative px-6 py-24 md:py-32"
       aria-label="Our Story — the craft"
     >
+      <PaperTexture variant="cotton" />
       <FabricTexture id="thread" opacity={0.05} />
 
       <div className="mx-auto max-w-6xl">

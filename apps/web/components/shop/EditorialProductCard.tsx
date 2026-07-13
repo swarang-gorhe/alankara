@@ -38,9 +38,10 @@ export function EditorialProductCard({
       <Link href={`/product/${product.slug}`} className="block" data-cursor-sparkle>
         <div
           className={cn(
-            "relative overflow-hidden rounded-sm border border-sage/20 bg-ivory transition-all duration-base ease-luxury",
+            "relative overflow-hidden rounded-sm border border-champagne/20 bg-ivory transition-all duration-base ease-luxury",
+            "shadow-[0_4px_20px_rgba(111,35,23,0.06),0_0_0_1px_rgba(250,243,231,0.8),inset_0_0_0_1px_rgba(201,147,47,0.06)]",
             variant === "shadow" &&
-              "group-hover:border-champagne/40 group-hover:shadow-luxury-lg",
+              "group-hover:border-champagne/45 group-hover:shadow-[0_8px_32px_rgba(111,35,23,0.12),0_0_0_2px_rgba(201,147,47,0.12)]",
             variant === "fold" &&
               "group-hover:rounded-[1.5rem_1.5rem_0.25rem_0.25rem] group-hover:shadow-luxury-lg",
             variant === "thread" &&
@@ -50,12 +51,13 @@ export function EditorialProductCard({
           <ProductPlaceholder
             name={product.name}
             image={image}
-            aspectRatio={size === "tall" ? "portrait" : size === "large" ? "landscape" : "square"}
-            className="transition-transform duration-slow ease-luxury group-hover:scale-[1.04]"
+            aspectRatio="square"
+            className="transition-transform duration-slow ease-luxury group-hover:scale-[1.03]"
+            priority={product.featured}
           />
 
           <div
-            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-maroon/10 via-transparent to-transparent opacity-0 transition-opacity duration-base group-hover:opacity-100"
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-maroon/8 via-transparent to-transparent opacity-0 transition-opacity duration-base group-hover:opacity-100"
             aria-hidden
           />
 
@@ -76,11 +78,13 @@ export function EditorialProductCard({
           <p className="line-clamp-2 hidden font-body text-sm leading-relaxed text-ink-muted sm:block">
             {product.shortDescription}
           </p>
-          <p className="pt-1.5 font-display text-base tracking-wide text-maroon md:text-lg">
-            <span className="text-[11px] font-body uppercase tracking-[0.15em] text-ink-muted md:text-xs">
+          <p className="pt-1.5 font-display text-lg tracking-wide text-champagne md:text-xl">
+            <span className="text-[10px] font-body uppercase tracking-[0.15em] text-ink-muted md:text-xs">
               from{" "}
             </span>
-            {formatPrice(product.minPrice)}
+            <span className="font-semibold text-maroon group-hover:text-champagne transition-colors">
+              {formatPrice(product.minPrice)}
+            </span>
           </p>
         </div>
       </Link>

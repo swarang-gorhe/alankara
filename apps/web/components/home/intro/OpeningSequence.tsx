@@ -2,7 +2,11 @@
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatedLogo, LOGO_SHOWCASE_SIZE } from "@/components/brand/AnimatedLogo";
+import {
+  AnimatedLogo,
+  LOGO_INTRO_DESKTOP_SIZE,
+  LOGO_SHOWCASE_SIZE,
+} from "@/components/brand/AnimatedLogo";
 import { ClientErrorBoundary } from "@/components/ui/ClientErrorBoundary";
 import { FabricTexture } from "@/components/ui/FabricTexture";
 import { useIsMobile } from "@/hooks/useIsMobile";
@@ -111,7 +115,7 @@ export function OpeningSequence({ onComplete, className }: OpeningSequenceProps)
 
   const ribbonVisible = untyingProgress < 1 || progress < INTRO_CHAPTER_BREAKS.openingEnd;
   const showLogo = revealProgress > 0.12;
-  const logoSize = isMobile ? LOGO_SHOWCASE_SIZE : LOGO_SHOWCASE_SIZE + 40;
+  const logoSize = isMobile ? LOGO_SHOWCASE_SIZE : LOGO_INTRO_DESKTOP_SIZE;
 
   return (
     <div
@@ -191,7 +195,7 @@ export function OpeningSequence({ onComplete, className }: OpeningSequenceProps)
               />
             </div>
 
-            <div className="relative flex flex-col items-center px-6 py-8 md:px-10 md:py-10">
+            <div className="relative flex min-w-[240px] flex-col items-center px-6 py-8 md:min-w-[288px] md:px-10 md:py-10">
               <div
                 className="absolute inset-0 scale-150 rounded-full bg-champagne/30 blur-3xl"
                 style={{ opacity: revealProgress * 0.8 }}
@@ -202,7 +206,7 @@ export function OpeningSequence({ onComplete, className }: OpeningSequenceProps)
                 playEntrance
                 showTagline={revealProgress > 0.55}
                 priority
-                className="relative drop-shadow-[0_0_32px_rgba(201,147,47,0.5)]"
+                className="relative min-w-[240px] drop-shadow-[0_0_32px_rgba(201,147,47,0.5)] md:min-w-[288px]"
               />
             </div>
           </div>

@@ -1,37 +1,25 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef } from "react";
-import { FabricTexture } from "@/components/ui/FabricTexture";
+import { BotanicalSprig, CraftPillars, GoldDivider, PaperTexture } from "@/components/decor";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { gsap, registerGsap } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
 
+/** Our Craft chapter — matches the Our Craft poster layout */
 export function ChapterCrafted() {
   const sectionRef = useRef<HTMLElement>(null);
-  const tearRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     registerGsap();
-    if (prefersReducedMotion || !sectionRef.current || !tearRef.current) return;
+    if (prefersReducedMotion || !sectionRef.current || !contentRef.current) return;
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        tearRef.current,
-        { clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" },
-        {
-          clipPath: "polygon(0 0, 100% 0, 100% 45%, 0 55%)",
-          ease: "power2.inOut",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 60%",
-            end: "top 20%",
-            scrub: 1,
-          },
-        },
-      );
-
       gsap.fromTo(
         contentRef.current,
         { opacity: 0, y: 40 },
@@ -42,7 +30,7 @@ export function ChapterCrafted() {
           ease: "power3.out",
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 50%",
+            start: "top 55%",
             toggleActions: "play none none reverse",
           },
         },
@@ -55,47 +43,71 @@ export function ChapterCrafted() {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[80vh] overflow-hidden bg-gradient-to-b from-linen via-linen to-cotton/50 px-6 py-24 md:py-32"
-      aria-label="Our Story"
+      className="relative overflow-hidden px-6 py-20 md:py-28"
+      aria-label="Our Craft"
     >
-      <FabricTexture id="crafted" opacity={0.04} />
+      <PaperTexture variant="linen" />
 
+      <BotanicalSprig position="top-left" size={isMobile ? 80 : 110} className="z-[1]" />
+
+      {/* Patterned fabric corner accent */}
       <div
-        ref={tearRef}
-        className="absolute inset-0 bg-gradient-to-br from-cotton via-ivory to-linen"
+        className="pointer-events-none absolute bottom-0 left-0 z-[1] h-32 w-32 opacity-60 md:h-44 md:w-44"
         aria-hidden="true"
-      >
-        <svg className="absolute inset-0 h-full w-full opacity-30" aria-hidden="true">
-          <path
-            d="M0 55 L100 45 L100 100 L0 100 Z"
-            fill="none"
-            stroke="#C9932F"
-            strokeWidth="1"
-            strokeDasharray="8 4"
-            vectorEffect="non-scaling-stroke"
-            transform="scale(10)"
-          />
-        </svg>
-      </div>
+        style={{
+          background:
+            "repeating-linear-gradient(45deg, #C9932F 0px, #C9932F 1px, transparent 1px, transparent 8px), repeating-linear-gradient(-45deg, #6F2317 0px, #6F2317 1px, transparent 1px, transparent 8px)",
+          clipPath: "polygon(0 100%, 0 0, 100% 100%)",
+          opacity: 0.12,
+        }}
+      />
 
       <div
         ref={contentRef}
         className={cn(
-          "relative z-10 mx-auto max-w-4xl text-center",
+          "relative z-10 mx-auto grid max-w-6xl gap-12 md:grid-cols-2 md:gap-16 md:items-center",
           prefersReducedMotion ? "opacity-100" : "opacity-0",
         )}
       >
-        <p className="font-script text-2xl text-warm-brown md:text-3xl">
-          Crafted for little moments.
-        </p>
-        <h2 className="mt-8 font-display text-3xl text-maroon md:text-5xl text-balance">
-          Simplicity, grace, comfort — woven into every thread
-        </h2>
-        <p className="mx-auto mt-8 max-w-2xl font-body text-lg text-ink-muted leading-relaxed">
-          Alankara is handmade clothing jewellery — fabric earrings, embroidered collars,
-          pearl-thread necklaces, and hair adornments finished in small batches. No two pieces
-          are exactly alike. Each one is slow fashion you can wear, not store away.
-        </p>
+        <div>
+          <h2 className="text-center font-display text-4xl text-maroon md:text-left md:text-5xl">
+            Our Craft
+          </h2>
+          <p className="mt-4 text-center font-body text-base text-ink md:text-left md:text-lg">
+            Every piece is:
+          </p>
+
+          <div className="mt-8 md:mt-10">
+            <CraftPillars />
+          </div>
+
+          <GoldDivider width="md" className="mt-10 hidden md:flex" />
+
+          <p className="mt-8 text-center font-body text-sm italic leading-relaxed text-ink-muted md:text-left md:text-base">
+            No two pieces are exactly alike — and that&apos;s the beauty of handmade.
+          </p>
+        </div>
+
+        <div className="relative flex items-center justify-center">
+          <div className="relative aspect-square w-full max-w-sm overflow-hidden rounded-sm border border-champagne/25 bg-ivory shadow-[0_8px_32px_rgba(111,35,23,0.1),0_0_0_1px_rgba(201,147,47,0.08)]">
+            <Image
+              src="/products/maroon-embroidered-studs.webp"
+              alt="Handmade fabric earrings with pearl fringe"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 80vw, 400px"
+            />
+            <div
+              className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ivory/20 via-transparent to-transparent"
+              aria-hidden="true"
+            />
+          </div>
+          {/* Soft pearl shadow beneath product */}
+          <div
+            className="absolute -bottom-4 left-1/2 h-6 w-3/4 -translate-x-1/2 rounded-[50%] bg-maroon/8 blur-xl"
+            aria-hidden="true"
+          />
+        </div>
       </div>
     </section>
   );
