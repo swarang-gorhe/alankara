@@ -32,7 +32,10 @@ async def upload_media(
 ) -> MediaUploadResponse:
     content_type = file.content_type or "application/octet-stream"
     if content_type not in ALLOWED_TYPES:
-        content_type = "image/jpeg"
+        raise HTTPException(
+            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+            detail=f"Unsupported file type: {content_type}. Allowed: JPEG, PNG, WebP, GIF.",
+        )
 
     data = await file.read()
     if len(data) > 10 * 1024 * 1024:

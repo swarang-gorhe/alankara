@@ -32,6 +32,11 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    weak_secret = settings.jwt_secret in ("", "change-me-in-production")
+    if settings.environment not in ("local", "test") and weak_secret:
+        raise RuntimeError(
+            "JWT_SECRET must be set to a strong value when environment is not local/test"
+        )
     if settings.storage_backend in ("local", "supabase"):
         get_storage_backend()
     yield

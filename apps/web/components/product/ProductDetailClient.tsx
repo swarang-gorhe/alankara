@@ -191,6 +191,13 @@ export function ProductDetailClient({
               {selectedVariant && formatPrice(selectedVariant.price.amount)}
             </p>
 
+            <p className="mt-8 flex flex-wrap gap-4 font-body text-xs uppercase tracking-widest text-olive">
+              <span>Handmade</span>
+              <span>Lightweight</span>
+              <span>Skin-kind</span>
+              <span>Sustainable</span>
+            </p>
+
             {product.variants.length > 0 && (
               <div className="mt-8">
                 <p className="mb-3 font-body text-xs uppercase tracking-widest text-ink-muted">

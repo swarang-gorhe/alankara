@@ -38,7 +38,7 @@ class StubPaymentProvider implements PaymentProvider {
       amount: params.amount,
       currency: params.currency,
       message:
-        "Secure payments via Stripe or Razorpay will be available soon. Your order is saved as pending payment.",
+        "Payment integration pending — your order is saved. Secure checkout via Stripe or Razorpay will be enabled for launch.",
     };
   }
 }

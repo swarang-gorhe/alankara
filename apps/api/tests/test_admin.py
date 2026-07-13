@@ -100,9 +100,18 @@ def test_admin_discounts_crud(client, admin_headers):
     assert updated.status_code == 200
     assert updated.json()["value"] == 15
 
+    cart = client.get("/cart")
+    session_cookie = cart.cookies.get("alankara_cart_session")
+    client.post(
+        "/cart/items",
+        json={"variantId": "var-001-a", "quantity": 1},
+        cookies={"alankara_cart_session": session_cookie},
+    )
+
     validate = client.post(
         "/discounts/validate",
-        json={"code": "TEST10", "subtotalAmount": 10000},
+        json={"code": "TEST10"},
+        cookies={"alankara_cart_session": session_cookie},
     )
     assert validate.status_code == 200
     assert validate.json()["valid"] is True

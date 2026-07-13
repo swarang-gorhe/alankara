@@ -51,7 +51,6 @@ class PaginatedDiscountsSchema(BaseModel):
 
 class ValidateDiscountRequest(BaseModel):
     code: str = Field(..., min_length=1, max_length=64)
-    subtotalAmount: int = Field(..., ge=0)
 
 
 class ValidateDiscountResponse(BaseModel):

@@ -16,7 +16,7 @@ from app.models.product import Product
 from app.models.review import Review
 from app.schemas.ai import AIInsightsSchema
 from app.schemas.auth import UserClaims
-from app.schemas.review import PaginatedReviewsSchema, ReviewSchema
+from app.schemas.review import PaginatedPublicReviewsSchema, PublicReviewSchema, ReviewSchema
 from app.services.ai.chains.insights_chain import get_global_insights
 
 router = APIRouter(prefix="/reviews", tags=["reviews"])
@@ -32,19 +32,19 @@ class ReviewCreate(BaseModel):
     authorName: str | None = Field(None, max_length=128)
 
 
-@router.get("", response_model=PaginatedReviewsSchema)
+@router.get("", response_model=PaginatedPublicReviewsSchema)
 async def list_reviews(
     db: DbSession,
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     product_id: str | None = None,
     category: str | None = None,
-    approved_only: bool = True,
-) -> PaginatedReviewsSchema:
-    stmt = select(Review).options(selectinload(Review.product).selectinload(Product.category))
-
-    if approved_only:
-        stmt = stmt.where(Review.approved.is_(True))
+) -> PaginatedPublicReviewsSchema:
+    stmt = (
+        select(Review)
+        .options(selectinload(Review.product).selectinload(Product.category))
+        .where(Review.approved.is_(True))
+    )
     if product_id:
         stmt = stmt.where(Review.product_id == product_id)
     if category:
@@ -64,24 +64,22 @@ async def list_reviews(
     reviews = result.scalars().unique().all()
 
     items = [
-        ReviewSchema(
+        PublicReviewSchema(
             id=r.id,
             productId=r.product_id,
             productSlug=r.product.slug,
             productName=r.product.name,
             categorySlug=r.product.category.slug if r.product.category else "",
-            userId=r.user_id,
             authorName=r.author_name,
             rating=r.rating,
             text=r.text,
             createdAt=r.created_at,
-            approved=r.approved,
         )
         for r in reviews
     ]
 
     pages = max(1, math.ceil(total / page_size)) if total else 1
-    return PaginatedReviewsSchema(
+    return PaginatedPublicReviewsSchema(
         items=items,
         total=total,
         page=page,

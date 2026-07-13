@@ -14,8 +14,8 @@ def _claims_from_payload(payload: dict) -> UserClaims:
     role = payload.get("role")
     if not role:
         app_meta = payload.get("app_metadata") or {}
-        user_meta = payload.get("user_metadata") or {}
-        role = app_meta.get("role") or user_meta.get("role") or "customer"
+        # Never trust user_metadata for roles — users can self-edit it in Supabase.
+        role = app_meta.get("role") or "customer"
     email = payload.get("email") or ""
     sub = payload.get("sub") or ""
     return UserClaims(sub=sub, email=email, role=role)

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AdminTable, AdminTableCell, AdminTableRow } from "@/components/admin/AdminTable";
 import {
@@ -124,7 +125,16 @@ export default function AdminReviewsPage() {
       <AdminTable columns={["Product", "Author", "Rating", "Excerpt", "Status", ""]}>
         {reviews.map((review) => (
           <AdminTableRow key={review.id}>
-            <AdminTableCell className="text-sm">{review.productName}</AdminTableCell>
+            <AdminTableCell className="text-sm">
+              <Link
+                href={`/product/${review.productSlug}`}
+                className="text-admin-accent hover:underline"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {review.productName}
+              </Link>
+            </AdminTableCell>
             <AdminTableCell>{review.authorName}</AdminTableCell>
             <AdminTableCell>{review.rating}★</AdminTableCell>
             <AdminTableCell className="max-w-xs truncate text-sm text-admin-muted">

@@ -11,7 +11,7 @@ import { ChapterNewsletter } from "./chapters/ChapterNewsletter";
 import { ChapterThreadToTreasure } from "./chapters/ChapterThreadToTreasure";
 import { FeatureBar } from "./FeatureBar";
 import { UnwrapIntro } from "./intro/UnwrapIntro";
-import { JournalSpread } from "@/components/journal";
+import { JournalSpread, TornDivider } from "@/components/journal";
 
 /** Pitch homepage — seven sections, restrained motion */
 export function HomePage() {
@@ -21,7 +21,8 @@ export function HomePage() {
         <Chapter5Hero />
         <FeatureBar />
         <ChapterBrandStatement />
-      <ChapterCrafted />
+        <TornDivider className="mx-auto max-w-6xl" />
+        <ChapterCrafted />
       <ChapterThreadToTreasure />
       <ChapterMeetMakers />
       <ChapterCollections />

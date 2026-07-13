@@ -8,6 +8,7 @@ from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from app.config import get_settings
 from app.models.cart import Cart, CartItem
 from app.models.product import Product, ProductVariant
 from app.schemas.cart import CartItemDetailSchema, CartSchema
@@ -31,12 +32,14 @@ def _ensure_session_cookie(response: Response | None, session_id: str | None) ->
         return session_id
     new_session = uuid.uuid4().hex
     if response is not None:
+        settings = get_settings()
         response.set_cookie(
             key=CART_SESSION_COOKIE,
             value=new_session,
             max_age=CART_COOKIE_MAX_AGE,
             httponly=True,
             samesite="lax",
+            secure=settings.environment not in ("local", "test"),
             path="/",
         )
     return new_session

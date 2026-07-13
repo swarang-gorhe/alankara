@@ -8,11 +8,45 @@ function resolveApiUrl(): string {
   return "http://localhost:8000";
 }
 
+const BLOCKED_SEGMENTS = new Set([".", ".."]);
+
+function sanitizePathSegments(pathSegments: string[]): string[] | null {
+  for (const segment of pathSegments) {
+    const decoded = decodeURIComponent(segment);
+    if (
+      BLOCKED_SEGMENTS.has(segment) ||
+      BLOCKED_SEGMENTS.has(decoded) ||
+      segment.includes("\\") ||
+      decoded.includes("/")
+    ) {
+      return null;
+    }
+  }
+  return pathSegments;
+}
+
+function buildAdminTargetUrl(apiUrl: string, pathSegments: string[], search: string): URL | null {
+  const safeSegments = sanitizePathSegments(pathSegments);
+  if (!safeSegments) {
+    return null;
+  }
+
+  const subPath = safeSegments.join("/");
+  const target = new URL(`${apiUrl}/admin/${subPath}${search}`);
+  if (!target.pathname.startsWith("/admin/") && target.pathname !== "/admin") {
+    return null;
+  }
+  return target;
+}
+
 async function proxyAdmin(request: NextRequest, pathSegments: string[]) {
   const apiUrl = resolveApiUrl();
-  const subPath = pathSegments.join("/");
   const search = request.nextUrl.search;
-  const targetUrl = `${apiUrl}/admin/${subPath}${search}`;
+  const target = buildAdminTargetUrl(apiUrl, pathSegments, search);
+
+  if (!target) {
+    return NextResponse.json({ detail: "Invalid admin path" }, { status: 400 });
+  }
 
   const headers = new Headers();
   headers.set("Accept", "application/json");
@@ -38,7 +72,7 @@ async function proxyAdmin(request: NextRequest, pathSegments: string[]) {
   }
 
   try {
-    const res = await fetch(targetUrl, init);
+    const res = await fetch(target.toString(), init);
     const body = await res.arrayBuffer();
 
     return new NextResponse(body, {

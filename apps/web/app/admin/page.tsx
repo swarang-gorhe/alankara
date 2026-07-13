@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { StatCard } from "@/components/admin/StatCard";
 import { AdminTable, AdminTableCell, AdminTableRow } from "@/components/admin/AdminTable";
-import { fetchDashboardStats, type DashboardStats } from "@/lib/api/admin";
+import { fetchDashboardStats, fetchAdminProducts, type DashboardStats, type AdminProduct } from "@/lib/api/admin";
 import { formatPrice } from "@/lib/fixtures";
 
 function RevenueChart({ data }: { data: Array<{ month: string; amount: number }> }) {
@@ -29,11 +29,15 @@ function RevenueChart({ data }: { data: Array<{ month: string; amount: number }>
 
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [featured, setFeatured] = useState<AdminProduct[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchDashboardStats()
-      .then(setStats)
+    Promise.all([fetchDashboardStats(), fetchAdminProducts()])
+      .then(([s, products]) => {
+        setStats(s);
+        setFeatured(products.items.filter((p) => p.featured).slice(0, 5));
+      })
       .catch((err: Error) => setError(err.message));
   }, []);
 
@@ -91,6 +95,23 @@ export default function AdminDashboardPage() {
                 <li key={item.id} className="flex items-center justify-between text-sm">
                   <span className="text-admin-text">{item.label}</span>
                   <span className="text-admin-muted">{formatPrice(item.amount)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        <section className="rounded-lg border border-admin-border bg-admin-surface p-6">
+          <h2 className="font-display text-lg text-admin-text">Featured products</h2>
+          <p className="mt-1 text-xs text-admin-muted">Live on storefront</p>
+          {featured.length === 0 ? (
+            <p className="mt-4 text-sm text-admin-muted">No featured products.</p>
+          ) : (
+            <ul className="mt-4 space-y-3">
+              {featured.map((p) => (
+                <li key={p.id} className="flex items-center justify-between text-sm">
+                  <span className="text-admin-text">{p.name}</span>
+                  <span className="text-admin-muted">{formatPrice(p.minPrice)}</span>
                 </li>
               ))}
             </ul>

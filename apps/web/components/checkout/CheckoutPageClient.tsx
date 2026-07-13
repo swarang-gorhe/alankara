@@ -44,7 +44,7 @@ export function CheckoutPageClient() {
     setValidatingDiscount(true);
     setDiscountMessage(null);
     try {
-      const result = await validateDiscount(discountCode.trim(), cart.subtotal.amount);
+      const result = await validateDiscount(discountCode.trim());
       if (result.valid) {
         setDiscountAmount(result.discountAmount);
         setDiscountMessage(result.message ?? "Discount applied");
@@ -185,11 +185,10 @@ export function CheckoutPageClient() {
             )}
           </div>
 
-          <div className="rounded-sm border border-dashed border-gold/40 bg-olive-linen/30 px-5 py-4">
-            <p className="text-xs uppercase tracking-widest text-gold">Payment</p>
-            <p className="mt-2 text-sm text-charcoal-muted">
-              Stripe / Razorpay integration coming soon. Placing this order saves it as{" "}
-              <em>pending payment</em> — no charge today.
+          <div className="rounded-sm border border-dashed border-champagne/40 bg-linen/40 px-5 py-4">
+            <p className="text-xs uppercase tracking-widest text-champagne">Payment</p>
+            <p className="mt-2 font-body text-sm text-ink-muted">
+              Payment integration pending — your order is saved; no charge today.
             </p>
           </div>
 

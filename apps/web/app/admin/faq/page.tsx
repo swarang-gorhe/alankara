@@ -1,17 +1,20 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AdminTable, AdminTableCell, AdminTableRow } from "@/components/admin/AdminTable";
 import {
   createAdminFaq,
   deleteAdminFaq,
   fetchAdminFaq,
+  updateAdminFaq,
   type AdminFaq,
 } from "@/lib/api/admin";
 
 export default function AdminFaqPage() {
   const [entries, setEntries] = useState<AdminFaq[]>([]);
   const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState({
     slug: "",
     question: "",
@@ -38,6 +41,25 @@ export default function AdminFaqPage() {
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this FAQ entry?")) return;
     await deleteAdminFaq(id);
+    load();
+  };
+
+  const startEdit = (entry: AdminFaq) => {
+    setEditingId(entry.id);
+    setShowForm(false);
+    setForm({
+      slug: entry.slug,
+      question: entry.question,
+      answer: entry.answer,
+      category: entry.category,
+    });
+  };
+
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingId) return;
+    await updateAdminFaq(editingId, form);
+    setEditingId(null);
     load();
   };
 
@@ -109,6 +131,42 @@ export default function AdminFaqPage() {
         </form>
       )}
 
+      {editingId && (
+        <form
+          onSubmit={(e) => void handleUpdate(e)}
+          className="space-y-4 rounded-lg border border-admin-accent/40 bg-admin-surface p-5"
+        >
+          <p className="font-display text-lg text-admin-text">Edit FAQ</p>
+          <label className="block">
+            <span className="text-xs uppercase tracking-widest text-admin-muted">Question</span>
+            <input
+              required
+              value={form.question}
+              onChange={(e) => setForm((f) => ({ ...f, question: e.target.value }))}
+              className="mt-1 w-full rounded border border-admin-border bg-admin-elevated px-3 py-2 text-sm text-admin-text"
+            />
+          </label>
+          <label className="block">
+            <span className="text-xs uppercase tracking-widest text-admin-muted">Answer</span>
+            <textarea
+              required
+              value={form.answer}
+              onChange={(e) => setForm((f) => ({ ...f, answer: e.target.value }))}
+              className="mt-1 w-full rounded border border-admin-border bg-admin-elevated px-3 py-2 text-sm text-admin-text"
+              rows={4}
+            />
+          </label>
+          <div className="flex gap-3">
+            <button type="submit" className="rounded bg-admin-accent px-4 py-2 text-xs uppercase tracking-widest text-admin-bg">
+              Save
+            </button>
+            <button type="button" onClick={() => setEditingId(null)} className="text-xs text-admin-muted">
+              Cancel
+            </button>
+          </div>
+        </form>
+      )}
+
       <AdminTable columns={["Question", "Category", "Published", ""]}>
         {entries.map((entry) => (
           <AdminTableRow key={entry.id}>
@@ -118,7 +176,14 @@ export default function AdminFaqPage() {
             </AdminTableCell>
             <AdminTableCell>{entry.category}</AdminTableCell>
             <AdminTableCell>{entry.published ? "Yes" : "No"}</AdminTableCell>
-            <AdminTableCell>
+            <AdminTableCell className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => startEdit(entry)}
+                className="text-xs uppercase tracking-widest text-admin-accent hover:underline"
+              >
+                Edit
+              </button>
               <button
                 type="button"
                 onClick={() => void handleDelete(entry.id)}

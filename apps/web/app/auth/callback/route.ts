@@ -28,5 +28,15 @@ export async function GET(request: Request) {
     await supabase.auth.exchangeCodeForSession(code);
   }
 
-  return NextResponse.redirect(`${origin}${next}`);
+  return NextResponse.redirect(`${origin}${safeRedirectPath(next)}`);
+}
+
+function safeRedirectPath(next: string): string {
+  if (!next.startsWith("/") || next.startsWith("//")) {
+    return "/account";
+  }
+  if (next.includes("://")) {
+    return "/account";
+  }
+  return next;
 }

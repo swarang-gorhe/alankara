@@ -127,12 +127,12 @@ export async function checkout(
 
 export async function validateDiscount(
   code: string,
-  subtotalAmount: number,
 ): Promise<{ valid: boolean; discountAmount: number; message?: string; code?: string }> {
   const res = await fetch(`${API_URL}/discounts/validate`, {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify({ code, subtotalAmount }),
+    credentials: "include",
+    body: JSON.stringify({ code }),
   });
   return res.json() as Promise<{
     valid: boolean;
