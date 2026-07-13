@@ -1,6 +1,8 @@
 import { API_URL } from "@/lib/api/client";
 import { clearAdminToken, getAdminToken } from "@/lib/admin/auth";
 
+const ADMIN_API_BASE = "/api/admin";
+
 export class AdminApiError extends Error {
   constructor(
     message: string,
@@ -57,6 +59,7 @@ export type AdminProduct = {
   primaryMaterial: string;
   minPrice: number;
   featured: boolean;
+  images?: string[];
   variants: Array<{
     id: string;
     sku: string;
@@ -89,6 +92,14 @@ export type AdminOrder = {
   status: string;
   email: string;
   phone?: string;
+  shippingAddress?: {
+    line1?: string;
+    line2?: string;
+    city?: string;
+    state?: string;
+    postalCode?: string;
+    country?: string;
+  };
   subtotal: { amount: number; currency: string };
   discountCode?: string;
   discountAmount: { amount: number; currency: string };
@@ -129,7 +140,8 @@ export type AdminReview = {
 
 export async function adminFetch<T>(path: string, init?: RequestInit): Promise<T> {
   const token = getAdminToken();
-  const res = await fetch(`${API_URL}${path}`, {
+  const adminPath = path.startsWith("/admin") ? path.slice("/admin".length) : path;
+  const res = await fetch(`${ADMIN_API_BASE}${adminPath}`, {
     ...init,
     headers: {
       Accept: "application/json",
@@ -158,7 +170,7 @@ export async function adminFetch<T>(path: string, init?: RequestInit): Promise<T
 }
 
 export async function adminLogin(email: string, password: string): Promise<string> {
-  const res = await fetch(`${API_URL}/auth/login`, {
+  const res = await fetch("/api/auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify({ email, password }),
@@ -174,8 +186,122 @@ export async function fetchDashboardStats(): Promise<DashboardStats> {
   return adminFetch<DashboardStats>("/admin/dashboard/stats");
 }
 
-export async function fetchAdminProducts(page = 1): Promise<Paginated<AdminProduct>> {
-  return adminFetch<Paginated<AdminProduct>>(`/admin/products?page=${page}&page_size=50`);
+export async function fetchAdminProducts(
+  page = 1,
+  search?: string,
+): Promise<Paginated<AdminProduct>> {
+  const params = new URLSearchParams({ page: String(page), page_size: "50" });
+  if (search) params.set("q", search);
+  return adminFetch<Paginated<AdminProduct>>(`/admin/products?${params.toString()}`);
+}
+
+export async function fetchAdminProduct(id: string): Promise<AdminProduct> {
+  return adminFetch<AdminProduct>(`/admin/products/${id}`);
+}
+
+export async function fetchCategories(): Promise<Array<{ id: string; name: string; slug: string }>> {
+  const data = await adminFetch<Paginated<{ id: string; name: string; slug: string }>>(
+    "/admin/categories?page_size=100",
+  );
+  return data.items;
+}
+
+export async function uploadAdminImage(file: File): Promise<{ url: string; key: string }> {
+  const token = getAdminToken();
+  const form = new FormData();
+  form.append("file", file);
+  const res = await fetch("/api/admin/media/upload", {
+    method: "POST",
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: form,
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    const body = await res.text();
+    throw new AdminApiError(`Upload failed (${res.status}): ${body}`, res.status);
+  }
+  return res.json() as Promise<{ url: string; key: string }>;
+}
+
+export async function createAdminVariant(
+  productId: string,
+  body: Record<string, unknown>,
+): Promise<void> {
+  await adminFetch(`/admin/products/${productId}/variants`, {
+    method: "POST",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function updateAdminVariant(
+  productId: string,
+  variantId: string,
+  body: Record<string, unknown>,
+): Promise<void> {
+  await adminFetch(`/admin/products/${productId}/variants/${variantId}`, {
+    method: "PUT",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function deleteAdminVariant(productId: string, variantId: string): Promise<void> {
+  await adminFetch<void>(`/admin/products/${productId}/variants/${variantId}`, {
+    method: "DELETE",
+  });
+}
+
+export async function updateVariantStock(
+  productId: string,
+  variantId: string,
+  stock: number,
+): Promise<void> {
+  await updateAdminVariant(productId, variantId, { stock });
+}
+
+export async function fetchAdminCustomers(): Promise<
+  Array<{ email: string; orderCount: number; totalSpent: number; lastOrderAt: string | null }>
+> {
+  return adminFetch("/admin/customers");
+}
+
+export async function fetchAdminCategoriesAdmin(): Promise<
+  Paginated<{ id: string; slug: string; name: string; description?: string }>
+> {
+  return adminFetch("/admin/categories?page_size=100");
+}
+
+export async function createAdminCategory(body: Record<string, unknown>) {
+  return adminFetch("/admin/categories", { method: "POST", body: JSON.stringify(body) });
+}
+
+export async function updateAdminCategory(id: string, body: Record<string, unknown>) {
+  return adminFetch(`/admin/categories/${id}`, { method: "PUT", body: JSON.stringify(body) });
+}
+
+export async function deleteAdminCategory(id: string) {
+  await adminFetch<void>(`/admin/categories/${id}`, { method: "DELETE" });
+}
+
+export async function fetchAdminCollections() {
+  return adminFetch<Paginated<Record<string, unknown>>>("/admin/collections?page_size=50");
+}
+
+export async function createAdminCollection(body: Record<string, unknown>) {
+  return adminFetch("/admin/collections", { method: "POST", body: JSON.stringify(body) });
+}
+
+export async function updateAdminCollection(id: string, body: Record<string, unknown>) {
+  return adminFetch(`/admin/collections/${id}`, { method: "PUT", body: JSON.stringify(body) });
+}
+
+export async function deleteAdminCollection(id: string) {
+  await adminFetch<void>(`/admin/collections/${id}`, { method: "DELETE" });
+}
+
+export async function fetchAdminOrders(status?: string): Promise<Paginated<AdminOrder>> {
+  const params = new URLSearchParams({ page_size: "50" });
+  if (status) params.set("status", status);
+  return adminFetch<Paginated<AdminOrder>>(`/admin/orders?${params.toString()}`);
 }
 
 export async function createAdminProduct(body: Record<string, unknown>): Promise<AdminProduct> {
@@ -222,10 +348,6 @@ export async function updateAdminDiscount(
 
 export async function deleteAdminDiscount(id: string): Promise<void> {
   await adminFetch<void>(`/admin/discounts/${id}`, { method: "DELETE" });
-}
-
-export async function fetchAdminOrders(): Promise<Paginated<AdminOrder>> {
-  return adminFetch<Paginated<AdminOrder>>("/admin/orders?page_size=50");
 }
 
 export async function updateAdminOrder(

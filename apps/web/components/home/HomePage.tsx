@@ -9,21 +9,26 @@ import { ChapterFooter } from "./chapters/ChapterFooter";
 import { ChapterMeetMakers } from "./chapters/ChapterMeetMakers";
 import { ChapterNewsletter } from "./chapters/ChapterNewsletter";
 import { ChapterThreadToTreasure } from "./chapters/ChapterThreadToTreasure";
+import { FeatureBar } from "./FeatureBar";
 import { UnwrapIntro } from "./intro/UnwrapIntro";
+import { JournalSpread } from "@/components/journal";
 
 /** Pitch homepage — seven sections, restrained motion */
 export function HomePage() {
   return (
     <UnwrapIntro>
-      <Chapter5Hero />
-      <ChapterBrandStatement />
+      <JournalSpread>
+        <Chapter5Hero />
+        <FeatureBar />
+        <ChapterBrandStatement />
       <ChapterCrafted />
       <ChapterThreadToTreasure />
       <ChapterMeetMakers />
       <ChapterCollections />
       <ChapterCustomerStories />
       <ChapterNewsletter />
-      <ChapterFooter />
+        <ChapterFooter />
+      </JournalSpread>
     </UnwrapIntro>
   );
 }

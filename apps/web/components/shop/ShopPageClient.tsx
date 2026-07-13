@@ -112,10 +112,26 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
       </section>
 
       <section className="relative mx-auto max-w-7xl px-4 pb-20 sm:px-6 md:pb-28">
-        {/* Champagne gold tinted filter strip */}
+        <div className="lg:grid lg:grid-cols-[240px_1fr] lg:gap-10">
+          <aside className="hidden lg:block">
+            <div className="sticky top-24 rounded-sm border border-champagne/20 bg-linen/30 p-5">
+              <p className="font-display text-sm text-maroon">Filter</p>
+              <ShopChipFilters
+                filters={filters}
+                onChange={handleFilterChange}
+                productCount={filteredProducts.length}
+                totalCount={products.length}
+                mobileOpen={false}
+                onMobileOpenChange={setMobileFiltersOpen}
+              />
+            </div>
+          </aside>
+
+          <div>
+        {/* Mobile + tablet filter strip */}
         <div
           className={cn(
-            "sticky top-16 z-20 -mx-1 mb-8 space-y-4 rounded-sm border border-champagne/25 px-4 py-4 shadow-luxury backdrop-blur-md md:top-[4.25rem] md:mb-12 md:px-6 md:py-5",
+            "sticky top-16 z-20 -mx-1 mb-8 space-y-4 rounded-sm border border-champagne/25 px-4 py-4 shadow-luxury backdrop-blur-md md:top-[4.25rem] md:mb-12 md:px-6 md:py-5 lg:hidden",
             "bg-ivory/95",
           )}
         >
@@ -202,6 +218,8 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
             </motion.div>
           )}
         </AnimatePresence>
+          </div>
+        </div>
       </section>
     </div>
   );

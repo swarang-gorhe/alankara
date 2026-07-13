@@ -6,6 +6,15 @@ import { fetchAdminOrders, updateAdminOrder, type AdminOrder } from "@/lib/api/a
 import { formatPrice } from "@/lib/fixtures";
 
 const STATUSES = [
+  { key: "", label: "All" },
+  { key: "pending_payment", label: "Pending" },
+  { key: "processing", label: "Processing" },
+  { key: "shipped", label: "Shipped" },
+  { key: "delivered", label: "Delivered" },
+  { key: "cancelled", label: "Cancelled" },
+] as const;
+
+const STATUS_OPTIONS = [
   "pending_payment",
   "paid",
   "processing",
@@ -16,16 +25,17 @@ const STATUSES = [
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<AdminOrder[]>([]);
+  const [statusFilter, setStatusFilter] = useState("");
   const [expanded, setExpanded] = useState<string | null>(null);
   const [notes, setNotes] = useState<Record<string, string>>({});
 
   const load = () => {
-    fetchAdminOrders().then((data) => setOrders(data.items));
+    fetchAdminOrders(statusFilter || undefined).then((data) => setOrders(data.items));
   };
 
   useEffect(() => {
     load();
-  }, []);
+  }, [statusFilter]);
 
   const handleStatusChange = async (orderId: string, status: string) => {
     await updateAdminOrder(orderId, { status });
@@ -41,7 +51,24 @@ export default function AdminOrdersPage() {
     <div className="space-y-6">
       <div>
         <h1 className="font-display text-3xl text-admin-text">Orders</h1>
-        <p className="mt-1 text-sm text-admin-muted">Status updates and fulfillment notes</p>
+        <p className="mt-1 text-sm text-admin-muted">Status, shipping, and fulfillment</p>
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        {STATUSES.map((s) => (
+          <button
+            key={s.key}
+            type="button"
+            onClick={() => setStatusFilter(s.key)}
+            className={`rounded px-3 py-1.5 text-xs uppercase tracking-widest ${
+              statusFilter === s.key
+                ? "bg-admin-accent text-admin-bg"
+                : "border border-admin-border text-admin-muted hover:text-admin-text"
+            }`}
+          >
+            {s.label}
+          </button>
+        ))}
       </div>
 
       <AdminTable columns={["Order", "Customer", "Total", "Status", "Date", ""]}>
@@ -56,7 +83,7 @@ export default function AdminOrdersPage() {
                 onChange={(e) => void handleStatusChange(order.id, e.target.value)}
                 className="rounded border border-admin-border bg-admin-elevated px-2 py-1 text-xs text-admin-text"
               >
-                {STATUSES.map((s) => (
+                {STATUS_OPTIONS.map((s) => (
                   <option key={s} value={s}>
                     {s.replace("_", " ")}
                   </option>
@@ -84,9 +111,17 @@ export default function AdminOrdersPage() {
           {(() => {
             const order = orders.find((o) => o.id === expanded);
             if (!order) return null;
+            const addr = order.shippingAddress;
             return (
               <div className="space-y-4">
                 <h3 className="font-display text-lg text-admin-text">Order {order.id}</h3>
+                {addr && (
+                  <p className="text-sm text-admin-muted">
+                    Ship to: {[addr.line1, addr.line2, addr.city, addr.state, addr.postalCode]
+                      .filter(Boolean)
+                      .join(", ")}
+                  </p>
+                )}
                 <ul className="space-y-2 text-sm">
                   {order.items.map((item) => (
                     <li key={item.id} className="flex justify-between text-admin-text">
@@ -97,15 +132,8 @@ export default function AdminOrdersPage() {
                     </li>
                   ))}
                 </ul>
-                {order.discountCode && (
-                  <p className="text-sm text-admin-muted">
-                    Discount {order.discountCode}: −{formatPrice(order.discountAmount.amount)}
-                  </p>
-                )}
                 <label className="block">
-                  <span className="text-xs uppercase tracking-widest text-admin-muted">
-                    Fulfillment notes
-                  </span>
+                  <span className="text-xs uppercase tracking-widest text-admin-muted">Fulfillment notes</span>
                   <textarea
                     value={notes[order.id] ?? order.fulfillmentNotes ?? ""}
                     onChange={(e) => setNotes((n) => ({ ...n, [order.id]: e.target.value }))}

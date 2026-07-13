@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { SpoolIcon } from "@/components/decor/CraftPillarIcons";
 import { FabricTexture } from "@/components/ui/FabricTexture";
 
 type ProductPlaceholderProps = {
@@ -49,13 +50,7 @@ export function ProductPlaceholder({
       <FabricTexture id={`ph-${name.slice(0, 8)}`} opacity={0.08} />
 
       <div className="absolute inset-0 flex items-center justify-center" aria-hidden="true">
-        <Image
-          src="/brand/logo-mark.png"
-          alt=""
-          width={120}
-          height={120}
-          className="opacity-[0.07]"
-        />
+        <SpoolIcon size={64} className="opacity-20" />
       </div>
 
       <div className="absolute inset-0 flex items-center justify-center p-6">

@@ -86,6 +86,16 @@ Optional: add [Custom Access Token Hook](docs/supabase-auth-migration.md) so `ro
 - Set all `NEXT_PUBLIC_*` env vars
 - Deploy API separately (Railway, Render, or Vercel serverless with `apps/api`)
 
+## Pitch demo script (~5 min)
+
+1. Open **`/admin/login`** — `admin@alankara.local` / `admin-dev-only`
+2. **Products** → New product → **upload image** → set variant price/stock → Save
+3. Open **`/shop`** in a new tab — product appears immediately
+4. Open PDP — gallery, add to cart → checkout (payment stub)
+5. Optional: edit seeded **"Demo Piece — Edit Me"** live
+
+Ensure `NEXT_PUBLIC_API_URL` is set on Vercel and API `API_PUBLIC_URL` points to your deployed API for image URLs.
+
 ## Pitch demo checklist
 
 1. Intro plays (~3.5s), skip works, return visit is shorter

@@ -24,6 +24,7 @@ class Settings(BaseSettings):
 
     storage_backend: str = "local"
     local_upload_dir: str = "./uploads"
+    api_public_url: str = "http://localhost:8000"
 
     supabase_url: str = ""
     supabase_service_key: str = ""

@@ -71,6 +71,7 @@ export function ProductDetailClient({
   const [added, setAdded] = useState(false);
   const [wishlisted, setWishlisted] = useState(false);
   const [reviewSummary, setReviewSummary] = useState<string | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const sectionsRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
 
@@ -150,13 +151,33 @@ export function ProductDetailClient({
     <div className="relative bg-gradient-to-b from-ivory via-linen/20 to-cotton/30">
       <section className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 md:py-16">
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
-          <FabricStitchReveal
-            name={product.name}
-            image={image}
-            className="lg:min-h-[min(70vh,640px)]"
-          />
+          <div className="lg:sticky lg:top-24 lg:self-start">
+            {product.images.length > 1 && (
+              <div className="mb-3 flex gap-2 overflow-x-auto">
+                {product.images.map((img, i) => (
+                  <button
+                    key={img}
+                    type="button"
+                    onClick={() => setSelectedImageIndex(i)}
+                    className={cn(
+                      "relative h-16 w-16 shrink-0 overflow-hidden rounded-sm border",
+                      selectedImageIndex === i ? "border-champagne" : "border-sage/30",
+                    )}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={img} alt="" className="h-full w-full object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
+            <FabricStitchReveal
+              name={product.name}
+              image={product.images[selectedImageIndex] ?? image}
+              className="lg:min-h-[min(70vh,640px)]"
+            />
+          </div>
 
-          <div className="flex flex-col justify-center lg:py-8">
+          <div className="flex flex-col justify-center lg:sticky lg:top-24 lg:self-start lg:py-8">
             <p className="font-body text-xs uppercase tracking-[0.25em] text-champagne">
               {product.categorySlug.replace(/-/g, " ")}
             </p>

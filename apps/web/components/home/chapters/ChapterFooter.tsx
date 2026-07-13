@@ -71,7 +71,10 @@ export function ChapterFooter() {
           </button>
           <p className="text-center font-body text-xs text-ink-muted">
             &copy; {new Date().getFullYear()} Alankara. Handmade cloth jewellery — slow fashion,
-            wearable art.
+            wearable art.{" "}
+            <Link href="/admin/login" className="text-ink-muted/60 hover:text-champagne">
+              Admin
+            </Link>
           </p>
         </div>
       </div>

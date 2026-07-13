@@ -3,8 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { AnimatedLogo } from "@/components/brand/AnimatedLogo";
-import { adminLogin } from "@/lib/api/admin";
-import { setAdminToken } from "@/lib/admin/auth";
+import { loginAsAdmin } from "@/components/admin/AdminGuard";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -18,11 +17,10 @@ export default function AdminLoginPage() {
     setLoading(true);
     setError(null);
     try {
-      const token = await adminLogin(email, password);
-      setAdminToken(token);
+      await loginAsAdmin(email, password);
       router.replace("/admin");
-    } catch {
-      setError("Invalid credentials");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Invalid credentials");
     } finally {
       setLoading(false);
     }

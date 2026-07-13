@@ -11,11 +11,11 @@ import { useCart } from "@/components/providers/CartProvider";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const navLinks = [
-  { href: "/shop", label: "Shop" },
-  { href: "/our-story", label: "Our Story" },
+const navLinks: Array<{ href: string; label: string; icon?: boolean }> = [
+  { href: "/our-story", label: "Journal" },
   { href: "/artisans", label: "Artisans" },
-  { href: "/reviews", label: "Reviews" },
+  { href: "/shop", label: "Shop" },
+  { href: "/", label: "Home", icon: true },
 ];
 
 function CartLink() {

@@ -2,6 +2,8 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from uuid import uuid4
 
+import httpx
+
 from app.config import get_settings
 
 
@@ -28,21 +30,20 @@ class LocalStorageBackend(StorageBackend):
         return key
 
     def get_url(self, key: str) -> str:
+        settings = get_settings()
+        base = settings.api_public_url.rstrip("/") if settings.api_public_url else ""
+        if base:
+            return f"{base}/uploads/{key}"
         return f"/uploads/{key}"
 
 
 class SupabaseStorageBackend(StorageBackend):
-    """Supabase Storage scaffold — wire HTTP upload when credentials are configured.
-
-  Set STORAGE_BACKEND=supabase plus SUPABASE_URL and SUPABASE_SERVICE_KEY.
-  See supabase/README.md for bucket setup.
-    """
+    """Upload to Supabase Storage via REST API."""
 
     def __init__(self, url: str, service_key: str, bucket: str) -> None:
         if not url or not service_key:
             raise RuntimeError(
-                "STORAGE_BACKEND=supabase requires SUPABASE_URL and SUPABASE_SERVICE_KEY. "
-                "See supabase/README.md."
+                "STORAGE_BACKEND=supabase requires SUPABASE_URL and SUPABASE_SERVICE_KEY."
             )
         self.url = url.rstrip("/")
         self.service_key = service_key
@@ -51,13 +52,15 @@ class SupabaseStorageBackend(StorageBackend):
     def save(self, filename: str, data: bytes, content_type: str | None = None) -> str:
         safe_name = filename.replace("/", "_").replace("\\", "_")
         key = f"{uuid4().hex}_{safe_name}"
-        # Stub: production upload via supabase-py or httpx to Storage API.
-        # POST {url}/storage/v1/object/{bucket}/{key}
-        raise NotImplementedError(
-            f"Supabase upload for '{key}' is scaffolded but not wired yet. "
-            "Use STORAGE_BACKEND=local for development, or implement upload in "
-            "SupabaseStorageBackend.save()."
-        )
+        upload_url = f"{self.url}/storage/v1/object/{self.bucket}/{key}"
+        headers = {
+            "Authorization": f"Bearer {self.service_key}",
+            "Content-Type": content_type or "application/octet-stream",
+        }
+        with httpx.Client(timeout=60.0) as client:
+            res = client.post(upload_url, headers=headers, content=data)
+            res.raise_for_status()
+        return key
 
     def get_url(self, key: str) -> str:
         return f"{self.url}/storage/v1/object/public/{self.bucket}/{key}"

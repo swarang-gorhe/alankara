@@ -63,7 +63,10 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-center gap-3 border-t border-champagne/15 pt-8 md:flex-row md:justify-between">
           <p className="font-body text-xs text-ink-muted">
-            &copy; {new Date().getFullYear()} Alankara. All rights reserved.
+            &copy; {new Date().getFullYear()} Alankara. All rights reserved.{" "}
+            <Link href="/admin/login" className="text-ink-muted/60 hover:text-champagne">
+              Admin
+            </Link>
           </p>
           <p className="font-script text-sm italic text-champagne">
             Crafted with thread, worn with joy.

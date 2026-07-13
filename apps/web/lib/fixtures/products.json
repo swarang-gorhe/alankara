@@ -686,5 +686,31 @@
         "stock": 11
       }
     ]
+  },
+  {
+    "id": "prod-demo",
+    "slug": "demo-piece-edit-me",
+    "name": "Demo Piece — Edit Me",
+    "description": "Reserved for live pitch demos. Edit this product in the admin console to show how catalog updates appear on the shop instantly.",
+    "shortDescription": "Live demo product — edit in admin",
+    "categoryId": "cat-cloth-earrings",
+    "categorySlug": "cloth-earrings",
+    "images": ["/editorial/ghungroo-detail.webp"],
+    "primaryMaterial": "cotton",
+    "styleTags": ["demo", "pitch"],
+    "minPrice": 149900,
+    "materials": ["Cotton base", "Silk thread", "Freshwater pearls"],
+    "careInstructions": "Store in cotton pouch. Spot clean only.",
+    "featured": false,
+    "occasion": ["Pitch demo"],
+    "variants": [
+      {
+        "id": "var-demo-a",
+        "sku": "DEMO-001",
+        "color": "Maroon",
+        "price": { "amount": 149900, "currency": "INR" },
+        "stock": 99
+      }
+    ]
   }
 ]
