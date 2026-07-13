@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
-import { AnimatedLogo } from "@/components/brand/AnimatedLogo";
+import { AnimatedLogo, LOGO_MARK_SRC } from "@/components/brand/AnimatedLogo";
 import { ClientErrorBoundary } from "@/components/ui/ClientErrorBoundary";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { useIsTouchDevice } from "@/hooks/useIsTouchDevice";
@@ -119,7 +119,7 @@ export function WelcomeScene() {
       <div className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-2 text-charcoal-muted">
         <span className="text-xs uppercase tracking-[0.3em]">Scroll to discover</span>
         <Image
-          src="/brand/logo.svg"
+          src={LOGO_MARK_SRC}
           alt=""
           width={16}
           height={16}

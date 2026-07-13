@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { LOGO_MARK_SRC } from "@/components/brand/AnimatedLogo";
 import { cn } from "@/lib/utils";
 
 const reviews = [
@@ -96,7 +97,7 @@ export function ReviewsScene() {
               <div
                 className="pointer-events-none absolute right-4 top-4 h-12 w-12 opacity-[0.04]"
                 style={{
-                  backgroundImage: "url(/brand/logo.svg)",
+                  backgroundImage: `url(${LOGO_MARK_SRC})`,
                   backgroundSize: "contain",
                   backgroundRepeat: "no-repeat",
                 }}

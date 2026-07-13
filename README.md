@@ -145,7 +145,7 @@ Same variable names across environments — different values per tier.
 ## Cloud staging — Vercel (frontend)
 
 1. Import [github.com/swarang-gorhe/alankara](https://github.com/swarang-gorhe/alankara) at [vercel.com/new](https://vercel.com/new)
-2. Set **Root Directory** to `apps/web`
+2. Set **Root Directory** to `apps/web` (**not** `apps/api` — the API deploys to Railway only)
 3. Framework: Next.js (auto-detected)
 4. Environment variables:
 
@@ -155,6 +155,28 @@ Same variable names across environments — different values per tier.
 | `NEXT_PUBLIC_SITE_URL` | `https://your-app.vercel.app` |
 
 `apps/web/vercel.json` configures monorepo install/build commands.
+
+### Fix production deploy (wrong root directory)
+
+If production serves stale assets (old `logo.svg`, 404 on `/products/*.webp`), the Vercel project is likely rooted at `apps/api` instead of `apps/web`.
+
+**Dashboard fix (recommended):**
+
+1. Open [vercel.com/dashboard](https://vercel.com/dashboard) → your Alankara project → **Settings** → **General**
+2. Under **Root Directory**, click **Edit** → set to `apps/web` → **Save**
+3. **Deployments** → redeploy the latest `main` commit (or push a new commit)
+
+**CLI deploy (bypasses root-directory setting for one release):**
+
+```bash
+cd apps/web
+npx vercel link          # link to existing alankara project if prompted
+npx vercel deploy --prod # deploy apps/web directly to production alias
+```
+
+Root `vercel.json` is a fallback when Root Directory is the monorepo root (`.`). Prefer `apps/web` as Root Directory so `apps/web/vercel.json` is used.
+
+> **Do not** point Vercel at `apps/api`. That directory is the FastAPI backend (Railway). A legacy staging shim was removed to prevent accidental wrong deploys.
 
 ## Cloud staging — Railway (API)
 

@@ -10,7 +10,7 @@
     "test": "pytest -q",
     "db:migrate": "alembic upgrade head",
     "db:seed": "python -m scripts.seed",
-    "build:vercel": "cd ../.. && pnpm turbo run build --filter=@alankara/web && node apps/api/scripts/stage-next-for-vercel.mjs"
+    "build:vercel": "echo 'ERROR: Deploy frontend from apps/web (Vercel Root Directory = apps/web). API deploys to Railway only.' && exit 1"
   },
   "dependencies": {
     "next": "^15.1.3",
