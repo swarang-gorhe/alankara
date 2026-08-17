@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 const SUGGESTED_QUESTIONS = [
   "How long does shipping take?",
   "What is your return policy?",
-  "How do I care for embroidered fabric pieces?",
+  "How do I care for fabric earrings?",
   "Do you offer gift wrapping?",
 ];
 

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ProductPlaceholder } from "@/components/product/ProductPlaceholder";
-import { formatPrice } from "@/lib/fixtures";
+import { formatPrice, getProductSize } from "@/lib/fixtures";
 import type { ProductFixture } from "@/lib/fixtures/types";
 import { cn } from "@/lib/utils";
 
@@ -28,6 +28,7 @@ export function EditorialProductCard({
 }: EditorialProductCardProps) {
   const image = product.images[0];
   const categoryLabel = product.categorySlug.replace(/-/g, " ");
+  const sizeLabel = getProductSize(product);
 
   return (
     <motion.article
@@ -66,6 +67,11 @@ export function EditorialProductCard({
               Featured
             </span>
           )}
+          {sizeLabel && (
+            <span className="absolute right-3 top-3 z-10 rounded-full bg-ivory/92 px-2.5 py-0.5 font-body text-[10px] uppercase tracking-widest text-maroon shadow-luxury">
+              {sizeLabel}
+            </span>
+          )}
         </div>
 
         <div className="mt-3 space-y-1 px-0.5 md:mt-4">
@@ -79,9 +85,6 @@ export function EditorialProductCard({
             {product.shortDescription}
           </p>
           <p className="pt-1.5 font-display text-lg tracking-wide text-champagne md:text-xl">
-            <span className="text-[10px] font-body uppercase tracking-[0.15em] text-ink-muted md:text-xs">
-              from{" "}
-            </span>
             <span className="font-semibold text-maroon group-hover:text-champagne transition-colors">
               {formatPrice(product.minPrice)}
             </span>

@@ -244,7 +244,7 @@ export default function DesignSystemPage() {
             <div className="mt-6">
               <PromotionalBanner
                 title="Festival thread collection"
-                subtitle="Mirror work, brocade thread, and hand-stitched zari — limited small batches."
+                subtitle="Bigger drops at ₹160, smaller studs at ₹130 — geometric textile, finished in small batches."
                 href="/shop"
               />
             </div>

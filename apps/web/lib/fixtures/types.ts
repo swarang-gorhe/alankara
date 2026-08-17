@@ -1,4 +1,5 @@
 import type { Product, Review } from "@alankara/shared";
+import type { EarringSize } from "./shop";
 
 export type CategorySlug =
   | "cloth-earrings"
@@ -7,11 +8,9 @@ export type CategorySlug =
   | "fabric-rings"
   | "hair-accessories"
   | "jewellery-sets"
-  | "embroidered-textile-jewellery"
   | "sustainable-fashion-accessories";
 
 export type MaterialSlug =
-  | "embroidery"
   | "pearls"
   | "cotton"
   | "silk-thread"
@@ -19,7 +18,6 @@ export type MaterialSlug =
   | "ghungroos";
 
 export type StyleTag =
-  | "embroidery"
   | "pearls"
   | "cotton"
   | "minimal"
@@ -99,5 +97,6 @@ export type AIInsightsFixture = {
 export type ShopFiltersState = {
   categories: CategorySlug[];
   styles: StyleTag[];
+  sizes: EarringSize[];
   priceRange: import("./index").PriceRangeId | null;
 };

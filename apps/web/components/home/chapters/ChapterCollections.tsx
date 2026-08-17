@@ -10,44 +10,44 @@ import { cn } from "@/lib/utils";
 
 const collections = [
   {
-    id: "earrings",
-    name: "Fabric Earrings",
-    description: "Lightweight jhumkas and drops — cotton, embroidery, and pearl-thread sway.",
-    href: "/shop?category=cloth-earrings",
+    id: "bigger",
+    name: "Bigger Earrings",
+    description: "Statement drops in mustard, cocoa, and geometric textile — ₹160 a pair.",
+    href: "/shop?size=Bigger",
     span: "md:col-span-7 md:row-span-2",
     accent: "from-maroon/8 to-champagne/5",
   },
   {
-    id: "necklaces",
-    name: "Thread & Pearl",
-    description: "Chokers and long strands knotted by hand on silk and cotton cord.",
-    href: "/shop?category=fabric-necklaces",
+    id: "smaller",
+    name: "Smaller Earrings",
+    description: "Everyday studs with a quiet presence — forest green and burgundy, ₹130 a pair.",
+    href: "/shop?size=Smaller",
     span: "md:col-span-5",
     accent: "from-olive/10 to-cotton",
   },
   {
-    id: "hair",
-    name: "Hair Adornments",
-    description: "Gajras, pins, and braided thread pieces for buns and braids.",
-    href: "/shop?category=hair-accessories",
+    id: "drops",
+    name: "Statement Drops",
+    description: "Diamond and crescent silhouettes that move with you from chai to evening.",
+    href: "/shop?style=statement",
     span: "md:col-span-5",
     accent: "from-sage/15 to-ivory",
   },
   {
-    id: "sets",
-    name: "Curated Sets",
-    description: "Matched earrings and collars — small-batch coordinates for gifting.",
-    href: "/shop?category=jewellery-sets",
+    id: "studs",
+    name: "Everyday Studs",
+    description: "Compact hearts and rounds — small-batch coordinates for gifting.",
+    href: "/shop?style=minimal",
     span: "md:col-span-7",
     accent: "from-warm-brown/8 to-linen",
   },
 ];
 
 const collectionImages: Record<string, string> = {
-  earrings: "/products/navy-jhumkas.webp",
-  necklaces: "/products/pearl-choker-necklace.webp",
-  hair: "/products/floral-hair-barrette.webp",
-  sets: "/products/maroon-chandbali-hoops.webp",
+  bigger: "/products/kesari-diamond-drops.webp",
+  smaller: "/products/vanam-textile-studs.webp",
+  drops: "/products/cocoa-crescent-drops.webp",
+  studs: "/products/raga-heart-studs.webp",
 };
 
 export function ChapterCollections() {

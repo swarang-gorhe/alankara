@@ -37,9 +37,9 @@ const artisanItems = [
     ),
   },
   {
-    id: "embroidery",
-    label: "Embroidery studies",
-    description: "Threadwork samples on natural linen",
+    id: "pattern",
+    label: "Pattern studies",
+    description: "Geometric textile samples on natural linen",
     icon: (
       <svg viewBox="0 0 80 80" className="h-full w-full" aria-hidden="true">
         <rect x="15" y="20" width="50" height="40" rx="2" fill="#f8ecd9" stroke="#b98a4a" strokeWidth="1" />

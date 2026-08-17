@@ -16,11 +16,6 @@ import { cn } from "@/lib/utils";
 const CATEGORY_OPTIONS: { slug: CategorySlug | "all"; label: string }[] = [
   { slug: "all", label: "All" },
   { slug: "cloth-earrings", label: "Earrings" },
-  { slug: "fabric-necklaces", label: "Necklaces" },
-  { slug: "fabric-bracelets", label: "Bracelets" },
-  { slug: "hair-accessories", label: "Hair" },
-  { slug: "jewellery-sets", label: "Sets" },
-  { slug: "embroidered-textile-jewellery", label: "Textile" },
 ];
 
 const RATING_OPTIONS = [

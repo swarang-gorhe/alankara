@@ -249,7 +249,7 @@ Brand tokens in `apps/web/tailwind.config.ts` and `apps/web/app/globals.css`:
 
 ### Product categories (cloth-only)
 
-`cloth-earrings`, `fabric-necklaces`, `fabric-bracelets`, `fabric-rings`, `hair-accessories`, `jewellery-sets`, `embroidered-textile-jewellery`, `sustainable-fashion-accessories`
+`cloth-earrings`, `fabric-necklaces`, `fabric-bracelets`, `fabric-rings`, `hair-accessories`, `jewellery-sets`, `sustainable-fashion-accessories`
 
 ## Scripts
 

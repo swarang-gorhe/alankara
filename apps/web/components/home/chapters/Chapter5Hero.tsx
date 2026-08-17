@@ -37,17 +37,17 @@ export function Chapter5Hero() {
             Crafted for little moments.
           </p>
           <p data-reveal className="mt-10 max-w-md font-body text-lg leading-relaxed text-ink-muted">
-            Fabric earrings, embroidered collars, and pearl-thread necklaces — finished in small
+            Fabric earrings in two sizes — bigger drops and smaller studs — finished in small
             batches with quiet patience.
           </p>
         </div>
 
         <div data-reveal className="mt-14 md:mt-16">
           <EditorialFrame
-            src="/editorial/embroidery-hoop.webp"
-            alt="Embroidery hoop with layered fabric flowers and pearl centres"
-            width={681}
-            height={210}
+            src="/products/kesari-diamond-drops.webp"
+            alt="Mustard geometric fabric drop earrings finished with gold bead dangles"
+            width={1400}
+            height={900}
             className="w-full"
             priority
             vignette="none"

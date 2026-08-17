@@ -8,7 +8,7 @@ import { createPageMetadata } from "@/lib/seo/metadata";
 export const metadata: Metadata = createPageMetadata({
   title: "Shop",
   description:
-    "Browse handmade cloth earrings, embroidered textile jewellery, pearl-thread necklaces, and cotton hair adornments.",
+    "Browse handmade cloth earrings — bigger drops at ₹160 and smaller studs at ₹130, finished in small batches.",
   path: "/shop",
 });
 

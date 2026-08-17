@@ -3,12 +3,12 @@
     "id": "art-001",
     "slug": "farida-bano",
     "name": "Farida Bano",
-    "title": "Zari & Textile Embroiderer",
+    "title": "Textile Pattern Artist",
     "location": "Lucknow, Uttar Pradesh",
-    "bio": "Farida specialises in chikankari-inspired zari work for our embroidered textile jewellery line. She works from a sunlit room where silk is stretched on frames and the only sound is her needle passing through cloth — a rhythm she has kept for twenty-five years.",
-    "specialty": ["Zari embroidery", "Silk mounting", "Brooch finishing"],
+    "bio": "Farida specialises in geometric textile composition for our cloth earring line. She works from a sunlit room where cotton is cut, backed, and paired — a rhythm she has kept for twenty-five years.",
+    "specialty": ["Geometric textiles", "Fabric cutting", "Earring finishing"],
     "yearsExperience": 25,
-    "quote": "Thread carries intention. I embroider as if the wearer is in the room."
+    "quote": "Cloth carries intention. I finish each pair as if the wearer is in the room."
   },
   {
     "id": "art-002",
@@ -50,7 +50,7 @@
     "title": "Mirror Work Specialist",
     "location": "Kutch, Gujarat",
     "bio": "Kavita stitches shisha mirrors into fabric chokers and hair pins using techniques passed through her Kutchi community. Each mirror is set by hand so light catches at every angle of movement.",
-    "specialty": ["Mirror work", "Shisha embroidery", "Choker construction"],
+    "specialty": ["Mirror work", "Textile composition", "Earring construction"],
     "yearsExperience": 17,
     "quote": "Mirrors do not reflect vanity — they reflect the joy of the person wearing them."
   }

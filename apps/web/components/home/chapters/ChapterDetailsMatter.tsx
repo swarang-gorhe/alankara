@@ -18,11 +18,11 @@ const details = [
   },
   {
     title: "Sustainability",
-    body: "Small batches, zero-waste embroidery offcuts repurposed into patches, and reusable cotton pouches instead of plastic.",
+    body: "Small batches, leftover textile offcuts repurposed into samples, and reusable cotton pouches instead of plastic.",
   },
   {
     title: "Packaging",
-    body: "Each order arrives wrapped in tissue, nestled in a hand-stitched cotton pouch you can keep for travel storage.",
+    body: "Each order arrives wrapped in tissue, nestled in a cotton pouch you can keep for travel storage.",
     highlight: true,
   },
 ];

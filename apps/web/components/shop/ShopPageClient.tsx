@@ -95,7 +95,7 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
             </h1>
             <GoldDivider width="md" className="my-6" />
             <p className="max-w-lg font-body text-base leading-relaxed text-ink-muted md:text-lg">
-              Fabric earrings, embroidered collars, pearl-thread necklaces, and hair adornments —
+              Fabric earrings in two sizes — bigger drops at ₹160, smaller studs at ₹130 —
               photographed in natural light, one small batch at a time.
             </p>
           </div>

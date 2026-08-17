@@ -11,14 +11,13 @@ import {
   updateAdminVariant,
   type AdminProduct,
 } from "@/lib/api/admin";
-import { formatPrice } from "@/lib/fixtures";
+import { formatPrice, EARRING_SIZES } from "@/lib/fixtures";
 
 const MATERIALS = [
   "cotton",
   "silk-thread",
   "zari",
   "linen",
-  "embroidery",
   "pearls",
   "upcycled-fabric",
 ];
@@ -110,7 +109,7 @@ export function AdminProductModal({ open, product, onClose, onSaved }: AdminProd
       );
     } else {
       setForm(emptyForm());
-      setVariants([{ sku: "", color: "", size: "", priceAmount: 0, stock: 10 }]);
+      setVariants([{ sku: "", color: "", size: "Bigger", priceAmount: 160, stock: 10 }]);
     }
     setError(null);
   }, [open, product]);
@@ -122,6 +121,12 @@ export function AdminProductModal({ open, product, onClose, onSaved }: AdminProd
     setSaving(true);
     setError(null);
     try {
+      const variantPrices = variants
+        .filter((v) => v.sku)
+        .map((v) => Number(v.priceAmount))
+        .filter((amount) => Number.isFinite(amount));
+      const minPrice = variantPrices.length > 0 ? Math.min(...variantPrices) : Number(form.minPrice);
+
       const body = {
         slug: form.slug,
         name: form.name,
@@ -129,7 +134,7 @@ export function AdminProductModal({ open, product, onClose, onSaved }: AdminProd
         shortDescription: form.shortDescription || undefined,
         categoryId: form.categoryId,
         primaryMaterial: form.primaryMaterial,
-        minPrice: Number(form.minPrice),
+        minPrice,
         featured: form.featured,
         careInstructions: form.careInstructions || undefined,
         occasion: form.occasion ? form.occasion.split(",").map((s) => s.trim()) : [],
@@ -195,7 +200,20 @@ export function AdminProductModal({ open, product, onClose, onSaved }: AdminProd
               <input
                 required
                 value={form.name}
-                onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                onChange={(e) => {
+                  const name = e.target.value;
+                  setForm((f) => ({
+                    ...f,
+                    name,
+                    slug: isEdit
+                      ? f.slug
+                      : name
+                          .toLowerCase()
+                          .trim()
+                          .replace(/[^a-z0-9]+/g, "-")
+                          .replace(/^-|-$/g, ""),
+                  }));
+                }}
                 className="mt-1 w-full rounded border border-admin-border bg-admin-elevated px-3 py-2 text-sm text-admin-text"
               />
             </label>
@@ -271,10 +289,15 @@ export function AdminProductModal({ open, product, onClose, onSaved }: AdminProd
           </div>
 
           <div className="rounded border border-admin-border p-4">
-            <p className="mb-3 text-xs uppercase tracking-widest text-admin-muted">Variants</p>
+            <p className="mb-3 text-xs uppercase tracking-widest text-admin-muted">
+              Variants — size &amp; price
+            </p>
+            <p className="mb-3 text-[11px] text-admin-muted">
+              Bigger earrings are ₹160. Smaller earrings are ₹130. Price is in rupees.
+            </p>
             <div className="space-y-3">
               {variants.map((v, i) => (
-                <div key={v.id ?? i} className="grid gap-2 sm:grid-cols-5">
+                <div key={v.id ?? i} className="grid gap-2 sm:grid-cols-6">
                   <input
                     placeholder="SKU"
                     required
@@ -286,6 +309,25 @@ export function AdminProductModal({ open, product, onClose, onSaved }: AdminProd
                     }}
                     className="rounded border border-admin-border bg-admin-elevated px-2 py-1 text-xs text-admin-text"
                   />
+                  <select
+                    value={v.size}
+                    onChange={(e) => {
+                      const next = [...variants];
+                      const size = e.target.value;
+                      const priceAmount =
+                        size === "Bigger" ? 160 : size === "Smaller" ? 130 : v.priceAmount;
+                      next[i] = { ...v, size, priceAmount };
+                      setVariants(next);
+                    }}
+                    className="rounded border border-admin-border bg-admin-elevated px-2 py-1 text-xs text-admin-text"
+                  >
+                    <option value="">Size…</option>
+                    {EARRING_SIZES.map((size) => (
+                      <option key={size} value={size}>
+                        {size}
+                      </option>
+                    ))}
+                  </select>
                   <input
                     placeholder="Color"
                     value={v.color}
@@ -297,8 +339,10 @@ export function AdminProductModal({ open, product, onClose, onSaved }: AdminProd
                     className="rounded border border-admin-border bg-admin-elevated px-2 py-1 text-xs text-admin-text"
                   />
                   <input
-                    placeholder="Price (paise)"
+                    placeholder="Price (₹)"
                     type="number"
+                    min={0}
+                    step={1}
                     value={v.priceAmount}
                     onChange={(e) => {
                       const next = [...variants];
@@ -306,6 +350,7 @@ export function AdminProductModal({ open, product, onClose, onSaved }: AdminProd
                       setVariants(next);
                     }}
                     className="rounded border border-admin-border bg-admin-elevated px-2 py-1 text-xs text-admin-text"
+                    aria-label="Price in rupees"
                   />
                   <input
                     placeholder="Stock"
@@ -323,10 +368,14 @@ export function AdminProductModal({ open, product, onClose, onSaved }: AdminProd
                     {v.id && (
                       <button
                         type="button"
-                        onClick={() => void deleteAdminVariant(product!.id, v.id!).then(() => setVariants(variants.filter((_, j) => j !== i)))}
-                        className="text-[10px] text-admin-danger"
+                        onClick={() =>
+                          void deleteAdminVariant(product!.id, v.id!).then(() =>
+                            setVariants(variants.filter((_, j) => j !== i)),
+                          )
+                        }
+                        className="text-[10px] uppercase tracking-widest text-admin-danger"
                       >
-                        Del
+                        Delete
                       </button>
                     )}
                   </div>
@@ -335,7 +384,12 @@ export function AdminProductModal({ open, product, onClose, onSaved }: AdminProd
             </div>
             <button
               type="button"
-              onClick={() => setVariants([...variants, { sku: "", color: "", size: "", priceAmount: 0, stock: 10 }])}
+              onClick={() =>
+                setVariants([
+                  ...variants,
+                  { sku: "", color: "", size: "Smaller", priceAmount: 130, stock: 10 },
+                ])
+              }
               className="mt-2 text-xs uppercase tracking-widest text-admin-accent"
             >
               + Add variant

@@ -11,7 +11,7 @@ const collections = [
   {
     id: "sets",
     name: "Curated Sets",
-    description: "Matched earrings and collars — small-batch coordinates for gifting",
+    description: "Matched earrings in two sizes — small-batch coordinates for gifting",
     accent: "from-maroon/10 to-gold/5",
   },
   {

@@ -29,8 +29,8 @@ export default function OurStoryPage() {
             <p className="mt-8 max-w-xl text-lg leading-relaxed text-ink-muted">{hero.subtitle}</p>
           </div>
           <EditorialFrame
-            src="/editorial/embroidery-hoop.webp"
-            alt="Embroidery hoop with layered fabric flowers"
+            src="/editorial/studio-morning.webp"
+            alt="Morning light across a linen-covered studio table with scissors and thread"
             caption="Where every piece begins"
             className="min-h-[320px] rounded-none border-0 shadow-none lg:min-h-full"
             imageClassName="min-h-[320px] lg:min-h-full"

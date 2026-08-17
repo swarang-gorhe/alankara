@@ -4,9 +4,9 @@ import { SectionDivider } from "@/components/ui/SectionDivider";
 
 const shopLinks = [
   { href: "/shop", label: "All pieces" },
+  { href: "/shop?size=Bigger", label: "Bigger earrings" },
+  { href: "/shop?size=Smaller", label: "Smaller earrings" },
   { href: "/shop?category=cloth-earrings", label: "Earrings" },
-  { href: "/shop?category=fabric-necklaces", label: "Necklaces" },
-  { href: "/shop?category=hair-accessories", label: "Hair" },
 ];
 
 const storyLinks = [

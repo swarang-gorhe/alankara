@@ -16,7 +16,7 @@ const artisanImages = [
 export const metadata: Metadata = createPageMetadata({
   title: "Artisans",
   description:
-    "Meet the master craftspeople behind Alankara — zari embroiderers, block printers, silk thread weavers, and upcycled fabric innovators.",
+    "Meet the master craftspeople behind Alankara — textile artists, block printers, silk thread weavers, and upcycled fabric innovators.",
   path: "/artisans",
 });
 
@@ -38,7 +38,7 @@ export default function ArtisansPage() {
           <div className="relative min-h-[280px] lg:min-h-[360px]">
             <Image
               src="/editorial/studio-morning.webp"
-              alt="Sunlit studio table with scissors, thread, and embroidered linen"
+              alt="Sunlit studio table with scissors, thread, and linen"
               fill
               className="object-cover"
               sizes="(max-width: 1024px) 100vw, 50vw"

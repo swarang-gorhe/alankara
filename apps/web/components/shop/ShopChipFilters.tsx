@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Chip } from "@/components/ui/chip";
-import { PRICE_RANGES, SHOP_STYLE_FILTERS, STYLE_LABELS } from "@/lib/fixtures";
+import { EARRING_SIZES, PRICE_RANGES, SHOP_STYLE_FILTERS, STYLE_LABELS } from "@/lib/fixtures";
 import type { ShopFiltersState } from "@/lib/fixtures/types";
 import { cn } from "@/lib/utils";
 import { ShopActiveFilterChips } from "./ShopActiveFilterChips";
@@ -35,11 +35,14 @@ export function ShopChipFilters({
   };
 
   const clearAll = () => {
-    onChange({ categories: [], styles: [], priceRange: null });
+    onChange({ categories: [], styles: [], sizes: [], priceRange: null });
   };
 
   const hasActive =
-    filters.categories.length > 0 || filters.styles.length > 0 || filters.priceRange !== null;
+    filters.categories.length > 0 ||
+    filters.styles.length > 0 ||
+    filters.sizes.length > 0 ||
+    filters.priceRange !== null;
 
   const countLabel = hasActive
     ? productCount === 1
@@ -106,6 +109,39 @@ export function ShopChipFilters({
           />
           <div className="scrollbar-none flex gap-2 overflow-x-auto pb-1 pt-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <span className="shrink-0 self-center pr-1 font-body text-[10px] uppercase tracking-[0.2em] text-olive">
+              Size
+            </span>
+            {EARRING_SIZES.map((size) => {
+              const active = filters.sizes.includes(size);
+              return (
+                <motion.div
+                  key={size}
+                  layout
+                  initial={false}
+                  animate={{ scale: active ? 1.02 : 1 }}
+                  transition={{ duration: 0.25, ease: LUXURY_EASE }}
+                  className="shrink-0"
+                >
+                  <Chip
+                    variant={active ? "active" : "default"}
+                    onClick={() => update({ sizes: toggleItem(filters.sizes, size) })}
+                    data-magnetic
+                    className="whitespace-nowrap"
+                  >
+                    {size}
+                  </Chip>
+                </motion.div>
+              );
+            })}
+
+            <span
+              className="mx-1 shrink-0 self-center text-champagne/40"
+              aria-hidden
+            >
+              |
+            </span>
+
+            <span className="shrink-0 self-center pr-1 font-body text-[10px] uppercase tracking-[0.2em] text-olive">
               Category
             </span>
             {CATEGORY_OPTIONS.map(({ slug, label }) => {
@@ -163,6 +199,40 @@ export function ShopChipFilters({
                 </motion.div>
               );
             })}
+            <span
+              className="mx-1 shrink-0 self-center text-champagne/40"
+              aria-hidden
+            >
+              |
+            </span>
+
+            <span className="shrink-0 self-center pr-1 font-body text-[10px] uppercase tracking-[0.2em] text-olive">
+              Price
+            </span>
+            {PRICE_RANGES.map((range) => {
+              const active = filters.priceRange === range.id;
+              return (
+                <motion.div
+                  key={range.id}
+                  layout
+                  initial={false}
+                  animate={{ scale: active ? 1.02 : 1 }}
+                  transition={{ duration: 0.25, ease: LUXURY_EASE }}
+                  className="shrink-0"
+                >
+                  <Chip
+                    variant={active ? "active" : "outline"}
+                    onClick={() =>
+                      update({ priceRange: active ? null : range.id })
+                    }
+                    data-magnetic
+                    className="whitespace-nowrap"
+                  >
+                    {range.label}
+                  </Chip>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
 
@@ -194,7 +264,16 @@ export function filterProducts(
 
     if (
       filters.styles.length > 0 &&
-      !filters.styles.some((style) => product.styleTags.includes(style))
+      !filters.styles.some((style) => (product.styleTags ?? []).includes(style))
+    ) {
+      return false;
+    }
+
+    if (
+      (filters.sizes ?? []).length > 0 &&
+      !filters.sizes.some((size) =>
+        (product.variants ?? []).some((variant) => variant.size === size),
+      )
     ) {
       return false;
     }

@@ -51,7 +51,9 @@ export default function AdminProductsPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="font-display text-3xl text-admin-text">Products</h1>
-          <p className="mt-1 text-sm text-admin-muted">Add and manage your catalog — changes appear on the shop instantly</p>
+          <p className="mt-1 text-sm text-admin-muted">
+            Add or delete products here — bigger earrings ₹160, smaller ₹130. Changes appear on the shop instantly.
+          </p>
         </div>
         <button
           type="button"
@@ -72,10 +74,15 @@ export default function AdminProductsPage() {
 
       {loading ? (
         <p className="text-admin-muted">Loading products…</p>
+      ) : products.length === 0 ? (
+        <p className="text-admin-muted">No products yet. Use New product to add a pair.</p>
       ) : (
-        <AdminTable columns={["Name", "Slug", "Category", "Variants", "From", "Stock", ""]}>
+        <AdminTable columns={["Name", "Slug", "Category", "Size", "From", "Stock", ""]}>
           {products.map((product) => {
             const totalStock = product.variants.reduce((sum, v) => sum + v.stock, 0);
+            const sizes = [
+              ...new Set(product.variants.map((v) => v.size).filter((size): size is string => Boolean(size))),
+            ].join(", ");
             return (
               <AdminTableRow key={product.id}>
                 <AdminTableCell className="font-medium">
@@ -86,7 +93,7 @@ export default function AdminProductsPage() {
                 </AdminTableCell>
                 <AdminTableCell className="font-mono text-xs text-admin-muted">{product.slug}</AdminTableCell>
                 <AdminTableCell className="text-xs text-admin-muted">{product.categorySlug}</AdminTableCell>
-                <AdminTableCell>{product.variants.length}</AdminTableCell>
+                <AdminTableCell className="text-xs text-admin-muted">{sizes || "—"}</AdminTableCell>
                 <AdminTableCell>{formatPrice(product.minPrice)}</AdminTableCell>
                 <AdminTableCell>
                   <span className={totalStock <= 5 ? "text-admin-danger" : ""}>{totalStock}</span>

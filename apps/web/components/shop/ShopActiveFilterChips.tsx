@@ -2,8 +2,9 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
-import { STYLE_LABELS } from "@/lib/fixtures";
+import { STYLE_LABELS, PRICE_RANGES } from "@/lib/fixtures";
 import type { CategorySlug, ShopFiltersState, StyleTag } from "@/lib/fixtures/types";
+import type { EarringSize } from "@/lib/fixtures/shop";
 import { cn } from "@/lib/utils";
 import { CATEGORY_OPTIONS } from "./shop-filter-utils";
 
@@ -26,7 +27,11 @@ export function ShopActiveFilterChips({
   onClearAll,
   className,
 }: ShopActiveFilterChipsProps) {
-  const activeCount = filters.categories.length + filters.styles.length;
+  const activeCount =
+    filters.categories.length +
+    filters.styles.length +
+    filters.sizes.length +
+    (filters.priceRange ? 1 : 0);
 
   if (activeCount === 0) return null;
 
@@ -41,6 +46,20 @@ export function ShopActiveFilterChips({
     onChange({
       ...filters,
       styles: filters.styles.filter((s) => s !== style),
+    });
+  };
+
+  const removeSize = (size: EarringSize) => {
+    onChange({
+      ...filters,
+      sizes: filters.sizes.filter((s) => s !== size),
+    });
+  };
+
+  const removePrice = () => {
+    onChange({
+      ...filters,
+      priceRange: null,
     });
   };
 
@@ -71,6 +90,43 @@ export function ShopActiveFilterChips({
               <X className="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
             </motion.button>
           ))}
+          {filters.sizes.map((size) => (
+            <motion.button
+              key={`size-${size}`}
+              layout
+              type="button"
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.85 }}
+              transition={{ duration: 0.25, ease: LUXURY_EASE }}
+              onClick={() => removeSize(size)}
+              className="inline-flex h-9 items-center gap-1.5 rounded-full border border-olive/30 bg-olive/8 pl-3.5 pr-2.5 font-body text-xs text-olive transition-colors hover:border-olive/50 hover:bg-olive/12"
+              aria-label={`Remove ${size} filter`}
+            >
+              <span>{size}</span>
+              <X className="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
+            </motion.button>
+          ))}
+          {filters.priceRange && (
+            <motion.button
+              key={`price-${filters.priceRange}`}
+              layout
+              type="button"
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.85 }}
+              transition={{ duration: 0.25, ease: LUXURY_EASE }}
+              onClick={removePrice}
+              className="inline-flex h-9 items-center gap-1.5 rounded-full border border-champagne/50 bg-champagne/10 pl-3.5 pr-2.5 font-body text-xs text-warm-brown transition-colors hover:border-champagne/70 hover:bg-champagne/18"
+              aria-label="Remove price filter"
+            >
+              <span>
+                {PRICE_RANGES.find((range) => range.id === filters.priceRange)?.label ??
+                  filters.priceRange}
+              </span>
+              <X className="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
+            </motion.button>
+          )}
           {filters.styles.map((style) => (
             <motion.button
               key={`style-${style}`}

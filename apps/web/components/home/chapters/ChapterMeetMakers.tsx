@@ -8,7 +8,7 @@ import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { gsap, registerGsap } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
 
-const studioImages = STORY_IMAGES.filter((img) => ["studio", "stitch", "pearls"].includes(img.id));
+const studioImages = STORY_IMAGES.filter((img) => ["studio", "finish", "pearls"].includes(img.id));
 
 export function ChapterMeetMakers() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -65,7 +65,7 @@ export function ChapterMeetMakers() {
           <div className="overflow-hidden rounded-sm border border-champagne/20 shadow-luxury">
             <Image
               src={studioImages[0].src}
-              alt="Sunlit studio table with scissors, thread, and embroidered linen"
+              alt="Sunlit studio table with scissors, thread, and linen"
               width={studioImages[0].width}
               height={studioImages[0].height}
               className="h-auto w-full"

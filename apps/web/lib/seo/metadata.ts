@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 const SITE_NAME = "Alankara";
 const DEFAULT_DESCRIPTION =
-  "Handmade cloth and fabric jewellery — embroidered earrings, pearl-thread necklaces, and cotton hair adornments for everyday moments.";
+  "Handmade cloth and fabric jewellery — fabric earrings in two sizes, finished in small batches for everyday moments.";
 
 const DEFAULT_SITE_URL = "https://alankara.com";
 

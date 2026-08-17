@@ -20,7 +20,7 @@ const reviews = [
     author: "Ananya K.",
     product: "Festive Jhumka Set",
     rating: 5,
-    text: "Every detail — from the clasp to the embroidery — speaks of patience and love. My mother wept when she saw it.",
+    text: "Every detail — from the clasp to the geometric weave — speaks of patience and love. My mother wept when she saw it.",
   },
   {
     id: 3,

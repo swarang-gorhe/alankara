@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { SlidersHorizontal, X } from "lucide-react";
 import { useEffect, type ReactNode } from "react";
 import { Chip } from "@/components/ui/chip";
-import { SHOP_STYLE_FILTERS, STYLE_LABELS } from "@/lib/fixtures";
+import { EARRING_SIZES, PRICE_RANGES, SHOP_STYLE_FILTERS, STYLE_LABELS } from "@/lib/fixtures";
 import type { CategorySlug, ShopFiltersState, StyleTag } from "@/lib/fixtures/types";
 import { cn } from "@/lib/utils";
 import { CATEGORY_OPTIONS, toggleItem } from "./shop-filter-utils";
@@ -28,7 +28,11 @@ export function ShopMobileFilterSheet({
   open,
   onOpenChange,
 }: ShopMobileFilterSheetProps) {
-  const activeCount = filters.categories.length + filters.styles.length;
+  const activeCount =
+    filters.categories.length +
+    filters.styles.length +
+    filters.sizes.length +
+    (filters.priceRange ? 1 : 0);
   const hasFilters = activeCount > 0;
 
   useEffect(() => {
@@ -45,7 +49,7 @@ export function ShopMobileFilterSheet({
   };
 
   const clearAll = () => {
-    onChange({ categories: [], styles: [], priceRange: null });
+    onChange({ categories: [], styles: [], sizes: [], priceRange: null });
   };
 
   const countLabel =
@@ -111,7 +115,23 @@ export function ShopMobileFilterSheet({
               </div>
 
               <div className="flex-1 overflow-y-auto px-5 py-6">
-                <FilterSection title="Category">
+                <FilterSection title="Size">
+                  <div className="flex flex-wrap gap-2.5">
+                    {EARRING_SIZES.map((size) => (
+                      <Chip
+                        key={size}
+                        size="lg"
+                        variant={filters.sizes.includes(size) ? "active" : "default"}
+                        onClick={() => update({ sizes: toggleItem(filters.sizes, size) })}
+                        className="min-h-11"
+                      >
+                        {size}
+                      </Chip>
+                    ))}
+                  </div>
+                </FilterSection>
+
+                <FilterSection title="Category" className="mt-8">
                   <div className="flex flex-wrap gap-2.5">
                     {CATEGORY_OPTIONS.map(({ slug, label }) => (
                       <Chip
@@ -140,6 +160,26 @@ export function ShopMobileFilterSheet({
                         className="min-h-11"
                       >
                         {STYLE_LABELS[style]}
+                      </Chip>
+                    ))}
+                  </div>
+                </FilterSection>
+
+                <FilterSection title="Price" className="mt-8">
+                  <div className="flex flex-wrap gap-2.5">
+                    {PRICE_RANGES.map((range) => (
+                      <Chip
+                        key={range.id}
+                        size="lg"
+                        variant={filters.priceRange === range.id ? "active" : "outline"}
+                        onClick={() =>
+                          update({
+                            priceRange: filters.priceRange === range.id ? null : range.id,
+                          })
+                        }
+                        className="min-h-11"
+                      >
+                        {range.label}
                       </Chip>
                     ))}
                   </div>

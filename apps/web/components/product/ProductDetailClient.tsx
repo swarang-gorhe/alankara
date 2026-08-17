@@ -12,7 +12,7 @@ import { SectionDivider } from "@/components/ui/SectionDivider";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { fetchProductReviewSummary } from "@/lib/api/ai";
 import { addToWishlist } from "@/lib/api/wishlist";
-import { formatPrice, MATERIAL_LABELS } from "@/lib/fixtures";
+import { formatPrice, MATERIAL_LABELS, getProductSize } from "@/lib/fixtures";
 import type { ProductFixture, ReviewFixture } from "@/lib/fixtures/types";
 import { gsap, registerGsap } from "@/lib/gsap";
 import { cn } from "@/lib/utils";
@@ -180,6 +180,7 @@ export function ProductDetailClient({
           <div className="flex flex-col justify-center lg:sticky lg:top-24 lg:self-start lg:py-8">
             <p className="font-body text-xs uppercase tracking-[0.25em] text-champagne">
               {product.categorySlug.replace(/-/g, " ")}
+              {getProductSize(product) ? ` · ${getProductSize(product)}` : ""}
             </p>
             <h1 className="mt-3 font-display text-3xl leading-tight text-maroon sm:text-4xl md:text-5xl">
               {product.name}
@@ -286,7 +287,7 @@ export function ProductDetailClient({
               ))}
             </ul>
             <p className="mt-6 font-body text-sm text-ink-muted">
-              Primary: {MATERIAL_LABELS[product.primaryMaterial]}
+              Primary: {MATERIAL_LABELS[product.primaryMaterial] ?? product.primaryMaterial}
             </p>
           </div>
         </StorySection>
@@ -341,7 +342,7 @@ export function ProductDetailClient({
           <div data-story-section className="rounded-sm border border-sage/25 bg-ivory/90 p-6 shadow-luxury md:p-8">
             <p className="font-body leading-relaxed text-ink-muted">
               {product.packaging ??
-                "Each piece arrives wrapped in tissue, nestled in a hand-stitched cotton pouch you can reuse for travel storage."}
+                "Each piece arrives wrapped in tissue, nestled in a cotton pouch you can reuse for travel storage."}
             </p>
           </div>
         </StorySection>

@@ -1,7 +1,6 @@
 import type { MaterialSlug, StyleTag } from "./types";
 
 export const MATERIAL_LABELS: Record<MaterialSlug, string> = {
-  embroidery: "Embroidery",
   pearls: "Pearls",
   cotton: "Cotton",
   "silk-thread": "Silk thread",
@@ -10,7 +9,6 @@ export const MATERIAL_LABELS: Record<MaterialSlug, string> = {
 };
 
 export const STYLE_LABELS: Record<StyleTag, string> = {
-  embroidery: "Embroidery",
   pearls: "Pearls",
   cotton: "Cotton",
   minimal: "Minimal",
@@ -22,13 +20,16 @@ export const STYLE_LABELS: Record<StyleTag, string> = {
 };
 
 export const SHOP_STYLE_FILTERS: StyleTag[] = [
-  "embroidery",
+  "statement",
+  "minimal",
+  "earthy",
+  "traditional",
   "pearls",
   "cotton",
-  "minimal",
-  "statement",
   "boho",
-  "earthy",
   "pastel",
-  "traditional",
 ];
+
+export const EARRING_SIZES = ["Bigger", "Smaller"] as const;
+
+export type EarringSize = (typeof EARRING_SIZES)[number];

@@ -31,10 +31,12 @@ export type {
 };
 
 export {
+  EARRING_SIZES,
   MATERIAL_LABELS,
   SHOP_STYLE_FILTERS,
   STYLE_LABELS,
 } from "./shop";
+export type { EarringSize } from "./shop";
 
 export const categories = categoriesData as CategoryFixture[];
 export const products = productsData as ProductFixture[];
@@ -65,11 +67,14 @@ export function getArtisanBySlug(slug: string): ArtisanFixture | undefined {
   return artisans.find((a) => a.slug === slug);
 }
 
+export function getProductSize(product: ProductFixture): string | undefined {
+  return product.variants.find((variant) => variant.size)?.size;
+}
+
 export const PRICE_RANGES = [
-  { id: "under-2000", label: "Under ₹2,000", min: 0, max: 1999 },
-  { id: "2000-5000", label: "₹2,000 – ₹5,000", min: 2000, max: 5000 },
-  { id: "5000-10000", label: "₹5,000 – ₹10,000", min: 5000, max: 10000 },
-  { id: "above-10000", label: "Above ₹10,000", min: 10001, max: Infinity },
+  { id: "under-150", label: "Under ₹150", min: 0, max: 149 },
+  { id: "150-200", label: "₹150 – ₹200", min: 150, max: 200 },
+  { id: "above-200", label: "Above ₹200", min: 201, max: Infinity },
 ] as const;
 
 export type PriceRangeId = (typeof PRICE_RANGES)[number]["id"];

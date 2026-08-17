@@ -12,9 +12,9 @@ type PromotionalBannerProps = {
 /** Deep-wine + antique-gold promotional strip — festival / limited drops */
 export function PromotionalBanner({
   className,
-  href = "/shop?category=embroidered-textile-jewellery",
-  title = "Festive Textiles",
-  subtitle = "Mirror work, brocade thread, and hand-stitched zari — limited small batches.",
+  href = "/shop?category=cloth-earrings",
+  title = "Fabric Earrings",
+  subtitle = "Bigger drops at ₹160, smaller studs at ₹130 — geometric textile, finished in small batches.",
 }: PromotionalBannerProps) {
   return (
     <Link

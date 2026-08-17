@@ -2,7 +2,7 @@
   {
     "slug": "cloth-earrings",
     "name": "Cloth Earrings",
-    "description": "Fabric jhumkas, embroidered drops, and pearl-thread studs — light enough for all-day wear."
+    "description": "Fabric drops and studs in two sizes — lightweight, geometric, and finished in small batches."
   },
   {
     "slug": "fabric-necklaces",
@@ -12,12 +12,12 @@
   {
     "slug": "fabric-bracelets",
     "name": "Fabric Bracelets",
-    "description": "Woven cotton cuffs, ghungroo wraps, and embroidered fabric bands."
+    "description": "Woven cotton cuffs, ghungroo wraps, and patterned fabric bands."
   },
   {
     "slug": "fabric-rings",
     "name": "Fabric Rings",
-    "description": "Thread-wrapped statement rings and embroidered fabric bands for the finger."
+    "description": "Thread-wrapped statement rings and patterned fabric bands for the finger."
   },
   {
     "slug": "hair-accessories",
@@ -27,12 +27,7 @@
   {
     "slug": "jewellery-sets",
     "name": "Jewellery Sets",
-    "description": "Coordinated earrings, collars, and cuffs — small-batch matching pieces."
-  },
-  {
-    "slug": "embroidered-textile-jewellery",
-    "name": "Embroidered Textile Jewellery",
-    "description": "Brooches, patches, and collar pieces — wearable embroidery on cotton and silk."
+    "description": "Coordinated earrings and cuffs — small-batch matching pieces."
   },
   {
     "slug": "sustainable-fashion-accessories",

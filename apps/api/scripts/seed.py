@@ -137,7 +137,7 @@ async def seed_discounts(session: AsyncSession) -> None:
             code="WELCOME10",
             type="percentage",
             value=10,
-            conditions={"minOrderAmount": 300000},
+            conditions={"minOrderAmount": 130},
             expires_at=None,
             usage_limit=None,
             usage_count=0,
