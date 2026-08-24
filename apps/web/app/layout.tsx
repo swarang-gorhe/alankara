@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Playfair_Display, Source_Sans_3 } from "next/font/google";
+import { Cormorant_Garamond, IBM_Plex_Mono, Playfair_Display, Source_Sans_3 } from "next/font/google";
 import { AppProviders } from "@/components/providers/AppProviders";
 import { rootMetadata } from "@/lib/seo/metadata";
 import "./globals.css";
@@ -24,6 +24,13 @@ const sourceSans = Source_Sans_3({
   display: "swap",
 });
 
+const ibmPlexMono = IBM_Plex_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-ibm-plex-mono",
+  display: "swap",
+});
+
 export const metadata: Metadata = rootMetadata;
 
 export default function RootLayout({
@@ -34,7 +41,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${playfair.variable} ${cormorant.variable} ${sourceSans.variable}`}
+      className={`${playfair.variable} ${cormorant.variable} ${sourceSans.variable} ${ibmPlexMono.variable}`}
     >
       <body className="min-h-screen bg-linen font-body text-ink antialiased">
         <AppProviders>{children}</AppProviders>

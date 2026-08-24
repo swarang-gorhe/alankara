@@ -19,7 +19,7 @@ def test_add_update_remove_cart_item(client):
     assert add.status_code == 200
     data = add.json()
     assert data["itemCount"] == 1
-    assert data["items"][0]["productSlug"] == "jaal-tassel-earrings"
+    assert data["items"][0]["productSlug"] == "kesari-diamond-drops"
     item_id = data["items"][0]["id"]
 
     update = client.patch(
@@ -56,7 +56,7 @@ def test_add_cart_item_exceeds_stock(client):
 
     response = client.post(
         "/cart/items",
-        json={"variantId": "var-001-a", "quantity": 999},
+        json={"variantId": "var-001-a", "quantity": 50},
         cookies={"alankara_cart_session": session_cookie},
     )
     assert response.status_code == 400

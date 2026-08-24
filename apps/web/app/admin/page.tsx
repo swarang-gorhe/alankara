@@ -60,27 +60,59 @@ export default function AdminDashboardPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          label="Total revenue"
-          value={formatPrice(stats.revenue.amount)}
-          hint="All non-cancelled orders"
+          label="Total products"
+          value={stats.productsCount}
         />
-        <StatCard label="Orders" value={stats.ordersCount} hint={`${stats.pendingOrdersCount} pending`} />
-        <StatCard label="Products" value={stats.productsCount} />
-        <StatCard label="Customers" value={stats.customersCount} />
+        <StatCard
+          label="Low stock"
+          value={stats.lowStockAlerts.length}
+          trend={stats.lowStockAlerts.length > 0 ? "down" : "neutral"}
+        />
+        <StatCard
+          label="Orders this week"
+          value={stats.ordersThisWeek ?? stats.ordersCount}
+          hint={`${stats.pendingOrdersCount} unfulfilled`}
+        />
+        <StatCard
+          label="Revenue this week"
+          value={formatPrice(stats.revenueThisWeek?.amount ?? 0)}
+        />
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <StatCard label="Reviews" value={stats.reviewsCount} hint={`${stats.pendingReviewsCount} pending`} />
-        <StatCard label="Active coupons" value={stats.activeCouponsCount} />
-        <StatCard label="Low stock SKUs" value={stats.lowStockAlerts.length} trend={stats.lowStockAlerts.length > 0 ? "down" : "neutral"} />
+        <StatCard
+          label="Average rating"
+          value={stats.averageRating != null ? stats.averageRating.toFixed(1) : "—"}
+          hint={`${stats.pendingReviewsCount} notes awaiting moderation`}
+        />
+        <StatCard label="Reviews" value={stats.reviewsCount} />
+        <StatCard label="Customers" value={stats.customersCount} />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <section className="rounded-lg border border-admin-border bg-admin-surface p-6">
-          <h2 className="font-display text-lg text-admin-text">Revenue trend</h2>
-          <p className="mt-1 text-xs text-admin-muted">Monthly revenue (INR)</p>
+          <h2 className="font-display text-lg text-admin-text">Revenue, last 30 days</h2>
+          <p className="mt-1 text-xs text-admin-muted">Daily totals (INR)</p>
           <div className="mt-6">
-            <RevenueChart data={stats.revenueByMonth ?? []} />
+            <RevenueChart
+              data={(stats.revenueLast30Days ?? []).map((d) => ({
+                month: d.day.slice(5),
+                amount: d.amount,
+              }))}
+            />
+          </div>
+        </section>
+
+        <section className="rounded-lg border border-admin-border bg-admin-surface p-6">
+          <h2 className="font-display text-lg text-admin-text">Stock by category</h2>
+          <p className="mt-1 text-xs text-admin-muted">Units on hand</p>
+          <div className="mt-6">
+            <RevenueChart
+              data={(stats.stockByCategory ?? []).map((d) => ({
+                month: d.category.replace("Fabric ", "").replace("Cloth ", ""),
+                amount: d.stock,
+              }))}
+            />
           </div>
         </section>
 

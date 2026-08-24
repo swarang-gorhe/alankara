@@ -4,12 +4,15 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { LuxuryImage } from "@/components/media";
 import { ProductGallery } from "@/components/product/ProductGallery";
-import { EditorialProductCard } from "@/components/shop/EditorialProductCard";
+import { RecommendationRail } from "@/components/shop/RecommendationRail";
+import { ProductReviews } from "@/components/reviews/ProductReviews";
+import { PearlRating } from "@/components/reviews/PearlRating";
 import { useCart } from "@/components/providers/CartProvider";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
 import { fetchProductReviewSummary } from "@/lib/api/ai";
+import { logCustomerEvent } from "@/lib/api/commerce";
 import { addToWishlist } from "@/lib/api/wishlist";
 import { formatPrice, MATERIAL_LABELS, getProductSize } from "@/lib/fixtures";
 import type { ProductFixture, ReviewFixture } from "@/lib/fixtures/types";
@@ -24,6 +27,7 @@ type ProductDetailClientProps = {
 export function ProductDetailClient({
   product,
   relatedProducts,
+  productReviews,
 }: ProductDetailClientProps) {
   const { addToCart } = useCart();
   const { user } = useAuth();
@@ -38,6 +42,12 @@ export function ProductDetailClient({
   const selectedVariant =
     product.variants.find((v) => v.id === selectedVariantId) ?? product.variants[0];
   const inStock = (selectedVariant?.stock ?? 0) > 0;
+  const lowStock =
+    inStock && selectedVariant && selectedVariant.stock > 0 && selectedVariant.stock <= 5;
+
+  useEffect(() => {
+    void logCustomerEvent(product.id, "viewed");
+  }, [product.id]);
 
   useEffect(() => {
     fetchProductReviewSummary(product.slug)
@@ -98,6 +108,14 @@ export function ProductDetailClient({
             <p className="mt-6 font-display text-3xl text-maroon">
               {selectedVariant && formatPrice(selectedVariant.price.amount)}
             </p>
+            {(product.reviewCount ?? productReviews.length) > 0 && (
+              <div className="mt-3 flex items-center gap-2">
+                <PearlRating rating={Math.round(product.averageRating ?? 0)} />
+                <span className="text-xs text-ink-muted">
+                  {(product.averageRating ?? 0).toFixed(1)} · {product.reviewCount ?? productReviews.length} notes
+                </span>
+              </div>
+            )}
 
             <dl className="mt-8 grid grid-cols-2 gap-4 border-y border-champagne/20 py-6 font-body text-sm">
               <div>
@@ -163,6 +181,16 @@ export function ProductDetailClient({
               </Button>
             </div>
             {addError && <p className="mt-3 font-body text-xs text-error">{addError}</p>}
+            {lowStock && inStock && (
+              <p className="mt-3 font-body text-xs uppercase tracking-widest text-champagne">
+                Only {selectedVariant?.stock} left in the atelier
+              </p>
+            )}
+            {!inStock && (
+              <p className="mt-3 font-body text-sm text-ink-muted">
+                This piece is resting. Write to us if you would like it remade.
+              </p>
+            )}
             {added && (
               <p className="mt-3 font-body text-xs text-champagne">
                 <Link href="/cart" className="underline underline-offset-2">
@@ -256,25 +284,28 @@ export function ProductDetailClient({
         </div>
       </section>
 
-      {reviewSummary && (
-        <section className="mx-auto max-w-3xl px-5 py-12 sm:px-8">
-          <p className="font-body text-[11px] uppercase tracking-[0.3em] text-champagne">
-            What wearers say
-          </p>
-          <p className="mt-4 font-body text-lg leading-relaxed text-ink">{reviewSummary}</p>
-        </section>
-      )}
-
-      {relatedProducts.length > 0 && (
-        <section className="mx-auto max-w-7xl px-5 pb-24 pt-10 sm:px-8">
-          <h2 className="font-display text-3xl text-maroon">You may also love</h2>
-          <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
-            {relatedProducts.map((related) => (
-              <EditorialProductCard key={related.id} product={related} />
-            ))}
+      <section className="mx-auto max-w-3xl px-5 py-12 sm:px-8">
+        {reviewSummary && (
+          <div className="mb-10">
+            <p className="font-body text-[11px] uppercase tracking-[0.3em] text-champagne">
+              What wearers say
+            </p>
+            <p className="mt-4 font-body text-lg leading-relaxed text-ink">{reviewSummary}</p>
           </div>
-        </section>
-      )}
+        )}
+        <ProductReviews
+          productId={product.id}
+          reviews={productReviews}
+          averageRating={product.averageRating}
+          reviewCount={product.reviewCount ?? productReviews.length}
+        />
+      </section>
+
+      <RecommendationRail
+        surface="pdp"
+        productId={product.id}
+        fallback={relatedProducts}
+      />
     </div>
   );
 }

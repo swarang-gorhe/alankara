@@ -74,6 +74,14 @@ export function EditorialProductCard({
             {product.shortDescription}
           </p>
           <p className="pt-1 font-display text-lg text-maroon">{formatPrice(product.minPrice)}</p>
+          {typeof product.averageRating === "number" && (product.reviewCount ?? 0) > 0 && (
+            <p className="font-body text-[11px] uppercase tracking-widest text-ink-muted">
+              {product.averageRating.toFixed(1)} · {product.reviewCount} notes
+            </p>
+          )}
+          {product.variants.every((v) => v.stock <= 0) && (
+            <p className="font-body text-[11px] uppercase tracking-widest text-maroon">Resting</p>
+          )}
         </div>
       </Link>
     </article>

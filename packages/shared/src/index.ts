@@ -35,6 +35,11 @@ export type Product = {
   materials?: string[];
   careInstructions?: string;
   featured?: boolean;
+  status?: "draft" | "published" | "archived";
+  tags?: string[];
+  aiGeneratedTags?: string[];
+  averageRating?: number | null;
+  reviewCount?: number;
 };
 
 export type Review = {
@@ -43,9 +48,12 @@ export type Review = {
   userId?: string;
   authorName: string;
   rating: number;
+  title?: string;
   text: string;
   createdAt: string;
   approved: boolean;
+  verifiedPurchase?: boolean;
+  status?: "pending" | "approved" | "rejected";
 };
 
 export type CartItem = {

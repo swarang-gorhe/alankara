@@ -1,17 +1,17 @@
 /**
- * Payment provider abstraction for checkout.
- *
- * TODO: Stripe — create Checkout Session, handle webhook in apps/api
- * TODO: Razorpay — create Order, hosted checkout, webhook handler
+ * Checkout payment session mapping.
+ * Stripe test mode is created by the API when STRIPE_SECRET_KEY is set;
+ * otherwise a local test provider confirms the order immediately.
  */
 
 export type PaymentSession = {
-  status: "coming_soon" | "ready" | "failed";
-  provider: "stub" | "stripe" | "razorpay";
+  status: "coming_soon" | "ready" | "failed" | "succeeded" | "requires_action";
+  provider: "stub" | "stripe" | "razorpay" | "test";
   orderId?: string;
   amount?: number;
   currency?: string;
   checkoutUrl?: string;
+  clientSecret?: string;
   message?: string;
 };
 

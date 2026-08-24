@@ -52,6 +52,7 @@ jobs:
     env:
       DATABASE_URL: postgresql://alankara:alankara_dev@localhost:5432/alankara_test
       JWT_SECRET: test-secret
+      TESTING: "1"
     steps:
       - uses: actions/checkout@v4
 

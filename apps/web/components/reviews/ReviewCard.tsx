@@ -1,5 +1,5 @@
-import { Star } from "lucide-react";
 import Link from "next/link";
+import { PearlRating } from "@/components/reviews/PearlRating";
 import { cn } from "@/lib/utils";
 import type { ReviewFixture } from "@/lib/fixtures/types";
 
@@ -8,22 +8,6 @@ type ReviewCardProps = {
   className?: string;
   featured?: boolean;
 };
-
-function StarRating({ rating }: { rating: number }) {
-  return (
-    <div className="flex gap-0.5" aria-label={`${rating} out of 5 stars`}>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Star
-          key={i}
-          className={cn(
-            "h-3.5 w-3.5",
-            i < rating ? "fill-champagne text-champagne" : "text-champagne/30",
-          )}
-        />
-      ))}
-    </div>
-  );
-}
 
 export function ReviewCard({ review, className, featured = false }: ReviewCardProps) {
   const date = new Date(review.createdAt).toLocaleDateString("en-IN", {
@@ -43,7 +27,10 @@ export function ReviewCard({ review, className, featured = false }: ReviewCardPr
     >
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <StarRating rating={review.rating} />
+          <PearlRating rating={review.rating} />
+          {review.verifiedPurchase && (
+            <p className="mt-1 text-[10px] uppercase tracking-widest text-olive">Verified purchase</p>
+          )}
           <p className="mt-2 font-display text-lg text-maroon">{review.authorName}</p>
           <p className="text-xs text-ink-muted">{date}</p>
         </div>

@@ -31,4 +31,4 @@ def decode_access_token(token: str) -> dict[str, Any]:
 
 
 def is_admin_claim(payload: dict[str, Any]) -> bool:
-    return payload.get("role") == "admin"
+    return payload.get("role") in {"admin", "owner", "staff"}

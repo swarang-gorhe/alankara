@@ -24,6 +24,7 @@ type Preview = {
 type AdminImageUploadProps = {
   images: string[];
   onChange: (images: string[]) => void;
+  onFileUploaded?: (file: File) => void;
   className?: string;
 };
 
@@ -45,7 +46,7 @@ function inspectImage(file: File, role: ImageRole): Promise<Preview> {
   });
 }
 
-export function AdminImageUpload({ images, onChange, className }: AdminImageUploadProps) {
+export function AdminImageUpload({ images, onChange, onFileUploaded, className }: AdminImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [role, setRole] = useState<ImageRole>("product");
   const [uploading, setUploading] = useState(false);
@@ -63,6 +64,7 @@ export function AdminImageUpload({ images, onChange, className }: AdminImageUplo
         const { url } = await uploadAdminImage(file);
         next.push(url);
         setMeta((prev) => ({ ...prev, [url]: { ...preview, url } }));
+        onFileUploaded?.(file);
       }
       onChange(next);
     } catch (err) {

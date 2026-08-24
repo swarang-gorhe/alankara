@@ -21,8 +21,11 @@ class Order(Base):
     discount_amount: Mapped[int] = mapped_column(Integer, default=0)
     total_amount: Mapped[int] = mapped_column(Integer)
     currency: Mapped[str] = mapped_column(String(8), default="INR")
+    shipping_amount: Mapped[int] = mapped_column(Integer, default=0)
     shipping_address: Mapped[dict] = mapped_column(JSONB)
     fulfillment_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    payment_status: Mapped[str] = mapped_column(String(32), default="pending", index=True)
+    payment_intent_id: Mapped[str | None] = mapped_column(String(128), nullable=True, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 

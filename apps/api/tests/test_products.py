@@ -19,18 +19,18 @@ def test_list_products_filter_by_category(client):
 
 
 def test_list_products_search(client):
-    response = client.get("/products", params={"q": "tassel"})
+    response = client.get("/products", params={"q": "kesari"})
     assert response.status_code == 200
     data = response.json()
     assert data["total"] >= 1
 
 
 def test_get_product_by_slug(client):
-    response = client.get("/products/jaal-tassel-earrings")
+    response = client.get("/products/kesari-diamond-drops")
     assert response.status_code == 200
     product = response.json()
-    assert product["slug"] == "jaal-tassel-earrings"
-    assert product["name"] == "Jaal Tassel Earrings"
+    assert product["slug"] == "kesari-diamond-drops"
+    assert product["name"] == "Kesari Diamond Drops"
     assert len(product["relatedProducts"]) >= 1
 
 

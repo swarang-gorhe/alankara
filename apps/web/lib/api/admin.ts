@@ -46,6 +46,11 @@ export type DashboardStats = {
     createdAt: string;
   }>;
   revenueByMonth?: Array<{ month: string; amount: number }>;
+  revenueLast30Days?: Array<{ day: string; amount: number }>;
+  stockByCategory?: Array<{ categoryId: string; category: string; stock: number }>;
+  ordersThisWeek?: number;
+  revenueThisWeek?: { amount: number; currency: string };
+  averageRating?: number | null;
 };
 
 export type AdminProduct = {
@@ -59,6 +64,9 @@ export type AdminProduct = {
   primaryMaterial: string;
   minPrice: number;
   featured: boolean;
+  status?: string;
+  tags?: string[];
+  aiGeneratedTags?: string[];
   images?: string[];
   variants: Array<{
     id: string;
@@ -133,8 +141,11 @@ export type AdminReview = {
   productName: string;
   authorName: string;
   rating: number;
+  title?: string;
   text: string;
   approved: boolean;
+  verifiedPurchase?: boolean;
+  status?: string;
   createdAt: string;
 };
 
@@ -395,6 +406,70 @@ export async function moderateReview(id: string, approved: boolean): Promise<Adm
     method: "PATCH",
     body: JSON.stringify({ approved }),
   });
+}
+
+export async function deleteAdminReview(id: string): Promise<void> {
+  await adminFetch<void>(`/admin/reviews/${id}`, { method: "DELETE" });
+}
+
+export type StoreSettings = {
+  lowStockThreshold: number;
+  currency: string;
+  taxRateBps: number;
+};
+
+export async function fetchStoreSettings(): Promise<StoreSettings> {
+  return adminFetch("/admin/settings");
+}
+
+export async function updateStoreSettings(body: Partial<StoreSettings>): Promise<StoreSettings> {
+  return adminFetch("/admin/settings", { method: "PUT", body: JSON.stringify(body) });
+}
+
+export async function exportInventoryCsv(): Promise<string> {
+  const token = getAdminToken();
+  const res = await fetch("/api/admin/inventory/export", {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    cache: "no-store",
+  });
+  if (!res.ok) throw new AdminApiError("Export failed", res.status);
+  return res.text();
+}
+
+export async function importInventoryCsv(file: File): Promise<{ updated: number; missing: string[] }> {
+  const token = getAdminToken();
+  const form = new FormData();
+  form.append("file", file);
+  const res = await fetch("/api/admin/inventory/import", {
+    method: "POST",
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: form,
+    cache: "no-store",
+  });
+  if (!res.ok) throw new AdminApiError("Import failed", res.status);
+  return res.json() as Promise<{ updated: number; missing: string[] }>;
+}
+
+export async function analyzeProductImage(
+  file: File,
+): Promise<{ ok: boolean; suggestion?: { category: string; material: string; tags: string[]; estimatedPriceRange: string }; error?: string }> {
+  const token = getAdminToken();
+  const form = new FormData();
+  form.append("file", file);
+  const res = await fetch("/api/admin/products/analyze-image", {
+    method: "POST",
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: form,
+    cache: "no-store",
+  });
+  if (!res.ok) throw new AdminApiError("Analyze failed", res.status);
+  return res.json();
+}
+
+export async function fetchCustomerEvents(email: string) {
+  return adminFetch<
+    Array<{ id: string; productId: string; productName?: string; eventType: string; createdAt: string }>
+  >(`/admin/customers/${encodeURIComponent(email)}/events`);
 }
 
 export async function validateDiscountCode(
