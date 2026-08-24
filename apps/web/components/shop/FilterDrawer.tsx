@@ -261,7 +261,7 @@ export function FloatingFilterButton({
       type="button"
       onClick={onClick}
       className={cn(
-        "fixed bottom-6 left-6 z-40 inline-flex items-center gap-2 rounded-full border border-champagne/40 bg-ivory/95 px-5 py-3 font-body text-sm text-maroon shadow-luxury backdrop-blur-md",
+        "fixed bottom-6 left-6 z-[60] inline-flex items-center gap-2 rounded-full border border-champagne/40 bg-ivory/95 px-5 py-3 font-body text-sm text-maroon shadow-luxury backdrop-blur-md",
         className,
       )}
       aria-haspopup="dialog"
