@@ -242,6 +242,15 @@ async def add_cart_item(
         )
 
     cart.updated_at = datetime.now(UTC)
+    from app.services.events import log_event
+
+    await log_event(
+        db,
+        product_id=variant.product_id,
+        event_type="added_to_cart",
+        customer_id=cart.user_id,
+        session_id=cart.session_id,
+    )
     await db.commit()
     await db.refresh(cart, ["items"])
     for item in cart.items:

@@ -64,9 +64,10 @@ async def list_products(
     base = select(Product).options(
         selectinload(Product.variants),
         selectinload(Product.category),
+        selectinload(Product.reviews),
     )
     filtered = _apply_product_filters(
-        base,
+        base.where(Product.status == "published"),
         search=search,
         category=category,
         material=material,
@@ -84,7 +85,7 @@ async def list_products(
     elif sort == "price_desc":
         order = Product.min_price.desc()
     elif sort == "newest":
-        order = Product.id.desc()
+        order = Product.created_at.desc()
     stmt = filtered.order_by(order).offset(offset).limit(page_size)
     result = await db.execute(stmt)
     products = result.scalars().unique().all()
@@ -103,10 +104,11 @@ async def list_products(
 async def get_product(slug: str, db: DbSession) -> ProductDetailSchema:
     stmt = (
         select(Product)
-        .where(Product.slug == slug)
+        .where(Product.slug == slug, Product.status == "published")
         .options(
             selectinload(Product.variants),
             selectinload(Product.category),
+            selectinload(Product.reviews),
         )
     )
     result = await db.execute(stmt)
@@ -119,7 +121,7 @@ async def get_product(slug: str, db: DbSession) -> ProductDetailSchema:
     if related_slugs:
         rel_stmt = (
             select(Product)
-            .where(Product.slug.in_(related_slugs))
+            .where(Product.slug.in_(related_slugs), Product.status == "published")
             .options(
                 selectinload(Product.variants),
                 selectinload(Product.category),

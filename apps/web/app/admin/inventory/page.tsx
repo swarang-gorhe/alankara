@@ -5,6 +5,8 @@ import { AdminTable, AdminTableCell, AdminTableRow } from "@/components/admin/Ad
 import {
   fetchAdminProducts,
   fetchDashboardStats,
+  exportInventoryCsv,
+  importInventoryCsv,
   updateVariantStock,
   type AdminProduct,
 } from "@/lib/api/admin";
@@ -54,7 +56,39 @@ export default function AdminInventoryPage() {
     <div className="space-y-8">
       <div>
         <h1 className="font-display text-3xl text-admin-text">Inventory</h1>
-        <p className="mt-1 text-sm text-admin-muted">Edit stock inline — changes save immediately</p>
+        <p className="mt-1 text-sm text-admin-muted">Edit stock inline — or update in bulk via CSV</p>
+      </div>
+      <div className="flex flex-wrap gap-3">
+        <button
+          type="button"
+          onClick={() => {
+            void exportInventoryCsv().then((csv) => {
+              const blob = new Blob([csv], { type: "text/csv" });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = "alankara-inventory.csv";
+              a.click();
+              URL.revokeObjectURL(url);
+            });
+          }}
+          className="rounded border border-admin-border px-3 py-2 font-mono text-xs uppercase tracking-widest"
+        >
+          Export CSV
+        </button>
+        <label className="rounded border border-admin-border px-3 py-2 font-mono text-xs uppercase tracking-widest">
+          Import CSV
+          <input
+            type="file"
+            accept=".csv"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              void importInventoryCsv(file).then(() => load());
+            }}
+          />
+        </label>
       </div>
 
       {alerts.length > 0 && (

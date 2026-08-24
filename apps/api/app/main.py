@@ -17,10 +17,13 @@ from app.routers import (
     checkout,
     collections,
     discounts,
+    events,
     health,
     orders,
     products,
+    recommendations,
     reviews,
+    webhooks,
     wishlist,
 )
 from app.routers.admin import router as admin_router
@@ -72,6 +75,9 @@ app.include_router(discounts.router)
 app.include_router(orders.router)
 app.include_router(addresses.router)
 app.include_router(wishlist.router)
+app.include_router(events.router)
+app.include_router(recommendations.router)
+app.include_router(webhooks.router)
 app.include_router(admin_router)
 
 upload_dir = settings.upload_path

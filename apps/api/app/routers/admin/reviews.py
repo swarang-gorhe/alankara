@@ -12,6 +12,7 @@ from app.models.product import Product
 from app.models.review import Review
 from app.schemas.admin import AdminReviewModerationSchema
 from app.schemas.auth import UserClaims
+from app.schemas.mappers import review_to_schema
 from app.schemas.review import PaginatedReviewsSchema, ReviewSchema
 
 router = APIRouter(prefix="/admin/reviews", tags=["admin-reviews"])
@@ -44,22 +45,7 @@ async def list_admin_reviews(
     reviews = result.scalars().unique().all()
     pages = max(1, math.ceil(total / page_size)) if total else 1
 
-    items = [
-        ReviewSchema(
-            id=r.id,
-            productId=r.product_id,
-            productSlug=r.product.slug,
-            productName=r.product.name,
-            categorySlug=r.product.category.slug if r.product.category else "",
-            userId=r.user_id,
-            authorName=r.author_name,
-            rating=r.rating,
-            text=r.text,
-            createdAt=r.created_at,
-            approved=r.approved,
-        )
-        for r in reviews
-    ]
+    items = [review_to_schema(r) for r in reviews]
     return PaginatedReviewsSchema(
         items=items,
         total=total,
@@ -86,19 +72,17 @@ async def moderate_review(
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Review not found")
 
     review.approved = body.approved
+    review.status = "approved" if body.approved else "rejected"
     await db.commit()
     await db.refresh(review, ["product"])
 
-    return ReviewSchema(
-        id=review.id,
-        productId=review.product_id,
-        productSlug=review.product.slug,
-        productName=review.product.name,
-        categorySlug=review.product.category.slug if review.product.category else "",
-        userId=review.user_id,
-        authorName=review.author_name,
-        rating=review.rating,
-        text=review.text,
-        createdAt=review.created_at,
-        approved=review.approved,
-    )
+    return review_to_schema(review)
+
+
+@router.delete("/{review_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_review(review_id: str, db: DbSession, _admin: AdminUser) -> None:
+    review = await db.get(Review, review_id)
+    if review is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Review not found")
+    await db.delete(review)
+    await db.commit()

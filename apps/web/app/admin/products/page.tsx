@@ -77,12 +77,9 @@ export default function AdminProductsPage() {
       ) : products.length === 0 ? (
         <p className="text-admin-muted">No products yet. Use New product to add a pair.</p>
       ) : (
-        <AdminTable columns={["Name", "Slug", "Category", "Size", "From", "Stock", ""]}>
+        <AdminTable columns={["Name", "Slug", "Category", "Status", "From", "Stock", ""]}>
           {products.map((product) => {
             const totalStock = product.variants.reduce((sum, v) => sum + v.stock, 0);
-            const sizes = [
-              ...new Set(product.variants.map((v) => v.size).filter((size): size is string => Boolean(size))),
-            ].join(", ");
             return (
               <AdminTableRow key={product.id}>
                 <AdminTableCell className="font-medium">
@@ -93,7 +90,7 @@ export default function AdminProductsPage() {
                 </AdminTableCell>
                 <AdminTableCell className="font-mono text-xs text-admin-muted">{product.slug}</AdminTableCell>
                 <AdminTableCell className="text-xs text-admin-muted">{product.categorySlug}</AdminTableCell>
-                <AdminTableCell className="text-xs text-admin-muted">{sizes || "—"}</AdminTableCell>
+                <AdminTableCell className="font-mono text-xs uppercase">{product.status ?? "published"}</AdminTableCell>
                 <AdminTableCell>{formatPrice(product.minPrice)}</AdminTableCell>
                 <AdminTableCell>
                   <span className={totalStock <= 5 ? "text-admin-danger" : ""}>{totalStock}</span>

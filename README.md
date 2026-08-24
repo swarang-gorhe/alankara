@@ -284,6 +284,11 @@ GitHub Actions (`.github/workflows/ci.yml`) runs on every push/PR to `main`:
 | **8** | ✅ Complete | FAQ chatbot (ivory palette), SEO, Supabase prep |
 | **9** | ✅ Complete | a11y (focus rings, reduced motion), mobile pass, Lighthouse-oriented splits |
 | **10** | ✅ Complete | Env audit, Vercel/Railway/Supabase docs, migration 005 |
+| **11** | ✅ Complete | Atelier Console (`/atelier`), atomic checkout, Stripe/test payments, order email, AI photo tagging, reviews, recommendations |
+
+The customer storefront and Atelier Console share Postgres via FastAPI. Cart, orders, reviews, and `customer_events` persist in the database — not localStorage. Public catalog shows `published` products only. The console is at `/atelier` (and `/admin` for compatibility), with an ink sidebar and ivory ledger.
+
+Local checkout uses a test payment provider unless `STRIPE_SECRET_KEY` is set. Order confirmation emails send through Resend when `RESEND_API_KEY` is present.
 
 ## Performance
 

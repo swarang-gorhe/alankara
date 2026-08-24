@@ -55,3 +55,14 @@ def seeded_database(database_url: str) -> Generator[None, None, None]:
 def client(seeded_database: None) -> Generator[TestClient, None, None]:
     with TestClient(app) as test_client:
         yield test_client
+
+
+@pytest.fixture
+def admin_headers(client):
+    login = client.post(
+        "/auth/login",
+        json={"email": "admin@alankara.local", "password": "admin-dev-only"},
+    )
+    assert login.status_code == 200
+    token = login.json()["access_token"]
+    return {"Authorization": f"Bearer {token}"}

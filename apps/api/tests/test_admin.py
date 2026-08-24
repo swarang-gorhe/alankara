@@ -1,18 +1,5 @@
 """Admin API integration tests."""
 
-import pytest
-
-
-@pytest.fixture
-def admin_headers(client):
-    login = client.post(
-        "/auth/login",
-        json={"email": "admin@alankara.local", "password": "admin-dev-only"},
-    )
-    assert login.status_code == 200
-    token = login.json()["access_token"]
-    return {"Authorization": f"Bearer {token}"}
-
 
 def test_dashboard_stats(client, admin_headers):
     response = client.get("/admin/dashboard/stats", headers=admin_headers)

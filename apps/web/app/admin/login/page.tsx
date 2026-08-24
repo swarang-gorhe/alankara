@@ -18,7 +18,7 @@ export default function AdminLoginPage() {
     setError(null);
     try {
       await loginAsAdmin(email, password);
-      router.replace("/admin");
+      router.replace("/atelier");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Invalid credentials");
     } finally {
@@ -27,35 +27,35 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-admin-bg px-4">
-      <div className="w-full max-w-md rounded-lg border border-admin-border bg-admin-surface p-8">
+    <div className="flex min-h-screen items-center justify-center bg-admin-sidebar px-4">
+      <div className="w-full max-w-md rounded-lg border border-admin-sidebar-border bg-[#231c18] p-8">
         <div className="flex flex-col items-center text-center">
           <AnimatedLogo size={48} className="text-admin-accent" />
-          <h1 className="mt-4 font-display text-2xl text-admin-text">Alankara Console</h1>
-          <p className="mt-1 text-xs uppercase tracking-widest text-admin-muted">
-            Admin access only
+          <h1 className="mt-4 font-display text-2xl text-admin-sidebar-text">Atelier Console</h1>
+          <p className="mt-1 font-mono text-xs uppercase tracking-widest text-admin-sidebar-muted">
+            Staff access only
           </p>
         </div>
 
         <form onSubmit={(e) => void handleSubmit(e)} className="mt-8 space-y-4">
           <label className="block">
-            <span className="text-xs uppercase tracking-widest text-admin-muted">Email</span>
+            <span className="text-xs uppercase tracking-widest text-admin-sidebar-muted">Email</span>
             <input
               type="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full rounded border border-admin-border bg-admin-elevated px-4 py-3 text-admin-text focus:border-admin-accent focus:outline-none focus:ring-1 focus:ring-admin-accent/30"
+              className="mt-1 w-full rounded border border-admin-sidebar-border bg-admin-sidebar px-4 py-3 text-admin-sidebar-text focus:border-admin-accent focus:outline-none focus:ring-1 focus:ring-admin-accent/30"
             />
           </label>
           <label className="block">
-            <span className="text-xs uppercase tracking-widest text-admin-muted">Password</span>
+            <span className="text-xs uppercase tracking-widest text-admin-sidebar-muted">Password</span>
             <input
               type="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full rounded border border-admin-border bg-admin-elevated px-4 py-3 text-admin-text focus:border-admin-accent focus:outline-none focus:ring-1 focus:ring-admin-accent/30"
+              className="mt-1 w-full rounded border border-admin-sidebar-border bg-admin-sidebar px-4 py-3 text-admin-sidebar-text focus:border-admin-accent focus:outline-none focus:ring-1 focus:ring-admin-accent/30"
             />
           </label>
           {error && <p className="text-sm text-admin-danger">{error}</p>}

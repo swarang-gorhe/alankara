@@ -64,6 +64,10 @@ async def seed_products(session: AsyncSession) -> None:
                 process=row.get("process"),
                 related_slugs=row.get("relatedSlugs"),
                 images=row.get("images"),
+                status="published",
+                tags=row.get("styleTags") or row.get("tags") or [],
+                created_at=datetime.now(UTC),
+                updated_at=datetime.now(UTC),
             )
         )
         for variant in row.get("variants", []):
@@ -112,6 +116,9 @@ async def seed_reviews(session: AsyncSession) -> None:
                 text=row["text"],
                 created_at=created_at,
                 approved=row.get("approved", True),
+                verified_purchase=row.get("verifiedPurchase", False),
+                title=row.get("title"),
+                status="approved" if row.get("approved", True) else "pending",
             )
         )
 

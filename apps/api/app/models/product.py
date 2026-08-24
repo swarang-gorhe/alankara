@@ -1,8 +1,14 @@
-from sqlalchemy import Boolean, ForeignKey, Integer, String, Text
+from datetime import UTC, datetime
+
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
+
+
+def _utcnow() -> datetime:
+    return datetime.now(UTC)
 
 
 class Product(Base):
@@ -23,6 +29,13 @@ class Product(Base):
     process: Mapped[list | None] = mapped_column(JSONB, nullable=True)
     related_slugs: Mapped[list | None] = mapped_column(JSONB, nullable=True)
     images: Mapped[list | None] = mapped_column(JSONB, nullable=True)
+    status: Mapped[str] = mapped_column(String(32), default="published", index=True)
+    tags: Mapped[list | None] = mapped_column(JSONB, nullable=True)
+    ai_generated_tags: Mapped[list | None] = mapped_column(JSONB, nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=_utcnow, onupdate=_utcnow
+    )
 
     category: Mapped["Category"] = relationship(back_populates="products")
     variants: Mapped[list["ProductVariant"]] = relationship(

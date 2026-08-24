@@ -93,9 +93,12 @@ export async function fetchReviews(pageSize = 100): Promise<ReviewFixture[]> {
   return data.items;
 }
 
-export async function fetchReviewsForProduct(productId: string): Promise<ReviewFixture[]> {
+export async function fetchReviewsForProduct(
+  productId: string,
+  sort = "newest",
+): Promise<ReviewFixture[]> {
   const data = await apiFetch<Paginated<ReviewFixture>>(
-    `/reviews?product_id=${encodeURIComponent(productId)}&page_size=50`,
+    `/reviews?product_id=${encodeURIComponent(productId)}&page_size=50&sort=${sort}`,
   );
   return data.items ?? [];
 }

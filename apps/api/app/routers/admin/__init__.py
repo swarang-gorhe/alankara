@@ -8,10 +8,12 @@ from app.routers.admin import (
     dashboard,
     discounts,
     faq,
+    inventory,
     media,
     orders,
     products,
     reviews,
+    settings,
 )
 
 router = APIRouter(tags=["admin"])
@@ -26,4 +28,6 @@ router.include_router(discounts.router)
 router.include_router(orders.router)
 router.include_router(faq.router)
 router.include_router(reviews.router)
+router.include_router(inventory.router)
+router.include_router(settings.router)
 router.include_router(ai.router)

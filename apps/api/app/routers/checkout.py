@@ -20,7 +20,10 @@ from app.services.cart import (
     get_or_create_cart,
 )
 from app.services.discount import validate_discount_for_cart
+from app.services.email import send_order_confirmation
+from app.services.events import log_event
 from app.services.payment import get_payment_provider
+from app.services.stock import InsufficientStockError, restore_stock, reserve_stock
 
 router = APIRouter(tags=["checkout"])
 
@@ -30,6 +33,65 @@ OptionalUser = Annotated[UserClaims | None, Depends(get_current_user_optional)]
 
 def _new_id(prefix: str) -> str:
     return f"{prefix}-{uuid.uuid4().hex[:12]}"
+
+
+def order_to_schema(order: Order) -> OrderSchema:
+    currency = order.currency
+    addr = order.shipping_address or {}
+    from app.schemas.order import ShippingAddressSchema
+
+    return OrderSchema(
+        id=order.id,
+        status=order.status,
+        email=order.email,
+        phone=order.phone,
+        items=[
+            OrderItemSchema(
+                id=oi.id,
+                productId=oi.product_id,
+                variantId=oi.variant_id,
+                productName=oi.product_name,
+                variantLabel=oi.variant_label,
+                sku=oi.sku,
+                quantity=oi.quantity,
+                unitPrice=MoneySchema(amount=oi.unit_price_amount, currency=oi.unit_price_currency),
+                lineTotal=MoneySchema(amount=oi.line_total_amount, currency=oi.unit_price_currency),
+            )
+            for oi in order.items
+        ],
+        subtotal=MoneySchema(amount=order.subtotal_amount, currency=currency),
+        discountCode=order.discount_code,
+        discountAmount=MoneySchema(amount=order.discount_amount, currency=currency)
+        if order.discount_amount
+        else None,
+        total=MoneySchema(amount=order.total_amount, currency=currency),
+        shippingAddress=ShippingAddressSchema.model_validate(addr),
+        paymentStatus=order.payment_status,
+        createdAt=order.created_at.isoformat(),
+    )
+
+
+async def mark_order_paid(db: AsyncSession, order: Order) -> None:
+    if order.payment_status == "paid":
+        return
+    order.payment_status = "paid"
+    if order.status == "pending_payment":
+        order.status = "paid"
+    order.updated_at = datetime.now(UTC)
+    for item in order.items:
+        await log_event(
+            db,
+            product_id=item.product_id,
+            event_type="purchased",
+            customer_id=order.user_id,
+            session_id=order.session_id,
+        )
+    await db.commit()
+    await db.refresh(order, ["items"])
+    try:
+        await send_order_confirmation(order)
+    except Exception:  # noqa: BLE001
+        pass
 
 
 @router.post("/checkout", response_model=CheckoutResponse)
@@ -82,6 +144,16 @@ async def checkout(
     now = datetime.now(UTC)
     order_id = _new_id("ord")
     addr = body.shippingAddress
+    reservations = [(item.variantId, item.quantity) for item in cart_schema.items]
+
+    try:
+        await reserve_stock(db, reservations)
+    except InsufficientStockError as exc:
+        await db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=str(exc),
+        ) from exc
 
     order = Order(
         id=order_id,
@@ -95,7 +167,9 @@ async def checkout(
         discount_amount=discount_amount,
         total_amount=total_amount,
         currency=cart_schema.subtotal.currency,
+        shipping_amount=0,
         shipping_address=addr.model_dump(),
+        payment_status="pending",
         created_at=now,
         updated_at=now,
     )
@@ -141,8 +215,7 @@ async def checkout(
             )
         )
 
-    await db.commit()
-    await clear_cart(db, cart)
+    await db.flush()
 
     payment_provider = get_payment_provider()
     payment = await payment_provider.create_payment_session(
@@ -152,33 +225,23 @@ async def checkout(
         customer_email=addr.email,
     )
 
-    order_schema = OrderSchema(
-        id=order.id,
-        status=order.status,
-        email=order.email,
-        phone=order.phone,
-        items=[
-            OrderItemSchema(
-                id=oi.id,
-                productId=oi.product_id,
-                variantId=oi.variant_id,
-                productName=oi.product_name,
-                variantLabel=oi.variant_label,
-                sku=oi.sku,
-                quantity=oi.quantity,
-                unitPrice=MoneySchema(amount=oi.unit_price_amount, currency=oi.unit_price_currency),
-                lineTotal=MoneySchema(amount=oi.line_total_amount, currency=oi.unit_price_currency),
-            )
-            for oi in order_items
-        ],
-        subtotal=MoneySchema(amount=order.subtotal_amount, currency=order.currency),
-        discountCode=order.discount_code,
-        discountAmount=MoneySchema(amount=order.discount_amount, currency=order.currency)
-        if order.discount_amount
-        else None,
-        total=MoneySchema(amount=order.total_amount, currency=order.currency),
-        shippingAddress=addr,
-        createdAt=order.created_at.isoformat(),
-    )
+    if payment.get("status") == "failed":
+        await restore_stock(db, reservations)
+        order.status = "cancelled"
+        order.payment_status = "failed"
+        await db.commit()
+        raise HTTPException(status_code=status.HTTP_402_PAYMENT_REQUIRED, detail=payment.get("message"))
 
-    return CheckoutResponse(order=order_schema, payment=payment)
+    if payment.get("paymentIntentId"):
+        order.payment_intent_id = payment["paymentIntentId"]
+
+    await db.commit()
+    await clear_cart(db, cart)
+
+    if payment.get("status") == "succeeded":
+        await db.refresh(order, ["items"])
+        await mark_order_paid(db, order)
+        payment["message"] = payment.get("message") or "Payment received. A confirmation is on its way."
+
+    await db.refresh(order, ["items"])
+    return CheckoutResponse(order=order_to_schema(order), payment=payment)
