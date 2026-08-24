@@ -1,6 +1,13 @@
 import Link from "next/link";
 import { AnimatedLogo } from "@/components/brand/AnimatedLogo";
 import { SectionDivider } from "@/components/ui/SectionDivider";
+import {
+  BRAND_EMAIL,
+  BRAND_INSTAGRAM_HANDLE,
+  BRAND_INSTAGRAM_URL,
+  BRAND_PHONE_DISPLAY,
+  BRAND_PHONE_TEL,
+} from "@/lib/brand/contact";
 
 const shopLinks = [
   { href: "/shop", label: "All pieces" },
@@ -30,6 +37,22 @@ export function Footer() {
               Handmade cloth jewellery from artisan workshops — slow fashion, wearable art for
               everyday and celebration.
             </p>
+            <div className="flex flex-col items-center gap-1.5 font-body text-sm text-ink-muted md:items-start">
+              <a href={BRAND_PHONE_TEL} className="hover:text-maroon">
+                {BRAND_PHONE_DISPLAY}
+              </a>
+              <a href={`mailto:${BRAND_EMAIL}`} className="hover:text-maroon">
+                {BRAND_EMAIL}
+              </a>
+              <a
+                href={BRAND_INSTAGRAM_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-maroon"
+              >
+                Instagram {BRAND_INSTAGRAM_HANDLE}
+              </a>
+            </div>
           </div>
 
           <div className="text-center md:text-left">

@@ -7,6 +7,7 @@ import { ProductGallery } from "@/components/product/ProductGallery";
 import { RecommendationRail } from "@/components/shop/RecommendationRail";
 import { ProductReviews } from "@/components/reviews/ProductReviews";
 import { PearlRating } from "@/components/reviews/PearlRating";
+import { TryOnButton } from "@/components/try-on/TryOnButton";
 import { useCart } from "@/components/providers/CartProvider";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { Button } from "@/components/ui/button";
@@ -172,6 +173,7 @@ export function ProductDetailClient({
               >
                 Buy now
               </Button>
+              <TryOnButton product={product} />
               <Button
                 variant="ghost"
                 disabled={wishlistSaving || wishlisted}

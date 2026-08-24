@@ -14,6 +14,7 @@ from app.routers.admin import (
     products,
     reviews,
     settings,
+    try_on_requests,
 )
 
 router = APIRouter(tags=["admin"])
@@ -31,3 +32,4 @@ router.include_router(reviews.router)
 router.include_router(inventory.router)
 router.include_router(settings.router)
 router.include_router(ai.router)
+router.include_router(try_on_requests.router)

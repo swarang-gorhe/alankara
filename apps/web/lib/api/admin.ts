@@ -376,6 +376,68 @@ export async function updateTryOnConfig(
   });
 }
 
+export type AdminTryOnRequest = {
+  id: string;
+  productId: string;
+  productName: string;
+  photoUrl?: string | null;
+  name?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  instagramHandle?: string | null;
+  message?: string | null;
+  customizationRequest?: Record<string, unknown> | null;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+  adminNotes?: string | null;
+  customPrice?: number | null;
+};
+
+export type TryOnAnalytics = {
+  attempts: number;
+  shareRate: number;
+  orderClickRate: number;
+  conversionRate: number;
+  shares: number;
+  orderClicks: number;
+  ordersCompleted: number;
+};
+
+export async function fetchTryOnRequests(status?: string): Promise<Paginated<AdminTryOnRequest>> {
+  const params = new URLSearchParams({ page_size: "50" });
+  if (status) params.set("status", status);
+  return adminFetch(`/admin/try-on-requests?${params.toString()}`);
+}
+
+export async function fetchTryOnRequest(id: string): Promise<AdminTryOnRequest> {
+  return adminFetch(`/admin/try-on-requests/${id}`);
+}
+
+export async function updateTryOnRequest(
+  id: string,
+  body: Record<string, unknown>,
+): Promise<AdminTryOnRequest> {
+  return adminFetch(`/admin/try-on-requests/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(body),
+  });
+}
+
+export async function parseTryOnCustomization(
+  id: string,
+  message: string,
+): Promise<{ suggestion: Record<string, unknown>; autoApplied: boolean }> {
+  return adminFetch(`/admin/try-on-requests/${id}/parse-customization`, {
+    method: "POST",
+    body: JSON.stringify({ message }),
+  });
+}
+
+export async function fetchTryOnAnalytics(): Promise<TryOnAnalytics> {
+  return adminFetch("/admin/try-on-requests/analytics");
+}
+
 export async function fetchAdminDiscounts(): Promise<Paginated<AdminDiscount>> {
   return adminFetch<Paginated<AdminDiscount>>("/admin/discounts?page_size=50");
 }
