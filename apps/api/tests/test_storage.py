@@ -8,6 +8,7 @@ from app.services.storage import LocalStorageBackend, SupabaseStorageBackend, ge
 def test_local_storage_backend(tmp_path, monkeypatch):
     monkeypatch.setenv("STORAGE_BACKEND", "local")
     monkeypatch.setenv("LOCAL_UPLOAD_DIR", str(tmp_path))
+    monkeypatch.setenv("API_PUBLIC_URL", "")
 
     from app.config import get_settings
 

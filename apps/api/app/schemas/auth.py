@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, Field
 
 
 class TokenResponse(BaseModel):
@@ -7,8 +7,10 @@ class TokenResponse(BaseModel):
 
 
 class LoginRequest(BaseModel):
-    email: EmailStr
-    password: str
+    # Plain str — EmailStr rejects special-use domains like .local used by
+    # local-only atelier credentials (admin@alankara.local).
+    email: str = Field(..., min_length=3, max_length=255)
+    password: str = Field(..., min_length=1)
 
 
 class UserClaims(BaseModel):

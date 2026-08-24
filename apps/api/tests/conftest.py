@@ -45,6 +45,9 @@ def seeded_database(database_url: str) -> Generator[None, None, None]:
     from scripts.seed import run_seed
 
     asyncio.run(run_seed(force=True))
+    # Seed ran on a closed event loop; drop pooled connections so TestClient's
+    # loop does not reuse asyncpg handles bound to the seed loop.
+    asyncio.run(engine.dispose())
 
     yield
 
