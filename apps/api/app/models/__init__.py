@@ -4,6 +4,7 @@ from app.models.artisan import Artisan
 from app.models.cart import Cart, CartItem
 from app.models.category import Category
 from app.models.collection import Collection, CollectionProduct
+from app.models.customer_event import CustomerEvent
 from app.models.discount import Discount
 from app.models.embedding import DocumentEmbedding
 from app.models.faq import FaqEntry
@@ -23,6 +24,7 @@ __all__ = [
     "Category",
     "Collection",
     "CollectionProduct",
+    "CustomerEvent",
     "Discount",
     "DocumentEmbedding",
     "FaqEntry",

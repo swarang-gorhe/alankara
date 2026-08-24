@@ -4,6 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { AdminShell } from "@/components/admin/AdminShell";
 import { clearAdminToken, getAdminToken, setAdminToken } from "@/lib/admin/auth";
+import { consoleBase, isConsoleLogin } from "@/lib/admin/paths";
 
 type AdminGuardProps = {
   children: ReactNode;
@@ -17,7 +18,7 @@ async function verifyAdminToken(token: string): Promise<boolean> {
     });
     if (!res.ok) return false;
     const user = (await res.json()) as { role?: string };
-    return user.role === "admin";
+    return ["admin", "owner", "staff"].includes(user.role ?? "");
   } catch {
     return false;
   }
@@ -28,7 +29,8 @@ export function AdminGuard({ children }: AdminGuardProps) {
   const pathname = usePathname();
   const [ready, setReady] = useState(false);
   const [authorized, setAuthorized] = useState(false);
-  const isLoginPage = pathname === "/admin/login";
+  const isLoginPage = isConsoleLogin(pathname);
+  const home = consoleBase(pathname);
 
   useEffect(() => {
     let cancelled = false;
@@ -38,7 +40,7 @@ export function AdminGuard({ children }: AdminGuardProps) {
 
       if (!token) {
         if (!isLoginPage) {
-          router.replace("/admin/login");
+          router.replace(`${home}/login`);
           return;
         }
         if (!cancelled) {
@@ -54,7 +56,7 @@ export function AdminGuard({ children }: AdminGuardProps) {
       if (!isAdmin) {
         clearAdminToken();
         if (!isLoginPage) {
-          router.replace("/admin/login");
+          router.replace(`${home}/login`);
           return;
         }
         setAuthorized(false);
@@ -63,7 +65,7 @@ export function AdminGuard({ children }: AdminGuardProps) {
       }
 
       if (isLoginPage) {
-        router.replace("/admin");
+        router.replace(home);
         return;
       }
 
@@ -75,17 +77,17 @@ export function AdminGuard({ children }: AdminGuardProps) {
     return () => {
       cancelled = true;
     };
-  }, [isLoginPage, router, pathname]);
+  }, [isLoginPage, router, pathname, home]);
 
   const handleLogout = () => {
     clearAdminToken();
-    router.replace("/admin/login");
+    router.replace(`${home}/login`);
   };
 
   if (!ready) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-admin-bg text-admin-muted">
-        Loading…
+      <div className="flex min-h-screen items-center justify-center bg-ivory text-ink-muted">
+        Loading the ledger…
       </div>
     );
   }
@@ -114,7 +116,7 @@ export async function loginAsAdmin(email: string, password: string): Promise<voi
   const data = (await res.json()) as { access_token: string };
   const isAdmin = await verifyAdminToken(data.access_token);
   if (!isAdmin) {
-    throw new Error("This account does not have admin access.");
+    throw new Error("This account does not have atelier access.");
   }
   setAdminToken(data.access_token);
 }

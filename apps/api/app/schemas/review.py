@@ -13,8 +13,10 @@ class PublicReviewSchema(BaseModel):
     categorySlug: str
     authorName: str
     rating: int
+    title: str | None = None
     text: str
     createdAt: datetime
+    verifiedPurchase: bool = False
 
     model_config = {"from_attributes": True}
 
@@ -28,9 +30,13 @@ class ReviewSchema(BaseModel):
     userId: str | None = None
     authorName: str
     rating: int
+    title: str | None = None
     text: str
     createdAt: datetime
     approved: bool
+    verifiedPurchase: bool = False
+    status: str = "pending"
+    customerEmail: str | None = None
 
     model_config = {"from_attributes": True}
 

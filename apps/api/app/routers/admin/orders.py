@@ -15,6 +15,7 @@ from app.models.order import Order
 from app.schemas.admin import AdminOrderSchema, AdminOrderUpdateSchema, PaginatedAdminOrdersSchema
 from app.schemas.auth import UserClaims
 from app.schemas.product import MoneySchema
+from app.services.email import send_order_status_email
 
 router = APIRouter(prefix="/admin/orders", tags=["admin-orders"])
 
@@ -66,10 +67,16 @@ async def list_orders(
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     status_filter: str | None = Query(None, alias="status"),
+    from_date: datetime | None = Query(None),
+    to_date: datetime | None = Query(None),
 ) -> PaginatedAdminOrdersSchema:
     base = select(Order).options(selectinload(Order.items))
     if status_filter:
         base = base.where(Order.status == status_filter)
+    if from_date:
+        base = base.where(Order.created_at >= from_date)
+    if to_date:
+        base = base.where(Order.created_at <= to_date)
 
     total = (await db.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
     offset = (page - 1) * page_size
@@ -102,6 +109,7 @@ async def update_order(
     _admin: AdminUser,
 ) -> AdminOrderSchema:
     order = await _get_order(db, order_id)
+    previous_status = order.status
     if body.status is not None:
         order.status = body.status
     if body.fulfillmentNotes is not None:
@@ -109,6 +117,11 @@ async def update_order(
     order.updated_at = datetime.now(UTC)
     await db.commit()
     await db.refresh(order, ["items"])
+    if body.status is not None and body.status != previous_status:
+        try:
+            await send_order_status_email(order)
+        except Exception:  # noqa: BLE001
+            pass
     return order_to_admin_schema(order)
 
 

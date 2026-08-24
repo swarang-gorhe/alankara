@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import math
 import uuid
+from datetime import UTC, datetime
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile, status
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -40,6 +41,7 @@ async def list_admin_products(
     page: int = Query(1, ge=1),
     page_size: int = Query(20, ge=1, le=100),
     search: str | None = Query(None, alias="q"),
+    status_filter: str | None = Query(None, alias="status"),
 ) -> PaginatedAdminProductsSchema:
     base = select(Product).options(
         selectinload(Product.variants),
@@ -48,6 +50,8 @@ async def list_admin_products(
     if search:
         pattern = f"%{search}%"
         base = base.where(Product.name.ilike(pattern) | Product.slug.ilike(pattern))
+    if status_filter:
+        base = base.where(Product.status == status_filter)
 
     total = (await db.execute(select(func.count()).select_from(base.subquery()))).scalar_one()
     offset = (page - 1) * page_size
@@ -89,11 +93,31 @@ async def create_product(
         occasion=body.occasion,
         related_slugs=body.relatedSlugs,
         images=body.images,
+        tags=body.tags,
+        ai_generated_tags=body.aiGeneratedTags,
+        status=body.status,
+        created_at=datetime.now(UTC),
+        updated_at=datetime.now(UTC),
     )
     db.add(product)
     await db.commit()
     await db.refresh(product, ["variants", "category"])
     return product_to_schema(product)
+
+
+@router.post("/analyze-image")
+async def analyze_product_image(
+    db: DbSession,
+    admin: AdminUser,
+    file: UploadFile = File(...),
+) -> dict:
+    from app.services.ai.vision import analyze_product_image as run_analyze
+
+    content = await file.read()
+    if not content:
+        raise HTTPException(status_code=400, detail="Empty file")
+    mime = file.content_type or "image/jpeg"
+    return await run_analyze(db, image_bytes=content, mime_type=mime, user_id=admin.sub)
 
 
 @router.get("/{product_id}", response_model=ProductSchema)
@@ -118,10 +142,12 @@ async def update_product(
         "minPrice": "min_price",
         "careInstructions": "care_instructions",
         "relatedSlugs": "related_slugs",
+        "aiGeneratedTags": "ai_generated_tags",
     }
     for key, value in updates.items():
         attr = field_map.get(key, key)
         setattr(product, attr, value)
+    product.updated_at = datetime.now(UTC)
     await db.commit()
     await db.refresh(product, ["variants", "category"])
     return product_to_schema(product)

@@ -92,8 +92,9 @@ export function CheckoutPageClient() {
         <p className="text-xs uppercase tracking-widest text-gold">Order placed</p>
         <h1 className="mt-2 font-display text-4xl text-maroon">Thank you</h1>
         <p className="mt-4 text-charcoal-muted">
-          Order <span className="font-medium text-charcoal">{completed.order.id}</span> is saved
-          with status <span className="italic">pending payment</span>.
+          Order <span className="font-medium text-charcoal">{completed.order.id}</span> is{" "}
+          {completed.order.status === "paid" ? "confirmed and paid" : `saved with status ${completed.order.status}`}.
+          A note is on its way to your email.
         </p>
         {paymentMessage && (
           <div className="mt-8 rounded-sm border border-dashed border-gold/40 bg-cream-light px-6 py-4 text-sm text-charcoal-muted">
@@ -188,7 +189,7 @@ export function CheckoutPageClient() {
           <div className="rounded-sm border border-dashed border-champagne/40 bg-linen/40 px-5 py-4">
             <p className="text-xs uppercase tracking-widest text-champagne">Payment</p>
             <p className="mt-2 font-body text-sm text-ink-muted">
-              Payment integration pending — your order is saved; no charge today.
+              Test-mode checkout: we capture payment, hold stock, and send a confirmation when keys are configured.
             </p>
           </div>
 

@@ -3,7 +3,9 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { FabricStitchReveal } from "@/components/product/FabricStitchReveal";
-import { EditorialProductCard } from "@/components/shop/EditorialProductCard";
+import { RecommendationRail } from "@/components/shop/RecommendationRail";
+import { ProductReviews } from "@/components/reviews/ProductReviews";
+import { PearlRating } from "@/components/reviews/PearlRating";
 import { useCart } from "@/components/providers/CartProvider";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { Button } from "@/components/ui/button";
@@ -11,6 +13,7 @@ import { Chip } from "@/components/ui/chip";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { fetchProductReviewSummary } from "@/lib/api/ai";
+import { logCustomerEvent } from "@/lib/api/commerce";
 import { addToWishlist } from "@/lib/api/wishlist";
 import { formatPrice, MATERIAL_LABELS, getProductSize } from "@/lib/fixtures";
 import type { ProductFixture, ReviewFixture } from "@/lib/fixtures/types";
@@ -78,7 +81,13 @@ export function ProductDetailClient({
   const selectedVariant =
     product.variants.find((v) => v.id === selectedVariantId) ?? product.variants[0];
   const inStock = (selectedVariant?.stock ?? 0) > 0;
+  const lowStock =
+    inStock && selectedVariant && selectedVariant.stock > 0 && selectedVariant.stock <= 5;
   const image = product.images[0];
+
+  useEffect(() => {
+    void logCustomerEvent(product.id, "viewed");
+  }, [product.id]);
 
   useEffect(() => {
     fetchProductReviewSummary(product.slug)
@@ -191,6 +200,14 @@ export function ProductDetailClient({
             <p className="mt-6 font-display text-2xl text-maroon md:text-3xl">
               {selectedVariant && formatPrice(selectedVariant.price.amount)}
             </p>
+            {(product.reviewCount ?? productReviews.length) > 0 && (
+              <div className="mt-3 flex items-center gap-2">
+                <PearlRating rating={Math.round(product.averageRating ?? 0)} />
+                <span className="text-xs text-ink-muted">
+                  {(product.averageRating ?? 0).toFixed(1)} · {product.reviewCount ?? productReviews.length} notes
+                </span>
+              </div>
+            )}
 
             <p className="mt-8 flex flex-wrap gap-4 font-body text-xs uppercase tracking-widest text-olive">
               <span>Handmade</span>
@@ -250,6 +267,16 @@ export function ProductDetailClient({
               </Button>
             </div>
             {addError && <p className="mt-3 font-body text-xs text-error">{addError}</p>}
+            {lowStock && inStock && (
+              <p className="mt-3 font-body text-xs uppercase tracking-widest text-champagne">
+                Only {selectedVariant?.stock} left in the atelier
+              </p>
+            )}
+            {!inStock && (
+              <p className="mt-3 font-body text-sm text-ink-muted">
+                This piece is resting. Write to us if you would like it remade.
+              </p>
+            )}
             {added && (
               <p className="mt-3 font-body text-xs text-champagne">
                 <Link href="/cart" className="underline underline-offset-2">
@@ -355,34 +382,32 @@ export function ProductDetailClient({
           </div>
         </StorySection>
 
-        {reviewSummary && (
-          <>
-            <SectionDivider />
-            <StorySection id="reviews" title="What wearers say">
-              <div data-story-section className="rounded-sm border border-champagne/30 bg-cotton/50 p-6">
+        <StorySection id="reviews" title="Notes from wearers" bgClass={sectionBackgrounds[sectionIndex++]}>
+          <div data-story-section>
+            {reviewSummary && (
+              <div className="mb-8 rounded-sm border border-champagne/30 bg-cotton/50 p-6">
                 <p className="font-body text-[10px] uppercase tracking-widest text-champagne">
                   Review highlights
                 </p>
                 <p className="mt-2 font-body text-sm leading-relaxed text-ink md:text-base">{reviewSummary}</p>
               </div>
-            </StorySection>
-          </>
-        )}
+            )}
+            <ProductReviews
+              productId={product.id}
+              reviews={productReviews}
+              averageRating={product.averageRating}
+              reviewCount={product.reviewCount ?? productReviews.length}
+            />
+          </div>
+        </StorySection>
       </div>
 
-      {relatedProducts.length > 0 && (
-        <>
-          <SectionDivider />
-          <section className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 md:pb-28">
-            <h2 className="font-display text-3xl text-maroon">You may also love</h2>
-            <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8">
-              {relatedProducts.map((related) => (
-                <EditorialProductCard key={related.id} product={related} variant="shadow" />
-              ))}
-            </div>
-          </section>
-        </>
-      )}
+      <SectionDivider />
+      <RecommendationRail
+        surface="pdp"
+        productId={product.id}
+        fallback={relatedProducts}
+      />
     </div>
   );
 }

@@ -43,6 +43,7 @@ class OrderSchema(BaseModel):
     discountAmount: MoneySchema | None = None
     total: MoneySchema
     shippingAddress: ShippingAddressSchema
+    paymentStatus: str | None = None
     createdAt: str
 
 

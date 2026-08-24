@@ -7,10 +7,11 @@ import { cn } from "@/lib/utils";
 type AdminImageUploadProps = {
   images: string[];
   onChange: (images: string[]) => void;
+  onFileUploaded?: (file: File) => void;
   className?: string;
 };
 
-export function AdminImageUpload({ images, onChange, className }: AdminImageUploadProps) {
+export function AdminImageUpload({ images, onChange, onFileUploaded, className }: AdminImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -24,6 +25,7 @@ export function AdminImageUpload({ images, onChange, className }: AdminImageUplo
       for (const file of Array.from(files)) {
         const { url } = await uploadAdminImage(file);
         next.push(url);
+        onFileUploaded?.(file);
       }
       onChange(next);
     } catch (err) {

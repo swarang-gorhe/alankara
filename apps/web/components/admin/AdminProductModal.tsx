@@ -7,6 +7,7 @@ import {
   createAdminVariant,
   deleteAdminVariant,
   fetchCategories,
+  analyzeProductImage,
   updateAdminProduct,
   updateAdminVariant,
   type AdminProduct,
@@ -34,6 +35,8 @@ export type ProductFormState = {
   careInstructions: string;
   occasion: string;
   images: string[];
+  tags: string;
+  status: "draft" | "published" | "archived";
 };
 
 const emptyForm = (): ProductFormState => ({
@@ -48,6 +51,8 @@ const emptyForm = (): ProductFormState => ({
   careInstructions: "",
   occasion: "",
   images: [],
+  tags: "",
+  status: "draft",
 });
 
 type VariantDraft = {
@@ -72,6 +77,15 @@ export function AdminProductModal({ open, product, onClose, onSaved }: AdminProd
   const [categories, setCategories] = useState<Array<{ id: string; name: string }>>([]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [lastFile, setLastFile] = useState<File | null>(null);
+  const [aiBusy, setAiBusy] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [suggestion, setSuggestion] = useState<{
+    category: string;
+    material: string;
+    tags: string[];
+    estimatedPriceRange: string;
+  } | null>(null);
 
   const isEdit = Boolean(product);
 
@@ -96,6 +110,8 @@ export function AdminProductModal({ open, product, onClose, onSaved }: AdminProd
         careInstructions: "",
         occasion: "",
         images: product.images ?? [],
+        tags: (product.tags ?? []).join(", "),
+        status: (product.status as ProductFormState["status"]) || "published",
       });
       setVariants(
         product.variants.map((v) => ({
@@ -139,6 +155,12 @@ export function AdminProductModal({ open, product, onClose, onSaved }: AdminProd
         careInstructions: form.careInstructions || undefined,
         occasion: form.occasion ? form.occasion.split(",").map((s) => s.trim()) : [],
         images: form.images,
+        tags: form.tags
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+        aiGeneratedTags: suggestion?.tags,
+        status: form.status,
       };
 
       let productId = product?.id;
@@ -284,9 +306,104 @@ export function AdminProductModal({ open, product, onClose, onSaved }: AdminProd
             <AdminImageUpload
               images={form.images}
               onChange={(images) => setForm((f) => ({ ...f, images }))}
+              onFileUploaded={setLastFile}
               className="mt-2"
             />
+            <button
+              type="button"
+              disabled={!lastFile || aiBusy}
+              onClick={() => {
+                if (!lastFile) return;
+                setAiBusy(true);
+                setAiError(null);
+                void analyzeProductImage(lastFile)
+                  .then((result) => {
+                    if (!result.ok || !result.suggestion) {
+                      setAiError(result.error ?? "Could not analyze this photograph.");
+                      setSuggestion(null);
+                      return;
+                    }
+                    setSuggestion(result.suggestion);
+                  })
+                  .catch((err: Error) => setAiError(err.message))
+                  .finally(() => setAiBusy(false));
+              }}
+              className="mt-3 rounded border border-admin-accent/40 px-3 py-2 text-[10px] uppercase tracking-widest text-admin-accent disabled:opacity-40"
+            >
+              {aiBusy ? "Reading the photograph…" : "Analyze with AI"}
+            </button>
+            {aiError && <p className="mt-2 text-xs text-admin-danger">{aiError}</p>}
+            {suggestion && (
+              <aside className="mt-3 space-y-2 rounded border border-dashed border-admin-accent/40 bg-admin-elevated p-3 text-sm">
+                <p className="font-mono text-[10px] uppercase tracking-widest text-admin-muted">
+                  Suggestions — apply only what you accept
+                </p>
+                <div className="flex items-center justify-between gap-2">
+                  <span>Category: {suggestion.category}</span>
+                  <button
+                    type="button"
+                    className="text-[10px] uppercase tracking-widest text-admin-accent"
+                    onClick={() => {
+                      const match = categories.find((c) =>
+                        c.name.toLowerCase().includes(suggestion.category.toLowerCase().split(" ")[0] ?? ""),
+                      );
+                      if (match) setForm((f) => ({ ...f, categoryId: match.id }));
+                    }}
+                  >
+                    Apply
+                  </button>
+                </div>
+                <div className="flex items-center justify-between gap-2">
+                  <span>Material: {suggestion.material}</span>
+                  <button
+                    type="button"
+                    className="text-[10px] uppercase tracking-widest text-admin-accent"
+                    onClick={() => setForm((f) => ({ ...f, primaryMaterial: suggestion.material }))}
+                  >
+                    Apply
+                  </button>
+                </div>
+                <div className="flex items-center justify-between gap-2">
+                  <span>Tags: {suggestion.tags.join(", ")}</span>
+                  <button
+                    type="button"
+                    className="text-[10px] uppercase tracking-widest text-admin-accent"
+                    onClick={() => setForm((f) => ({ ...f, tags: suggestion.tags.join(", ") }))}
+                  >
+                    Apply
+                  </button>
+                </div>
+                <p className="font-mono text-xs text-admin-muted">
+                  Price range: {suggestion.estimatedPriceRange}
+                </p>
+              </aside>
+            )}
           </div>
+
+          <label className="block">
+            <span className="text-xs uppercase tracking-widest text-admin-muted">Tags</span>
+            <input
+              value={form.tags}
+              onChange={(e) => setForm((f) => ({ ...f, tags: e.target.value }))}
+              placeholder="statement, festive, pearls"
+              className="mt-1 w-full rounded border border-admin-border bg-admin-elevated px-3 py-2 text-sm text-admin-text"
+            />
+          </label>
+
+          <label className="block">
+            <span className="text-xs uppercase tracking-widest text-admin-muted">Status</span>
+            <select
+              value={form.status}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, status: e.target.value as ProductFormState["status"] }))
+              }
+              className="mt-1 w-full rounded border border-admin-border bg-admin-elevated px-3 py-2 text-sm"
+            >
+              <option value="draft">Save as draft</option>
+              <option value="published">Published</option>
+              <option value="archived">Archived</option>
+            </select>
+          </label>
 
           <div className="rounded border border-admin-border p-4">
             <p className="mb-3 text-xs uppercase tracking-widest text-admin-muted">

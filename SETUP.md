@@ -43,12 +43,15 @@ uvicorn app.main:app --reload
 | `JWT_SECRET` | Dev JWT signing secret |
 | `SUPABASE_JWT_SECRET` | Supabase JWT secret (Dashboard → Settings → API) |
 | `CORS_ORIGINS` | `http://localhost:3000` |
+| `STRIPE_SECRET_KEY` | Stripe test secret (optional; local test provider otherwise) |
+| `RESEND_API_KEY` | Order confirmation email (optional) |
 
-### 3. Admin panel
+### 3. Atelier Console
 
-- URL: **`/admin`**
-- Dev login: `admin@alankara.local` / `admin-dev-only`
-- Admin role requires `role: admin` in JWT (dev) or `app_metadata.role = "admin"` in Supabase
+- URL: **`/atelier`** (also `/admin`)
+- Owner: `admin@alankara.local` / `admin-dev-only`
+- Staff: `staff@alankara.local` / `staff-dev-only`
+- Roles `admin`, `owner`, and `staff` may enter the console
 
 ## Supabase Auth setup
 
@@ -88,10 +91,10 @@ Optional: add [Custom Access Token Hook](docs/supabase-auth-migration.md) so `ro
 
 ## Pitch demo script (~5 min)
 
-1. Open **`/admin/login`** — `admin@alankara.local` / `admin-dev-only`
-2. **Products** → New product → **upload image** → set variant price/stock → Save
+1. Open **`/atelier/login`** — `admin@alankara.local` / `admin-dev-only`
+2. **Products** → New product → **upload image** → Analyze with AI (optional) → set variant price/stock → Save as published
 3. Open **`/shop`** in a new tab — product appears immediately
-4. Open PDP — gallery, add to cart → checkout (payment stub)
+4. Open PDP — gallery, add to cart → checkout (test payment confirms; Stripe when keys are set)
 5. Optional: edit a seeded earring (Kesari Diamond Drops, etc.) live
 
 Ensure `NEXT_PUBLIC_API_URL` is set on Vercel and API `API_PUBLIC_URL` points to your deployed API for image URLs.
@@ -99,7 +102,7 @@ Ensure `NEXT_PUBLIC_API_URL` is set on Vercel and API `API_PUBLIC_URL` points to
 ## Pitch demo checklist
 
 1. Intro plays (~3.5s), skip works, return visit is shorter
-2. Add product in `/admin` → appears on `/shop`
+2. Add product in `/atelier` → appears on `/shop`
 3. Sign up → browse → cart → checkout → order in `/account`
-4. Same order visible in `/admin/orders`
+4. Same order visible in `/atelier/orders`
 5. Submit review on PDP → appears after moderation in admin

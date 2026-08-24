@@ -15,6 +15,11 @@ class DashboardStatsSchema(BaseModel):
     lowStockAlerts: list[dict]
     recentActivity: list[dict] = Field(default_factory=list)
     revenueByMonth: list[dict] = Field(default_factory=list)
+    revenueLast30Days: list[dict] = Field(default_factory=list)
+    stockByCategory: list[dict] = Field(default_factory=list)
+    ordersThisWeek: int = 0
+    revenueThisWeek: MoneySchema | None = None
+    averageRating: float | None = None
 
 
 class AdminProductCreateSchema(BaseModel):
@@ -31,6 +36,9 @@ class AdminProductCreateSchema(BaseModel):
     occasion: list[str] = Field(default_factory=list)
     relatedSlugs: list[str] = Field(default_factory=list)
     images: list[str] = Field(default_factory=list)
+    tags: list[str] = Field(default_factory=list)
+    aiGeneratedTags: list[str] = Field(default_factory=list)
+    status: str = Field("draft", pattern="^(draft|published|archived)$")
 
 
 class AdminProductUpdateSchema(BaseModel):
@@ -47,6 +55,9 @@ class AdminProductUpdateSchema(BaseModel):
     occasion: list[str] | None = None
     relatedSlugs: list[str] | None = None
     images: list[str] | None = None
+    tags: list[str] | None = None
+    aiGeneratedTags: list[str] | None = None
+    status: str | None = Field(None, pattern="^(draft|published|archived)$")
 
 
 class AdminVariantCreateSchema(BaseModel):

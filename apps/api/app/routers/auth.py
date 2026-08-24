@@ -10,6 +10,8 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 # Dev-only admin credentials scaffold — replaced by Supabase Auth in Phase 8
 _DEV_ADMIN_EMAIL = "admin@alankara.local"
 _DEV_ADMIN_PASSWORD = "admin-dev-only"
+_DEV_STAFF_EMAIL = "staff@alankara.local"
+_DEV_STAFF_PASSWORD = "staff-dev-only"
 
 
 def _ensure_dev_auth_allowed() -> None:
@@ -29,6 +31,14 @@ async def login(body: LoginRequest) -> TokenResponse:
             subject="admin-001",
             email=body.email,
             role="admin",
+        )
+        return TokenResponse(access_token=token)
+
+    if body.email == _DEV_STAFF_EMAIL and body.password == _DEV_STAFF_PASSWORD:
+        token = create_access_token(
+            subject="staff-001",
+            email=body.email,
+            role="staff",
         )
         return TokenResponse(access_token=token)
 

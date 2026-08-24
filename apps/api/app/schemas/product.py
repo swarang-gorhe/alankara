@@ -38,7 +38,12 @@ class ProductSchema(BaseModel):
     occasion: list[str] = Field(default_factory=list)
     process: list[ProcessStepSchema] = Field(default_factory=list)
     relatedSlugs: list[str] = Field(default_factory=list)
+    tags: list[str] = Field(default_factory=list)
+    aiGeneratedTags: list[str] = Field(default_factory=list)
+    status: str = "published"
     variants: list[ProductVariantSchema] = Field(default_factory=list)
+    averageRating: float | None = None
+    reviewCount: int = 0
 
     model_config = {"from_attributes": True}
 

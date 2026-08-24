@@ -38,6 +38,14 @@ class Settings(BaseSettings):
     anthropic_api_key: str = ""
     anthropic_chat_model: str = "claude-3-5-haiku-latest"
 
+    stripe_secret_key: str = ""
+    stripe_webhook_secret: str = ""
+    stripe_publishable_key: str = ""
+
+    resend_api_key: str = ""
+    email_from: str = "Alankara <orders@alankara.local>"
+    site_url: str = "http://localhost:3000"
+
     @property
     def cors_origin_list(self) -> list[str]:
         return [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]

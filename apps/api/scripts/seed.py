@@ -11,7 +11,7 @@ from pathlib import Path
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.database import async_session_maker, engine
+from app import database as db
 from app.models import (
     Artisan,
     Category,
@@ -64,6 +64,10 @@ async def seed_products(session: AsyncSession) -> None:
                 process=row.get("process"),
                 related_slugs=row.get("relatedSlugs"),
                 images=row.get("images"),
+                status="published",
+                tags=row.get("styleTags") or row.get("tags") or [],
+                created_at=datetime.now(UTC),
+                updated_at=datetime.now(UTC),
             )
         )
         for variant in row.get("variants", []):
@@ -112,6 +116,9 @@ async def seed_reviews(session: AsyncSession) -> None:
                 text=row["text"],
                 created_at=created_at,
                 approved=row.get("approved", True),
+                verified_purchase=row.get("verifiedPurchase", False),
+                title=row.get("title"),
+                status="approved" if row.get("approved", True) else "pending",
             )
         )
 
@@ -199,7 +206,7 @@ async def database_is_seeded(session: AsyncSession) -> bool:
 
 
 async def run_seed(force: bool = False) -> None:
-    async with async_session_maker() as session:
+    async with db.async_session_maker() as session:
         if not force and await database_is_seeded(session):
             print("Database already seeded — skipping (use --force to re-seed)")
             return
@@ -231,7 +238,7 @@ async def main() -> None:
     parser.add_argument("--force", action="store_true", help="Clear catalog tables and re-seed")
     args = parser.parse_args()
     await run_seed(force=args.force)
-    await engine.dispose()
+    await db.engine.dispose()
 
 
 if __name__ == "__main__":

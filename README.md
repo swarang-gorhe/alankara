@@ -71,7 +71,7 @@ cd ../..
 ```bash
 cd apps/api
 source .venv/bin/activate
-alembic upgrade head   # includes migration 005 (collections, media, settings, wishlist)
+alembic upgrade head   # through 006 (commerce: status, events, payments)
 python -m scripts.seed
 cd ../..
 ```
@@ -90,6 +90,12 @@ Alembic revision `005_collections_media` adds:
 | `wishlist_items` | Customer wishlist (user + variant) |
 
 Run via `alembic upgrade head` after pulling. Seed script populates collections from fixtures when present.
+
+### Migration 006 — commerce platform
+
+Alembic revision `006_commerce_platform` adds product status/tags, review moderation fields, order payment fields, `customer_events`, and store settings keys (`low_stock_threshold`, `currency`, `tax_rate_bps`).
+
+Atelier console: `/atelier` (rewrites to `/admin`). Dev owner login is `admin@alankara.local` / `admin-dev-only`; staff is `staff@alankara.local` / `staff-dev-only`.
 
 ### 6. Run development servers
 
@@ -284,6 +290,11 @@ GitHub Actions (`.github/workflows/ci.yml`) runs on every push/PR to `main`:
 | **8** | ✅ Complete | FAQ chatbot (ivory palette), SEO, Supabase prep |
 | **9** | ✅ Complete | a11y (focus rings, reduced motion), mobile pass, Lighthouse-oriented splits |
 | **10** | ✅ Complete | Env audit, Vercel/Railway/Supabase docs, migration 005 |
+| **11** | ✅ Complete | Atelier Console (`/atelier`), atomic checkout, Stripe/test payments, order email, AI photo tagging, reviews, recommendations |
+
+The customer storefront and Atelier Console share Postgres via FastAPI. Cart, orders, reviews, and `customer_events` persist in the database — not localStorage. Public catalog shows `published` products only. The console is at `/atelier` (and `/admin` for compatibility), with an ink sidebar and ivory ledger.
+
+Local checkout uses a test payment provider unless `STRIPE_SECRET_KEY` is set. Order confirmation emails send through Resend when `RESEND_API_KEY` is present.
 
 ## Performance
 
