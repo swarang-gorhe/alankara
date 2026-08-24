@@ -23,6 +23,8 @@ Migrations live in `supabase/migrations/`:
 |------|---------|
 | `000001_initial_schema.sql` | Tables mirroring Alembic revisions 001–004 |
 | `000002_rls_policies.sql` | Row Level Security for direct client access |
+| `000003_commerce_platform.sql` | Product status/tags, payments, customer_events |
+| `000004_try_on.sql` | Try-on product calibration, requests, events |
 
 ### Option B — SQL editor
 

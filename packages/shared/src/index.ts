@@ -40,6 +40,29 @@ export type Product = {
   aiGeneratedTags?: string[];
   averageRating?: number | null;
   reviewCount?: number;
+  tryOnEnabled?: boolean;
+  tryOnAssetUrl?: string | null;
+  tryOnScale?: number;
+  tryOnLeftOffsetX?: number;
+  tryOnLeftOffsetY?: number;
+  tryOnRightOffsetX?: number;
+  tryOnRightOffsetY?: number;
+  tryOnRotation?: number;
+  tryOnVerticalOffset?: number;
+};
+
+export type TryOnConfig = {
+  productId: string;
+  productName: string;
+  tryOnEnabled: boolean;
+  tryOnAssetUrl?: string | null;
+  tryOnScale: number;
+  tryOnLeftOffsetX: number;
+  tryOnLeftOffsetY: number;
+  tryOnRightOffsetX: number;
+  tryOnRightOffsetY: number;
+  tryOnRotation: number;
+  tryOnVerticalOffset: number;
 };
 
 export type Review = {

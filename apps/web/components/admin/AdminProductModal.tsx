@@ -1,7 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { AdminImageUpload } from "@/components/admin/AdminImageUpload";
+import { consoleBase } from "@/lib/admin/paths";
 import {
   createAdminProduct,
   createAdminVariant,
@@ -72,6 +75,8 @@ type AdminProductModalProps = {
 };
 
 export function AdminProductModal({ open, product, onClose, onSaved }: AdminProductModalProps) {
+  const pathname = usePathname();
+  const base = consoleBase(pathname);
   const [form, setForm] = useState<ProductFormState>(emptyForm);
   const [variants, setVariants] = useState<VariantDraft[]>([]);
   const [categories, setCategories] = useState<Array<{ id: string; name: string }>>([]);
@@ -521,6 +526,16 @@ export function AdminProductModal({ open, product, onClose, onSaved }: AdminProd
             />
             <span className="text-xs uppercase tracking-widest text-admin-muted">Featured on homepage</span>
           </label>
+
+          {isEdit && product && (
+            <Link
+              href={`${base}/products/${product.id}/try-on-config`}
+              onClick={onClose}
+              className="inline-flex items-center rounded border border-admin-border px-3 py-2 text-xs uppercase tracking-widest text-admin-accent hover:border-admin-accent"
+            >
+              Open try-on calibration →
+            </Link>
+          )}
 
           {error && <p className="text-sm text-admin-danger">{error}</p>}
 

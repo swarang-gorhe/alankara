@@ -68,6 +68,15 @@ export type AdminProduct = {
   tags?: string[];
   aiGeneratedTags?: string[];
   images?: string[];
+  tryOnEnabled?: boolean;
+  tryOnAssetUrl?: string | null;
+  tryOnScale?: number;
+  tryOnLeftOffsetX?: number;
+  tryOnLeftOffsetY?: number;
+  tryOnRightOffsetX?: number;
+  tryOnRightOffsetY?: number;
+  tryOnRotation?: number;
+  tryOnVerticalOffset?: number;
   variants: Array<{
     id: string;
     sku: string;
@@ -77,6 +86,20 @@ export type AdminProduct = {
     price: { amount: number; currency: string };
     stock: number;
   }>;
+};
+
+export type TryOnConfig = {
+  productId: string;
+  productName: string;
+  tryOnEnabled: boolean;
+  tryOnAssetUrl?: string | null;
+  tryOnScale: number;
+  tryOnLeftOffsetX: number;
+  tryOnLeftOffsetY: number;
+  tryOnRightOffsetX: number;
+  tryOnRightOffsetY: number;
+  tryOnRotation: number;
+  tryOnVerticalOffset: number;
 };
 
 export type AdminDiscount = {
@@ -334,6 +357,23 @@ export async function updateAdminProduct(
 
 export async function deleteAdminProduct(id: string): Promise<void> {
   await adminFetch<void>(`/admin/products/${id}`, { method: "DELETE" });
+}
+
+export async function fetchTryOnConfig(productId: string): Promise<TryOnConfig> {
+  return adminFetch<TryOnConfig>(`/admin/products/${productId}/try-on`);
+}
+
+export async function updateTryOnConfig(
+  productId: string,
+  body: Partial<TryOnConfig>,
+): Promise<TryOnConfig> {
+  const payload: Record<string, unknown> = { ...body };
+  delete payload.productId;
+  delete payload.productName;
+  return adminFetch<TryOnConfig>(`/admin/products/${productId}/try-on`, {
+    method: "PUT",
+    body: JSON.stringify(payload),
+  });
 }
 
 export async function fetchAdminDiscounts(): Promise<Paginated<AdminDiscount>> {

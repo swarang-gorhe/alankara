@@ -97,6 +97,10 @@ Alembic revision `006_commerce_platform` adds product status/tags, review modera
 
 Atelier console: `/atelier` (rewrites to `/admin`). Dev owner login is `admin@alankara.local` / `admin-dev-only`; staff is `staff@alankara.local` / `staff-dev-only`.
 
+### Migration 007 — virtual try-on
+
+Alembic revision `007_try_on` (Supabase twin `000004_try_on.sql`) adds product try-on calibration columns plus `try_on_requests` and `try_on_events`. Admin calibration UI: `/admin/products/{id}/try-on-config`.
+
 ### 6. Run development servers
 
 ```bash

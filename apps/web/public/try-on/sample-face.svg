@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 520" role="img" aria-label="Sample face for try-on calibration">
+  <defs>
+    <linearGradient id="skin" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F5E6D3"/>
+      <stop offset="100%" stop-color="#E8D0B8"/>
+    </linearGradient>
+    <linearGradient id="hair" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3D2314"/>
+      <stop offset="100%" stop-color="#6F2317"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="520" fill="#FAF3E7"/>
+  <!-- hair back -->
+  <ellipse cx="200" cy="210" rx="148" ry="175" fill="url(#hair)"/>
+  <!-- face -->
+  <ellipse cx="200" cy="250" rx="110" ry="140" fill="url(#skin)"/>
+  <!-- hair front -->
+  <path d="M70 200 Q90 80 200 70 Q310 80 330 200 Q300 120 200 115 Q100 120 70 200Z" fill="url(#hair)"/>
+  <!-- brows -->
+  <path d="M130 220 Q155 208 175 220" fill="none" stroke="#5C3A28" stroke-width="3" stroke-linecap="round"/>
+  <path d="M225 220 Q245 208 270 220" fill="none" stroke="#5C3A28" stroke-width="3" stroke-linecap="round"/>
+  <!-- eyes -->
+  <ellipse cx="152" cy="245" rx="14" ry="9" fill="#2A1810"/>
+  <ellipse cx="248" cy="245" rx="14" ry="9" fill="#2A1810"/>
+  <circle cx="155" cy="243" r="3" fill="#FAF3E7"/>
+  <circle cx="251" cy="243" r="3" fill="#FAF3E7"/>
+  <!-- nose -->
+  <path d="M200 250 L192 295 Q200 302 208 295 Z" fill="#D4B59A"/>
+  <!-- lips -->
+  <path d="M175 330 Q200 350 225 330 Q200 342 175 330Z" fill="#C47A6A"/>
+  <!-- ear markers (approx anchors for calibration) -->
+  <ellipse cx="88" cy="255" rx="14" ry="28" fill="#E8D0B8" stroke="#C9A227" stroke-width="1.5" stroke-dasharray="3 2"/>
+  <ellipse cx="312" cy="255" rx="14" ry="28" fill="#E8D0B8" stroke="#C9A227" stroke-width="1.5" stroke-dasharray="3 2"/>
+  <text x="200" y="490" text-anchor="middle" font-family="Georgia, serif" font-size="12" fill="#6F2317" opacity="0.55">
+    Calibration face  ear guides in gold
+  </text>
+</svg>
