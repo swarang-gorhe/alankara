@@ -1,15 +1,17 @@
 "use client";
 
-import { MessageCircle, Send, Sparkles, X } from "lucide-react";
+import { Send, Sparkles, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { sendFaqChatMessage, AiApiError, type FaqChatMessage } from "@/lib/api/ai";
 import { cn } from "@/lib/utils";
 
 const SUGGESTED_QUESTIONS = [
-  "How long does shipping take?",
-  "What is your return policy?",
-  "How do I care for fabric earrings?",
-  "Do you offer gift wrapping?",
+  "Find earrings",
+  "Care guide",
+  "Shipping",
+  "Returns",
+  "Customization",
+  "Track order",
 ];
 
 const OUT_OF_KB_MARKERS = ["i'm not sure", "hello@alankara.com"] as const;
@@ -133,18 +135,29 @@ export function FaqChatWidget() {
         type="button"
         onClick={() => setOpen((v) => !v)}
         className={cn(
-          "fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full",
-          "border border-champagne/40 bg-maroon text-ivory shadow-luxury transition-transform motion-safe:hover:scale-105",
+          "fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-sm border border-champagne/40",
+          "bg-ivory/95 px-4 py-3 text-maroon shadow-luxury backdrop-blur-md",
+          "transition-transform motion-safe:hover:-translate-y-0.5",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne focus-visible:ring-offset-2 focus-visible:ring-offset-linen",
         )}
-        aria-label={open ? "Close FAQ chat" : "Open FAQ chat"}
+        aria-label={open ? "Close Alankara assistant" : "Open Alankara assistant"}
         aria-expanded={open}
         aria-controls="faq-chat-panel"
       >
         {open ? (
           <X className="h-5 w-5" aria-hidden="true" />
         ) : (
-          <MessageCircle className="h-6 w-6" aria-hidden="true" />
+          <>
+            <span className="flex h-8 w-8 items-center justify-center rounded-full border border-champagne/40 bg-linen">
+              <Sparkles className="h-3.5 w-3.5 text-champagne" aria-hidden="true" />
+            </span>
+            <span className="hidden text-left sm:block">
+              <span className="block font-display text-sm leading-none">Concierge</span>
+              <span className="mt-1 block font-body text-[10px] uppercase tracking-[0.18em] text-olive">
+                Ask Alankara
+              </span>
+            </span>
+          </>
         )}
       </button>
 
@@ -163,7 +176,7 @@ export function FaqChatWidget() {
               Alankara Concierge
             </p>
             <p id="faq-chat-desc" className="font-body text-[10px] uppercase tracking-widest text-olive">
-              Answers from our FAQ knowledge base
+              How can we help you find your little moment?
             </p>
           </header>
 
@@ -178,8 +191,7 @@ export function FaqChatWidget() {
             {messages.length === 0 && (
               <div className="space-y-3">
                 <p className="font-body text-sm text-ink-muted">
-                  Ask about shipping, returns, fabric care, or sizing. I answer only from our
-                  published FAQ — for anything else, I&apos;ll connect you with our team.
+                  How can we help you find your little moment?
                 </p>
                 <div className="flex flex-wrap gap-2" role="group" aria-label="Suggested questions">
                   {SUGGESTED_QUESTIONS.map((q) => (

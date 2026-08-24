@@ -1,21 +1,19 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FabricStitchReveal } from "@/components/product/FabricStitchReveal";
+import { LuxuryImage } from "@/components/media";
+import { ProductGallery } from "@/components/product/ProductGallery";
 import { EditorialProductCard } from "@/components/shop/EditorialProductCard";
 import { useCart } from "@/components/providers/CartProvider";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { Button } from "@/components/ui/button";
 import { Chip } from "@/components/ui/chip";
-import { SectionDivider } from "@/components/ui/SectionDivider";
-import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { fetchProductReviewSummary } from "@/lib/api/ai";
 import { addToWishlist } from "@/lib/api/wishlist";
 import { formatPrice, MATERIAL_LABELS, getProductSize } from "@/lib/fixtures";
 import type { ProductFixture, ReviewFixture } from "@/lib/fixtures/types";
-import { gsap, registerGsap } from "@/lib/gsap";
-import { cn } from "@/lib/utils";
+import { MATERIAL_CHAPTER, MEDIA } from "@/lib/media";
 
 type ProductDetailClientProps = {
   product: ProductFixture;
@@ -23,44 +21,9 @@ type ProductDetailClientProps = {
   productReviews: ReviewFixture[];
 };
 
-const sectionBackgrounds = [
-  "bg-ivory",
-  "bg-gradient-to-b from-linen/60 to-cotton/40",
-  "bg-ivory",
-  "bg-gradient-to-b from-cotton/50 to-ivory",
-  "bg-linen/40",
-  "bg-ivory",
-  "bg-gradient-to-b from-sage/10 to-ivory",
-];
-
-function StorySection({
-  id,
-  title,
-  children,
-  className,
-  bgClass,
-}: {
-  id: string;
-  title: string;
-  children: React.ReactNode;
-  className?: string;
-  bgClass?: string;
-}) {
-  return (
-    <section
-      id={id}
-      className={cn("mx-auto max-w-4xl px-4 py-14 sm:px-6 md:py-20", bgClass, className)}
-    >
-      <p className="font-body text-xs uppercase tracking-[0.3em] text-olive">{title}</p>
-      <div className="mt-6">{children}</div>
-    </section>
-  );
-}
-
 export function ProductDetailClient({
   product,
   relatedProducts,
-  productReviews,
 }: ProductDetailClientProps) {
   const { addToCart } = useCart();
   const { user } = useAuth();
@@ -71,48 +34,16 @@ export function ProductDetailClient({
   const [added, setAdded] = useState(false);
   const [wishlisted, setWishlisted] = useState(false);
   const [reviewSummary, setReviewSummary] = useState<string | null>(null);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const sectionsRef = useRef<HTMLDivElement>(null);
-  const prefersReducedMotion = usePrefersReducedMotion();
 
   const selectedVariant =
     product.variants.find((v) => v.id === selectedVariantId) ?? product.variants[0];
   const inStock = (selectedVariant?.stock ?? 0) > 0;
-  const image = product.images[0];
 
   useEffect(() => {
     fetchProductReviewSummary(product.slug)
       .then((data) => setReviewSummary(data?.summary ?? null))
       .catch(() => setReviewSummary(null));
   }, [product.slug]);
-
-  useEffect(() => {
-    registerGsap();
-    if (prefersReducedMotion || !sectionsRef.current) return;
-
-    const sections = sectionsRef.current.querySelectorAll("[data-story-section]");
-    const ctx = gsap.context(() => {
-      sections.forEach((section) => {
-        gsap.fromTo(
-          section,
-          { opacity: 0, y: 40 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.9,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: section,
-              start: "top 85%",
-              toggleActions: "play none none reverse",
-            },
-          },
-        );
-      });
-    }, sectionsRef);
-
-    return () => ctx.revert();
-  }, [prefersReducedMotion]);
 
   const handleAddToCart = async () => {
     if (!selectedVariant || !inStock) return;
@@ -145,108 +76,90 @@ export function ProductDetailClient({
     }
   };
 
-  let sectionIndex = 0;
-
   return (
-    <div className="relative bg-gradient-to-b from-ivory via-linen/20 to-cotton/30">
-      <section className="relative mx-auto max-w-7xl px-4 py-10 sm:px-6 md:py-16">
-        <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
-          <div className="lg:sticky lg:top-24 lg:self-start">
-            {product.images.length > 1 && (
-              <div className="mb-3 flex gap-2 overflow-x-auto">
-                {product.images.map((img, i) => (
-                  <button
-                    key={img}
-                    type="button"
-                    onClick={() => setSelectedImageIndex(i)}
-                    className={cn(
-                      "relative h-16 w-16 shrink-0 overflow-hidden rounded-sm border",
-                      selectedImageIndex === i ? "border-champagne" : "border-sage/30",
-                    )}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={img} alt="" className="h-full w-full object-cover" />
-                  </button>
-                ))}
-              </div>
-            )}
-            <FabricStitchReveal
-              name={product.name}
-              image={product.images[selectedImageIndex] ?? image}
-              className="lg:min-h-[min(70vh,640px)]"
-            />
+    <div className="relative overflow-x-hidden bg-ivory">
+      <section className="mx-auto max-w-7xl px-5 py-10 sm:px-8 md:py-16">
+        <div className="grid items-start gap-10 lg:grid-cols-12 lg:gap-14">
+          <div className="min-w-0 lg:col-span-7">
+            <ProductGallery name={product.name} slug={product.slug} images={product.images} />
           </div>
 
-          <div className="flex flex-col justify-center lg:sticky lg:top-24 lg:self-start lg:py-8">
+          <div className="lg:sticky lg:top-28 lg:col-span-5 lg:self-start">
             <p className="font-body text-xs uppercase tracking-[0.25em] text-champagne">
               {product.categorySlug.replace(/-/g, " ")}
               {getProductSize(product) ? ` · ${getProductSize(product)}` : ""}
             </p>
-            <h1 className="mt-3 font-display text-3xl leading-tight text-maroon sm:text-4xl md:text-5xl">
+            <h1 className="mt-3 font-display text-4xl leading-tight text-maroon md:text-5xl">
               {product.name}
             </h1>
-            <p className="mt-4 font-body text-base leading-relaxed text-ink-muted md:text-lg">
+            <p className="mt-4 font-body text-lg leading-relaxed text-ink-muted">
               {product.shortDescription}
             </p>
-            <p className="mt-6 font-display text-2xl text-maroon md:text-3xl">
+            <p className="mt-6 font-display text-3xl text-maroon">
               {selectedVariant && formatPrice(selectedVariant.price.amount)}
             </p>
 
-            <p className="mt-8 flex flex-wrap gap-4 font-body text-xs uppercase tracking-widest text-olive">
-              <span>Handmade</span>
-              <span>Lightweight</span>
-              <span>Skin-kind</span>
-              <span>Sustainable</span>
-            </p>
+            <dl className="mt-8 grid grid-cols-2 gap-4 border-y border-champagne/20 py-6 font-body text-sm">
+              <div>
+                <dt className="text-[11px] uppercase tracking-[0.2em] text-olive">Materials</dt>
+                <dd className="mt-1 text-ink">
+                  {MATERIAL_LABELS[product.primaryMaterial] ?? product.primaryMaterial}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-[11px] uppercase tracking-[0.2em] text-olive">Weight</dt>
+                <dd className="mt-1 text-ink">Lightweight cloth</dd>
+              </div>
+              <div>
+                <dt className="text-[11px] uppercase tracking-[0.2em] text-olive">Availability</dt>
+                <dd className="mt-1 text-ink">{inStock ? "In studio" : "Currently resting"}</dd>
+              </div>
+              <div>
+                <dt className="text-[11px] uppercase tracking-[0.2em] text-olive">Care</dt>
+                <dd className="mt-1 text-ink">Spot clean · cotton pouch</dd>
+              </div>
+            </dl>
 
             {product.variants.length > 0 && (
-              <div className="mt-8">
+              <div className="mt-6">
                 <p className="mb-3 font-body text-xs uppercase tracking-widest text-ink-muted">
                   {product.variants.length > 1 ? "Select variant" : "Variant"}
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {product.variants.map((variant) => {
-                    const variantInStock = variant.stock > 0;
-                    return (
-                      <Chip
-                        key={variant.id}
-                        variant={selectedVariantId === variant.id ? "active" : "default"}
-                        disabled={!variantInStock}
-                        onClick={() => setSelectedVariantId(variant.id)}
-                        data-magnetic
-                      >
-                        {[variant.material, variant.size, variant.color]
-                          .filter(Boolean)
-                          .join(" · ")}
-                        {!variantInStock && " (out of stock)"}
-                      </Chip>
-                    );
-                  })}
+                  {product.variants.map((variant) => (
+                    <Chip
+                      key={variant.id}
+                      variant={selectedVariantId === variant.id ? "active" : "default"}
+                      disabled={variant.stock <= 0}
+                      onClick={() => setSelectedVariantId(variant.id)}
+                    >
+                      {[variant.material, variant.size, variant.color].filter(Boolean).join(" · ")}
+                    </Chip>
+                  ))}
                 </div>
               </div>
             )}
 
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button
-                disabled={!inStock || adding}
-                onClick={() => void handleAddToCart()}
-                data-magnetic
-                className="min-w-[140px]"
-              >
-                {adding
-                  ? "Adding…"
-                  : added
-                    ? "Added to cart"
-                    : inStock
-                      ? "Add to cart"
-                      : "Out of stock"}
+              <Button disabled={!inStock || adding} onClick={() => void handleAddToCart()} className="min-w-[140px]">
+                {adding ? "Adding…" : added ? "Added to cart" : inStock ? "Add to cart" : "Out of stock"}
               </Button>
               <Button
                 variant="outline"
+                disabled={!inStock || adding}
+                onClick={async () => {
+                  await handleAddToCart();
+                  window.location.href = "/checkout";
+                }}
+              >
+                Buy now
+              </Button>
+              <Button
+                variant="ghost"
                 disabled={wishlistSaving || wishlisted}
                 onClick={() => void handleWishlist()}
               >
-                {wishlisted ? "Saved" : wishlistSaving ? "Saving…" : "Save to wishlist"}
+                {wishlisted ? "Saved" : "Wishlist"}
               </Button>
             </div>
             {addError && <p className="mt-3 font-body text-xs text-error">{addError}</p>}
@@ -261,127 +174,106 @@ export function ProductDetailClient({
         </div>
       </section>
 
-      <div ref={sectionsRef}>
-        <SectionDivider />
-
-        <StorySection id="story" title="The story" bgClass={sectionBackgrounds[sectionIndex++]}>
-          <div data-story-section>
-            <p className="font-body text-lg leading-relaxed text-ink md:text-xl">
-              {product.description}
-            </p>
+      <section className="border-t border-champagne/15 bg-linen/30 px-5 py-20 sm:px-8 md:py-28">
+        <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-12">
+          <div className="lg:col-span-5">
+            <p className="font-body text-[11px] uppercase tracking-[0.3em] text-olive">The story</p>
+            <h2 className="mt-4 font-display text-3xl text-maroon md:text-4xl">Why this pair</h2>
           </div>
-        </StorySection>
+          <p className="font-body text-lg leading-relaxed text-ink lg:col-span-7 md:text-xl">
+            {product.description}
+          </p>
+        </div>
+      </section>
 
-        <SectionDivider />
-
-        <StorySection id="materials" title="Materials" bgClass={sectionBackgrounds[sectionIndex++]}>
-          <div data-story-section className="rounded-sm border border-sage/25 bg-ivory/90 p-6 shadow-luxury md:p-8">
-            <ul className="space-y-3">
-              {product.materials?.map((material) => (
-                <li
-                  key={material}
-                  className="flex items-center gap-3 font-body text-ink before:h-1.5 before:w-1.5 before:rounded-full before:bg-champagne"
-                >
-                  {material}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-6 font-body text-sm text-ink-muted">
-              Primary: {MATERIAL_LABELS[product.primaryMaterial] ?? product.primaryMaterial}
-            </p>
-          </div>
-        </StorySection>
-
-        <SectionDivider />
-
-        <StorySection id="craft" title="How we craft" bgClass={sectionBackgrounds[sectionIndex++]}>
-          <div data-story-section className="grid gap-6 md:grid-cols-3">
-            {product.process?.map((step, index) => (
-              <article
-                key={step.title}
-                className="rounded-sm border border-sage/25 bg-ivory/90 p-6 shadow-luxury"
-              >
-                <span className="font-display text-4xl text-champagne/30">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <h3 className="mt-2 font-display text-xl text-maroon">{step.title}</h3>
-                <p className="mt-3 font-body text-sm leading-relaxed text-ink-muted">
-                  {step.description}
-                </p>
-              </article>
-            )) ?? null}
-          </div>
-        </StorySection>
-
-        <SectionDivider />
-
-        <StorySection id="comfort" title="Comfort" bgClass={sectionBackgrounds[sectionIndex++]}>
-          <div data-story-section>
-            <p className="font-body text-lg leading-relaxed text-ink-muted">
-              {product.comfort ??
-                "Lightweight fabric construction with soft backings and adjustable closures — designed for hours of comfortable wear."}
-            </p>
-          </div>
-        </StorySection>
-
-        <SectionDivider />
-
-        <StorySection id="perfect-for" title="Perfect for" bgClass={sectionBackgrounds[sectionIndex++]}>
-          <div data-story-section className="flex flex-wrap gap-3">
-            {product.occasion.map((occ) => (
-              <Chip key={occ} variant="outline" className="pointer-events-none">
-                {occ}
-              </Chip>
+      <section className="px-5 py-20 sm:px-8 md:py-28">
+        <div className="mx-auto max-w-7xl">
+          <p className="font-body text-[11px] uppercase tracking-[0.3em] text-olive">Made from</p>
+          <h2 className="mt-4 font-display text-3xl text-maroon md:text-5xl">Materials</h2>
+          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {MATERIAL_CHAPTER.map((item) => (
+              <figure key={item.asset.id}>
+                <LuxuryImage
+                  src={item.asset.src}
+                  alt={item.asset.alt}
+                  width={item.asset.width}
+                  height={item.asset.height}
+                  fit="cover"
+                  sizes="(max-width: 768px) 100vw, 25vw"
+                  className="aspect-[4/5] w-full border border-champagne/15"
+                />
+                <figcaption className="mt-3">
+                  <p className="font-display text-lg text-maroon">{item.kicker}</p>
+                  <p className="mt-1 font-body text-sm text-ink-muted">{item.title}</p>
+                </figcaption>
+              </figure>
             ))}
           </div>
-        </StorySection>
+          <ul className="mt-10 flex flex-wrap gap-3">
+            {product.materials?.map((material) => (
+              <li
+                key={material}
+                className="rounded-full border border-sage/30 px-4 py-1.5 font-body text-sm text-ink"
+              >
+                {material}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
 
-        <SectionDivider />
+      <section className="border-t border-champagne/15 bg-ivory px-5 py-20 sm:px-8">
+        <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-3">
+          {(product.process ?? []).map((step, index) => (
+            <article key={step.title}>
+              <span className="font-display text-4xl text-champagne/40">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <h3 className="mt-2 font-display text-xl text-maroon">{step.title}</h3>
+              <p className="mt-3 font-body text-sm leading-relaxed text-ink-muted">{step.description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
 
-        <StorySection id="packaging" title="Packaging" bgClass={sectionBackgrounds[sectionIndex++]}>
-          <div data-story-section className="rounded-sm border border-sage/25 bg-ivory/90 p-6 shadow-luxury md:p-8">
-            <p className="font-body leading-relaxed text-ink-muted">
-              {product.packaging ??
-                "Each piece arrives wrapped in tissue, nestled in a cotton pouch you can reuse for travel storage."}
+      <section className="px-5 py-16 sm:px-8">
+        <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-2">
+          <div>
+            <p className="font-body text-[11px] uppercase tracking-[0.3em] text-olive">Care</p>
+            <p className="mt-4 font-body text-lg leading-relaxed text-ink-muted">
+              {product.careInstructions}
             </p>
           </div>
-        </StorySection>
+          <LuxuryImage
+            src={MEDIA.threadBrown.src}
+            alt={MEDIA.threadBrown.alt}
+            width={MEDIA.threadBrown.width}
+            height={MEDIA.threadBrown.height}
+            fit="cover"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="aspect-[16/10] w-full border border-champagne/15"
+          />
+        </div>
+      </section>
 
-        <SectionDivider />
-
-        <StorySection id="care" title="Care" bgClass={sectionBackgrounds[sectionIndex++]}>
-          <div data-story-section>
-            <p className="font-body leading-relaxed text-ink-muted">{product.careInstructions}</p>
-          </div>
-        </StorySection>
-
-        {reviewSummary && (
-          <>
-            <SectionDivider />
-            <StorySection id="reviews" title="What wearers say">
-              <div data-story-section className="rounded-sm border border-champagne/30 bg-cotton/50 p-6">
-                <p className="font-body text-[10px] uppercase tracking-widest text-champagne">
-                  Review highlights
-                </p>
-                <p className="mt-2 font-body text-sm leading-relaxed text-ink md:text-base">{reviewSummary}</p>
-              </div>
-            </StorySection>
-          </>
-        )}
-      </div>
+      {reviewSummary && (
+        <section className="mx-auto max-w-3xl px-5 py-12 sm:px-8">
+          <p className="font-body text-[11px] uppercase tracking-[0.3em] text-champagne">
+            What wearers say
+          </p>
+          <p className="mt-4 font-body text-lg leading-relaxed text-ink">{reviewSummary}</p>
+        </section>
+      )}
 
       {relatedProducts.length > 0 && (
-        <>
-          <SectionDivider />
-          <section className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 md:pb-28">
-            <h2 className="font-display text-3xl text-maroon">You may also love</h2>
-            <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-8">
-              {relatedProducts.map((related) => (
-                <EditorialProductCard key={related.id} product={related} variant="shadow" />
-              ))}
-            </div>
-          </section>
-        </>
+        <section className="mx-auto max-w-7xl px-5 pb-24 pt-10 sm:px-8">
+          <h2 className="font-display text-3xl text-maroon">You may also love</h2>
+          <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
+            {relatedProducts.map((related) => (
+              <EditorialProductCard key={related.id} product={related} />
+            ))}
+          </div>
+        </section>
       )}
     </div>
   );

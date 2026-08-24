@@ -3,28 +3,36 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { EditorialFrame } from "@/components/editorial";
-import { GoldDivider, PromotionalBanner } from "@/components/decor";
+import { LuxuryImage } from "@/components/media";
+import { MEDIA } from "@/lib/media";
 import { EditorialProductCard } from "@/components/shop/EditorialProductCard";
-import { ShopChipFilters, filterProducts } from "@/components/shop/ShopChipFilters";
+import { FilterDrawer, FloatingFilterButton } from "@/components/shop/FilterDrawer";
 import { ShopEmptyState } from "@/components/shop/ShopEmptyState";
 import { ShopProductGridSkeleton } from "@/components/shop/ShopProductGridSkeleton";
+import { ShopActiveFilterChips } from "@/components/shop/ShopActiveFilterChips";
 import type { ProductFixture, ShopFiltersState } from "@/lib/fixtures/types";
-import { cn } from "@/lib/utils";
-import { filtersFromSearchParams, filtersToQueryString } from "./shop-filter-utils";
+import {
+  EMPTY_FILTERS,
+  activeFilterCount,
+  filterProducts,
+  filtersFromSearchParams,
+  filtersToQueryString,
+} from "./shop-filter-utils";
+
+const EASE = [0.16, 1, 0.3, 1] as const;
+
+const CARD_LAYOUTS = ["feature", "square", "portrait", "wide", "square", "portrait"] as const;
 
 type ShopPageClientProps = {
   products: ProductFixture[];
 };
-
-const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
 export function ShopPageClient({ products }: ShopPageClientProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [showSkeleton, setShowSkeleton] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"name" | "price_asc" | "price_desc">("name");
@@ -72,8 +80,7 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
   );
 
   useEffect(() => {
-    const fromUrl = filtersFromSearchParams(searchParams);
-    setFilters(fromUrl);
+    setFilters(filtersFromSearchParams(searchParams));
   }, [searchParams]);
 
   useEffect(() => {
@@ -83,71 +90,54 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
   }, [showSkeleton, filteredProducts]);
 
   const isLoading = isPending || showSkeleton;
+  const count = activeFilterCount(filters);
 
   return (
-    <div className="relative overflow-hidden bg-ivory">
+    <div className="relative overflow-x-hidden bg-ivory">
       <section className="relative border-b border-champagne/15">
         <div className="mx-auto grid max-w-7xl lg:grid-cols-2">
-          <div className="relative z-10 flex flex-col justify-center px-4 py-14 sm:px-6 md:py-20 lg:px-10">
-            <p className="font-script text-xl italic text-warm-brown md:text-2xl">The catalogue</p>
-            <h1 className="mt-3 max-w-xl font-display text-4xl text-maroon md:text-5xl text-balance">
-              Cloth &amp; thread jewellery
+          <div className="relative z-10 flex flex-col justify-center px-5 py-16 sm:px-8 md:py-24 lg:px-12">
+            <p className="font-script text-xl italic text-warm-brown md:text-2xl">The atelier</p>
+            <h1 className="mt-3 max-w-xl font-display text-4xl text-maroon md:text-6xl text-balance">
+              Cloth jewellery, photographed as cloth
             </h1>
-            <GoldDivider width="md" className="my-6" />
-            <p className="max-w-lg font-body text-base leading-relaxed text-ink-muted md:text-lg">
-              Fabric earrings in two sizes — bigger drops at ₹160, smaller studs at ₹130 —
-              photographed in natural light, one small batch at a time.
+            <p className="mt-6 max-w-lg font-body text-base leading-relaxed text-ink-muted md:text-lg">
+              Fabric earrings in two sizes — bigger drops at ₹160, smaller studs at ₹130 — finished
+              in small batches. Until studio photography lands, each piece is shown contained on
+              ivory linen, never stretched.
             </p>
           </div>
-          <EditorialFrame
-            src="/editorial/cotton-pouch.webp"
-            alt="Alankara cotton drawstring pouch in kraft gift packaging"
-            caption="Sealed with care"
-            className="min-h-[280px] rounded-none border-0 border-l border-champagne/15 shadow-none lg:min-h-[360px]"
-            imageClassName="min-h-[280px] lg:min-h-[360px]"
+          <LuxuryImage
+            src={MEDIA.creamFolds.src}
+            alt={MEDIA.creamFolds.alt}
+            width={MEDIA.creamFolds.width}
+            height={MEDIA.creamFolds.height}
+            fit="cover"
+            priority
             sizes="(max-width: 1024px) 100vw, 50vw"
-            vignette="bottom"
+            className="min-h-[240px] lg:min-h-[420px]"
           />
         </div>
       </section>
 
-      <section className="relative mx-auto max-w-7xl px-4 pb-20 sm:px-6 md:pb-28">
-        <div className="lg:grid lg:grid-cols-[240px_1fr] lg:gap-10">
-          <aside className="hidden lg:block">
-            <div className="sticky top-24 rounded-sm border border-champagne/20 bg-linen/30 p-5">
-              <p className="font-display text-sm text-maroon">Filter</p>
-              <ShopChipFilters
-                filters={filters}
-                onChange={handleFilterChange}
-                productCount={filteredProducts.length}
-                totalCount={products.length}
-                mobileOpen={false}
-                onMobileOpenChange={setMobileFiltersOpen}
-              />
-            </div>
-          </aside>
-
-          <div>
-        {/* Mobile + tablet filter strip */}
-        <div
-          className={cn(
-            "sticky top-16 z-20 -mx-1 mb-8 space-y-4 rounded-sm border border-champagne/25 px-4 py-4 shadow-luxury backdrop-blur-md md:top-[4.25rem] md:mb-12 md:px-6 md:py-5 lg:hidden",
-            "bg-ivory/95",
-          )}
-        >
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <section className="relative mx-auto max-w-7xl px-5 pb-24 sm:px-8 md:pb-32">
+        <div className="flex flex-col gap-4 py-8 sm:flex-row sm:items-center sm:justify-between">
+          <p className="font-display text-lg text-maroon">
+            {filteredProducts.length} {filteredProducts.length === 1 ? "piece" : "pieces"}
+          </p>
+          <div className="flex flex-wrap items-center gap-3">
             <input
               type="search"
               placeholder="Search cloth jewellery…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-1 rounded-sm border border-sage/30 bg-ivory px-4 py-2.5 font-body text-sm text-ink placeholder:text-ink-muted focus:border-champagne focus:outline-none"
+              className="w-full rounded-sm border border-sage/30 bg-ivory px-4 py-2.5 font-body text-sm sm:w-56"
               aria-label="Search products"
             />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-              className="rounded-sm border border-sage/30 bg-ivory px-3 py-2.5 font-body text-sm text-ink"
+              className="rounded-sm border border-sage/30 bg-ivory px-3 py-2.5 font-body text-sm"
               aria-label="Sort products"
             >
               <option value="name">Name</option>
@@ -155,17 +145,13 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
               <option value="price_desc">Price: high to low</option>
             </select>
           </div>
-          <ShopChipFilters
-            filters={filters}
-            onChange={handleFilterChange}
-            productCount={filteredProducts.length}
-            totalCount={products.length}
-            mobileOpen={mobileFiltersOpen}
-            onMobileOpenChange={setMobileFiltersOpen}
-          />
         </div>
 
-        <PromotionalBanner className="mb-10" />
+        <ShopActiveFilterChips
+          filters={filters}
+          onChange={handleFilterChange}
+          onClearAll={() => handleFilterChange(EMPTY_FILTERS)}
+        />
 
         <AnimatePresence mode="wait">
           {isLoading ? (
@@ -174,18 +160,11 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2, ease: LUXURY_EASE }}
             >
-              <ShopProductGridSkeleton count={Math.min(filteredProducts.length || 8, 8)} />
+              <ShopProductGridSkeleton count={Math.min(filteredProducts.length || 6, 6)} />
             </motion.div>
           ) : filteredProducts.length === 0 ? (
-            <motion.div
-              key="empty"
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.35, ease: LUXURY_EASE }}
-            >
+            <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <ShopEmptyState />
             </motion.div>
           ) : (
@@ -193,34 +172,60 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
               key="grid"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.35, ease: LUXURY_EASE }}
-              className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 md:gap-x-8 md:gap-y-12 lg:grid-cols-4"
+              transition={{ duration: 0.4, ease: EASE }}
+              className="mt-8 grid grid-cols-1 gap-x-5 gap-y-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-x-6"
             >
-              {filteredProducts.map((product, index) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{
-                    duration: 0.4,
-                    delay: Math.min(index * 0.04, 0.24),
-                    ease: LUXURY_EASE,
-                  }}
-                >
-                  <EditorialProductCard
-                    product={product}
-                    variant="shadow"
-                    size="default"
+              {filteredProducts.map((product, index) => {
+                const layout = CARD_LAYOUTS[index % CARD_LAYOUTS.length];
+                const span =
+                  layout === "feature"
+                    ? "lg:col-span-7"
+                    : layout === "wide"
+                      ? "lg:col-span-8"
+                      : layout === "portrait"
+                        ? "lg:col-span-5"
+                        : "lg:col-span-4";
+                return (
+                  <div key={product.id} className={span}>
+                    {index === 2 && (
+                      <p className="mb-8 hidden max-w-sm font-script text-2xl italic text-warm-brown lg:block">
+                        Cloth, thread, pearl — jewellery that moves like fabric.
+                      </p>
+                    )}
+                    <EditorialProductCard product={product} layout={layout} />
+                  </div>
+                );
+              })}
+              {filteredProducts.length > 1 && (
+                <div className="hidden lg:col-span-5 lg:block">
+                  <LuxuryImage
+                    src={MEDIA.threadWhite.src}
+                    alt={MEDIA.threadWhite.alt}
+                    width={MEDIA.threadWhite.width}
+                    height={MEDIA.threadWhite.height}
+                    fit="cover"
+                    sizes="40vw"
+                    className="aspect-[4/5] w-full border border-champagne/15"
                   />
-                </motion.div>
-              ))}
+                  <p className="mt-4 font-body text-[11px] uppercase tracking-[0.22em] text-olive">
+                    Thread
+                  </p>
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
-          </div>
-        </div>
       </section>
+
+      <FloatingFilterButton count={count} onClick={() => setDrawerOpen(true)} />
+      <FilterDrawer
+        filters={filters}
+        onChange={handleFilterChange}
+        productCount={filteredProducts.length}
+        totalCount={products.length}
+        open={drawerOpen}
+        onOpenChange={setDrawerOpen}
+      />
     </div>
   );
 }

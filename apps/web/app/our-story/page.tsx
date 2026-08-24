@@ -29,9 +29,11 @@ export default function OurStoryPage() {
             <p className="mt-8 max-w-xl text-lg leading-relaxed text-ink-muted">{hero.subtitle}</p>
           </div>
           <EditorialFrame
-            src="/editorial/studio-morning.webp"
-            alt="Morning light across a linen-covered studio table with scissors and thread"
-            caption="Where every piece begins"
+            src="/media/materials/cream-folds.jpg"
+            alt="Close view of cream linen with a quiet crease and woven grain"
+            caption="Cloth, first"
+            width={2800}
+            height={1867}
             className="min-h-[320px] rounded-none border-0 shadow-none lg:min-h-full"
             imageClassName="min-h-[320px] lg:min-h-full"
             priority

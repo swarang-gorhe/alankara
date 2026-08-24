@@ -11,8 +11,10 @@ import { cn } from "@/lib/utils";
 const footerLinks = [
   { href: "/shop", label: "Shop" },
   { href: "/our-story", label: "Our Story" },
+  { href: "/journal", label: "Journal" },
   { href: "/artisans", label: "Artisans" },
   { href: "/reviews", label: "Reviews" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export function ChapterFooter() {
@@ -31,7 +33,7 @@ export function ChapterFooter() {
       <div className="relative mx-auto max-w-6xl px-6 py-16">
         <div className="flex flex-col items-center gap-10 md:flex-row md:justify-between">
           <div className="flex flex-col items-center gap-4 md:items-start">
-            <AnimatedLogo size={72} idlePulse showTagline />
+            <AnimatedLogo size={96} idlePulse showTagline />
           </div>
 
           <nav className="flex flex-wrap justify-center gap-8" aria-label="Footer navigation">

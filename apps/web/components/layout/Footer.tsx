@@ -11,8 +11,10 @@ const shopLinks = [
 
 const storyLinks = [
   { href: "/our-story", label: "Our Story" },
+  { href: "/journal", label: "Journal" },
   { href: "/artisans", label: "Artisans" },
   { href: "/reviews", label: "Reviews" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export function Footer() {
@@ -23,7 +25,7 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-6 py-14 md:py-16">
         <div className="grid gap-10 md:grid-cols-[1.2fr_1fr_1fr] md:gap-12">
           <div className="flex flex-col items-center gap-4 md:items-start">
-            <AnimatedLogo size={56} showTagline />
+            <AnimatedLogo size={72} showTagline />
             <p className="max-w-xs text-center font-body text-sm leading-relaxed text-ink-muted md:text-left">
               Handmade cloth jewellery from artisan workshops — slow fashion, wearable art for
               everyday and celebration.

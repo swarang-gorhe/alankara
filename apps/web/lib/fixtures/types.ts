@@ -99,4 +99,8 @@ export type ShopFiltersState = {
   styles: StyleTag[];
   sizes: EarringSize[];
   priceRange: import("./index").PriceRangeId | null;
+  materials: MaterialSlug[];
+  colors: string[];
+  availability: "all" | "in-stock";
+  collections: string[];
 };
