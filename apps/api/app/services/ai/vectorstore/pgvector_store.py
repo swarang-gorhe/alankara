@@ -12,7 +12,8 @@ from app.services.ai.embeddings import get_embeddings
 
 FALLBACK_MESSAGE = (
     "I'm not sure about that — our team would love to help. "
-    "Reach us at thealankarastudios@gmail.com, call/WhatsApp +91 70207 57445, or Instagram @alankara.studios."
+    "Reach us at thealankarastudios@gmail.com, "
+    "call/WhatsApp +91 70207 57445, or Instagram @alankara.studios."
 )
 
 
