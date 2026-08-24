@@ -123,19 +123,17 @@ export function FilterDrawer({
             </header>
 
             <div className="flex-1 overflow-y-auto px-6 pb-8">
-              {CATEGORY_OPTIONS.length > 1 && (
-                <Section title="Category">
-                  {CATEGORY_OPTIONS.map(({ slug, label }) => (
-                    <Chip
-                      key={slug}
-                      variant={filters.categories.includes(slug) ? "active" : "default"}
-                      onClick={() => update({ categories: toggleItem(filters.categories, slug) })}
-                    >
-                      {label}
-                    </Chip>
-                  ))}
-                </Section>
-              )}
+              <Section title="Category">
+                {CATEGORY_OPTIONS.map(({ slug, label }) => (
+                  <Chip
+                    key={slug}
+                    variant={filters.categories.includes(slug) ? "active" : "default"}
+                    onClick={() => update({ categories: toggleItem(filters.categories, slug) })}
+                  >
+                    {label}
+                  </Chip>
+                ))}
+              </Section>
               {SHOP_MATERIAL_FILTERS.length > 1 && (
                 <Section title="Material">
                   {SHOP_MATERIAL_FILTERS.map((material) => (

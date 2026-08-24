@@ -13,11 +13,9 @@ import { cn } from "@/lib/utils";
 
 const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
-/** Circular Alankara lockup — name, emblem, and tagline in one mark. */
 export const LOGO_FULL_SRC = "/brand/logo-full.png";
 /** Flower emblem only — favicon, wax seal, tiny chrome. */
 export const LOGO_MARK_SRC = "/brand/logo-mark.png";
-export const LOGO_LOCKUP_SRC = "/brand/logo-lockup.png";
 
 type AnimatedLogoProps = {
   size?: number;

@@ -99,13 +99,11 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
           <div className="relative z-10 flex flex-col justify-center px-5 py-16 sm:px-8 md:py-24 lg:px-12">
             <p className="font-script text-xl italic text-warm-brown md:text-2xl">The atelier</p>
             <h1 className="mt-3 max-w-xl font-display text-4xl text-maroon md:text-6xl text-balance">
-              Cloth earrings, this season
+              Handmade cloth jewellery
             </h1>
             <p className="mt-6 max-w-lg font-body text-base leading-relaxed text-ink-muted md:text-lg">
-              Four handmade pairs in two sizes — bigger drops at ₹160, smaller studs at ₹130.
-              Each piece uses the same photograph everywhere, contained on ivory linen, never
-              cropped or stretched. High-resolution cloth stills hold the page until studio
-              jewellery photography is ready.
+              Fabric earrings in two sizes — bigger drops at ₹160, smaller studs at ₹130. Each piece
+              uses the same photograph everywhere, contained on ivory linen so the cloth stays sharp.
             </p>
           </div>
           <LuxuryImage

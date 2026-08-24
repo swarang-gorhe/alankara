@@ -1,40 +1,33 @@
 "use client";
 
-import { ChapterCollection } from "./chapters/ChapterCollection";
-import { ChapterCustomerStories } from "./chapters/ChapterCustomerStories";
-import { ChapterDetails } from "./chapters/ChapterDetails";
-import { ChapterFooter } from "./chapters/ChapterFooter";
-import { ChapterJournal } from "./chapters/ChapterJournal";
-import { ChapterMadeByHand } from "./chapters/ChapterMadeByHand";
-import { ChapterMaterial } from "./chapters/ChapterMaterial";
-import { ChapterMoments } from "./chapters/ChapterMoments";
+import { HomeHero } from "./commerce/HomeHero";
+import { HomeCollections } from "./commerce/HomeCollections";
+import { HomeProducts } from "./commerce/HomeProducts";
+import { HomeMadeByHand } from "./commerce/HomeMadeByHand";
+import { HomeCustomize } from "./commerce/HomeCustomize";
+import { HomeMadeWithLove } from "./commerce/HomeMadeWithLove";
+import { HomeSocial } from "./commerce/HomeSocial";
 import { ChapterNewsletter } from "./chapters/ChapterNewsletter";
-import { ChapterStyle } from "./chapters/ChapterStyle";
-import { UnwrapIntro } from "./intro/UnwrapIntro";
-import { KeepsakeScene } from "./intro/KeepsakeScene";
-import { JournalSpread } from "@/components/journal";
+import { ChapterFooter } from "./chapters/ChapterFooter";
 import type { ProductFixture } from "@/lib/fixtures/types";
 
 type HomePageProps = {
   products: ProductFixture[];
 };
 
+/** Commercial fabric-jewellery homepage — shop-first, not a chapter book. */
 export function HomePage({ products }: HomePageProps) {
   return (
-    <UnwrapIntro>
-      <JournalSpread>
-        <KeepsakeScene />
-        <ChapterMoments />
-        <ChapterMaterial />
-        <ChapterMadeByHand />
-        <ChapterCollection products={products} />
-        <ChapterDetails />
-        <ChapterStyle />
-        <ChapterCustomerStories />
-        <ChapterJournal />
-        <ChapterNewsletter />
-        <ChapterFooter />
-      </JournalSpread>
-    </UnwrapIntro>
+    <div className="overflow-x-hidden bg-ivory">
+      <HomeHero />
+      <HomeCollections />
+      <HomeProducts products={products} />
+      <HomeMadeByHand />
+      <HomeCustomize />
+      <HomeMadeWithLove />
+      <HomeSocial />
+      <ChapterNewsletter />
+      <ChapterFooter />
+    </div>
   );
 }

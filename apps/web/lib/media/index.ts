@@ -15,3 +15,4 @@ export {
   getProductMedia,
 } from "./catalog";
 export type { JournalStory, MediaAsset, ProductMediaSet } from "./catalog";
+export { ATELIER_MEDIA, COLLECTION_TILES, MAKE_STEPS } from "./atelier";
