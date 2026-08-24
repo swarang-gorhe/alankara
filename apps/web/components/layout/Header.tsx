@@ -87,7 +87,7 @@ export function Header({ className }: { className?: string }) {
       <div
         className={cn(
           "mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6",
-          compact ? "h-[3.75rem] md:h-16" : "h-[4.5rem] md:h-[5.25rem]",
+          compact ? "h-16 md:h-[4.25rem]" : "h-[4.75rem] md:h-[5.75rem]",
         )}
       >
         <Link href="/" className="flex shrink-0 items-center gap-3" aria-label="Alankara home">
