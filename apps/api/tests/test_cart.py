@@ -56,7 +56,7 @@ def test_add_cart_item_exceeds_stock(client):
 
     response = client.post(
         "/cart/items",
-        json={"variantId": "var-001-a", "quantity": 999},
+        json={"variantId": "var-001-a", "quantity": 50},
         cookies={"alankara_cart_session": session_cookie},
     )
     assert response.status_code == 400

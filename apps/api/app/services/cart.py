@@ -75,6 +75,22 @@ async def _get_cart_by_user(db: AsyncSession, user_id: str) -> Cart | None:
     return result.scalar_one_or_none()
 
 
+async def _reload_cart(db: AsyncSession, cart_id: str) -> Cart:
+    """Re-fetch a cart with the full relationship graph (async-safe)."""
+    stmt = (
+        select(Cart)
+        .where(Cart.id == cart_id)
+        .options(
+            selectinload(Cart.items)
+            .selectinload(CartItem.variant)
+            .selectinload(ProductVariant.product)
+            .selectinload(Product.category),
+        )
+    )
+    result = await db.execute(stmt)
+    return result.scalar_one()
+
+
 async def _merge_guest_into_user_cart(
     db: AsyncSession,
     guest_cart: Cart,
@@ -122,20 +138,14 @@ async def get_or_create_cart(
     if user_id and guest_cart and user_cart:
         cart = await _merge_guest_into_user_cart(db, guest_cart, user_cart)
         await db.commit()
-        await db.refresh(cart, ["items"])
-        for item in cart.items:
-            await db.refresh(item, ["variant"])
-            if item.variant:
-                await db.refresh(item.variant, ["product"])
-        return cart
+        return await _reload_cart(db, cart.id)
 
     if user_id and guest_cart and not user_cart:
         guest_cart.user_id = user_id
         guest_cart.session_id = None
         guest_cart.updated_at = now
         await db.commit()
-        await db.refresh(guest_cart, ["items"])
-        return guest_cart
+        return await _reload_cart(db, guest_cart.id)
 
     if user_cart:
         return user_cart
@@ -152,8 +162,7 @@ async def get_or_create_cart(
     )
     db.add(cart)
     await db.commit()
-    await db.refresh(cart, ["items"])
-    return cart
+    return await _reload_cart(db, cart.id)
 
 
 def cart_to_schema(cart: Cart) -> CartSchema:
@@ -252,12 +261,7 @@ async def add_cart_item(
         session_id=cart.session_id,
     )
     await db.commit()
-    await db.refresh(cart, ["items"])
-    for item in cart.items:
-        await db.refresh(item, ["variant"])
-        if item.variant:
-            await db.refresh(item.variant, ["product"])
-    return cart
+    return await _reload_cart(db, cart.id)
 
 
 async def update_cart_item(
@@ -281,12 +285,7 @@ async def update_cart_item(
     item.quantity = quantity
     cart.updated_at = datetime.now(UTC)
     await db.commit()
-    await db.refresh(cart, ["items"])
-    for cart_item in cart.items:
-        await db.refresh(cart_item, ["variant"])
-        if cart_item.variant:
-            await db.refresh(cart_item.variant, ["product"])
-    return cart
+    return await _reload_cart(db, cart.id)
 
 
 async def remove_cart_item(db: AsyncSession, cart: Cart, *, item_id: str) -> Cart:
@@ -297,8 +296,7 @@ async def remove_cart_item(db: AsyncSession, cart: Cart, *, item_id: str) -> Car
     await db.delete(item)
     cart.updated_at = datetime.now(UTC)
     await db.commit()
-    await db.refresh(cart, ["items"])
-    return cart
+    return await _reload_cart(db, cart.id)
 
 
 async def clear_cart(db: AsyncSession, cart: Cart) -> None:

@@ -22,7 +22,6 @@ def test_root():
 def test_app_registers_multipart_routes():
     """FastAPI registers File/Form routes at import time; missing python-multipart
     used to crash CI before any test ran."""
-    paths = {getattr(route, "path", None) for route in app.routes}
-    paths.discard(None)
+    paths = set(app.openapi().get("paths", {}))
     assert "/admin/inventory/import" in paths
     assert "/admin/products/analyze-image" in paths
