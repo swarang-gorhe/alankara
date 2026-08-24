@@ -31,6 +31,14 @@ export function ContactForm() {
             className="mt-14 space-y-5"
             onSubmit={(e) => {
               e.preventDefault();
+              const form = e.currentTarget;
+              const data = new FormData(form);
+              const name = String(data.get("name") ?? "").trim();
+              const email = String(data.get("email") ?? "").trim();
+              const message = String(data.get("message") ?? "").trim();
+              window.location.href = `mailto:hello@alankara.com?subject=${encodeURIComponent(
+                `Atelier note from ${name}`,
+              )}&body=${encodeURIComponent(`${message}\n\n— ${name} (${email})`)}`;
               setSent(true);
             }}
           >

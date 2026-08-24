@@ -21,7 +21,7 @@ import {
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-const CARD_LAYOUTS = ["feature", "square", "portrait", "wide", "square", "portrait"] as const;
+const CARD_LAYOUTS = ["portrait", "square", "square", "portrait"] as const;
 
 type ShopPageClientProps = {
   products: ProductFixture[];
@@ -99,12 +99,13 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
           <div className="relative z-10 flex flex-col justify-center px-5 py-16 sm:px-8 md:py-24 lg:px-12">
             <p className="font-script text-xl italic text-warm-brown md:text-2xl">The atelier</p>
             <h1 className="mt-3 max-w-xl font-display text-4xl text-maroon md:text-6xl text-balance">
-              Cloth jewellery, photographed as cloth
+              Cloth earrings, this season
             </h1>
             <p className="mt-6 max-w-lg font-body text-base leading-relaxed text-ink-muted md:text-lg">
-              Fabric earrings in two sizes — bigger drops at ₹160, smaller studs at ₹130 — finished
-              in small batches. Until studio photography lands, each piece is shown contained on
-              ivory linen, never stretched.
+              Four handmade pairs in two sizes — bigger drops at ₹160, smaller studs at ₹130.
+              Each piece uses the same photograph everywhere, contained on ivory linen, never
+              cropped or stretched. High-resolution cloth stills hold the page until studio
+              jewellery photography is ready.
             </p>
           </div>
           <LuxuryImage
@@ -177,16 +178,8 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
             >
               {filteredProducts.map((product, index) => {
                 const layout = CARD_LAYOUTS[index % CARD_LAYOUTS.length];
-                const span =
-                  layout === "feature"
-                    ? "lg:col-span-7"
-                    : layout === "wide"
-                      ? "lg:col-span-8"
-                      : layout === "portrait"
-                        ? "lg:col-span-5"
-                        : "lg:col-span-4";
                 return (
-                  <div key={product.id} className={span}>
+                  <div key={product.id} className="lg:col-span-6">
                     {index === 2 && (
                       <p className="mb-8 hidden max-w-sm font-script text-2xl italic text-warm-brown lg:block">
                         Cloth, thread, pearl — jewellery that moves like fabric.
@@ -197,7 +190,7 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
                 );
               })}
               {filteredProducts.length > 1 && (
-                <div className="hidden lg:col-span-5 lg:block">
+                <div className="hidden lg:col-span-6 lg:block">
                   <LuxuryImage
                     src={MEDIA.threadWhite.src}
                     alt={MEDIA.threadWhite.alt}

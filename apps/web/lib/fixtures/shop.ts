@@ -24,23 +24,13 @@ export const SHOP_STYLE_FILTERS: StyleTag[] = [
   "minimal",
   "earthy",
   "traditional",
-  "pearls",
-  "cotton",
-  "boho",
-  "pastel",
 ];
 
 export const EARRING_SIZES = ["Bigger", "Smaller"] as const;
 
 export type EarringSize = (typeof EARRING_SIZES)[number];
 
-export const SHOP_MATERIAL_FILTERS: MaterialSlug[] = [
-  "cotton",
-  "pearls",
-  "silk-thread",
-  "ghungroos",
-  "zari",
-];
+export const SHOP_MATERIAL_FILTERS: MaterialSlug[] = ["cotton"];
 
 export const COLOR_OPTIONS = [
   "Mustard & burgundy",

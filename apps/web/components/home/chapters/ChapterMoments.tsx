@@ -14,7 +14,7 @@ export function ChapterMoments() {
   const contentRef = useRef<HTMLDivElement>(null);
   useChapterReveal({ trigger: sectionRef, targets: contentRef, variant: "fade-up" });
 
-  const featured = products.filter((p) => p.featured).slice(0, 2);
+  const featured = products.filter((p) => p.featured)[0];
 
   return (
     <section
@@ -48,34 +48,37 @@ export function ChapterMoments() {
 
         <div className="mt-16 grid grid-cols-1 gap-5 md:mt-24 md:grid-cols-12 md:gap-6">
           <div data-reveal className="md:col-span-7">
-            <ProductStill
-              name={featured[0]?.name ?? "Cloth earrings"}
-              slug={featured[0]?.slug}
-              image={featured[0]?.images[0]}
-              aspect="landscape"
-              sizes="(max-width: 768px) 100vw, 60vw"
-              className="min-h-[280px] border border-champagne/15 md:min-h-[420px]"
-              hoverZoom
-            />
-            <p className="mt-4 font-script text-lg italic text-warm-brown">
-              {featured[0]?.name}
-            </p>
-          </div>
-          <div data-reveal className="md:col-span-5 md:mt-16">
             <LuxuryImage
               src={MEDIA.silkCream.src}
               alt={MEDIA.silkCream.alt}
               width={MEDIA.silkCream.width}
               height={MEDIA.silkCream.height}
               fit="cover"
-              sizes="(max-width: 768px) 100vw, 40vw"
-              className="aspect-[3/4] w-full border border-champagne/15"
+              sizes="(max-width: 768px) 100vw, 60vw"
+              className="aspect-[4/5] w-full border border-champagne/15 md:aspect-[16/11]"
             />
-            <p className="mt-4 max-w-xs font-body text-sm leading-relaxed text-ink-muted">
+            <p className="mt-4 max-w-md font-body text-sm leading-relaxed text-ink-muted">
               Cloth, thread, pearls, beads, and ghungroos — materials that move with you rather than
               sit in a box.
             </p>
           </div>
+          {featured && (
+            <div data-reveal className="md:col-span-5 md:mt-16">
+              <ProductStill
+                name={featured.name}
+                slug={featured.slug}
+                image={featured.images[0]}
+                aspect="square"
+                sizes="(max-width: 768px) 100vw, 32vw"
+                className="border border-champagne/15"
+                hoverZoom
+              />
+              <p className="mt-4 font-script text-lg italic text-warm-brown">{featured.name}</p>
+              <p className="mt-1 font-body text-xs uppercase tracking-[0.2em] text-olive">
+                Contained on linen · never cropped
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </section>

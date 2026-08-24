@@ -123,30 +123,34 @@ export function FilterDrawer({
             </header>
 
             <div className="flex-1 overflow-y-auto px-6 pb-8">
-              <Section title="Category">
-                {CATEGORY_OPTIONS.map(({ slug, label }) => (
-                  <Chip
-                    key={slug}
-                    variant={filters.categories.includes(slug) ? "active" : "default"}
-                    onClick={() => update({ categories: toggleItem(filters.categories, slug) })}
-                  >
-                    {label}
-                  </Chip>
-                ))}
-              </Section>
-              <Section title="Material">
-                {SHOP_MATERIAL_FILTERS.map((material) => (
-                  <Chip
-                    key={material}
-                    variant={(filters.materials ?? []).includes(material) ? "active" : "outline"}
-                    onClick={() =>
-                      update({ materials: toggleItem(filters.materials ?? [], material) })
-                    }
-                  >
-                    {MATERIAL_LABELS[material]}
-                  </Chip>
-                ))}
-              </Section>
+              {CATEGORY_OPTIONS.length > 1 && (
+                <Section title="Category">
+                  {CATEGORY_OPTIONS.map(({ slug, label }) => (
+                    <Chip
+                      key={slug}
+                      variant={filters.categories.includes(slug) ? "active" : "default"}
+                      onClick={() => update({ categories: toggleItem(filters.categories, slug) })}
+                    >
+                      {label}
+                    </Chip>
+                  ))}
+                </Section>
+              )}
+              {SHOP_MATERIAL_FILTERS.length > 1 && (
+                <Section title="Material">
+                  {SHOP_MATERIAL_FILTERS.map((material) => (
+                    <Chip
+                      key={material}
+                      variant={(filters.materials ?? []).includes(material) ? "active" : "outline"}
+                      onClick={() =>
+                        update({ materials: toggleItem(filters.materials ?? [], material) })
+                      }
+                    >
+                      {MATERIAL_LABELS[material]}
+                    </Chip>
+                  ))}
+                </Section>
+              )}
               <Section title="Color">
                 {COLOR_OPTIONS.map((color) => (
                   <Chip

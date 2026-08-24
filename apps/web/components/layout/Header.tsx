@@ -75,7 +75,7 @@ export function Header({ className }: { className?: string }) {
     ? products.filter((p) => p.name.toLowerCase().includes(query.toLowerCase())).slice(0, 6)
     : [];
 
-  const logoSize = compact ? 52 : 72;
+  const logoSize = compact ? 56 : 80;
 
   return (
     <header

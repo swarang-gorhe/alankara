@@ -47,7 +47,16 @@ export function ChapterMadeByHand() {
         <ol className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {PROCESS_STEPS.map((step, index) => (
             <li key={step.id} data-reveal>
-              <span className="font-body text-[11px] uppercase tracking-[0.28em] text-champagne">
+              <LuxuryImage
+                src={step.image}
+                alt={step.alt}
+                width={step.width}
+                height={step.height}
+                fit="cover"
+                sizes="(max-width: 768px) 100vw, 25vw"
+                className="aspect-[4/5] w-full border border-champagne/15"
+              />
+              <span className="mt-4 block font-body text-[11px] uppercase tracking-[0.28em] text-champagne">
                 {String(index + 1).padStart(2, "0")}
               </span>
               <h3 className="mt-3 font-display text-xl text-maroon">{step.title}</h3>

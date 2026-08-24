@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllProductSlugs } from "@/lib/api/products";
+import { JOURNAL_STORIES } from "@/lib/media";
 import { getSiteUrl } from "@/lib/seo/metadata";
 
 const STATIC_ROUTES = [
@@ -27,6 +28,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   let productEntries: MetadataRoute.Sitemap = [];
+  const journalEntries: MetadataRoute.Sitemap = JOURNAL_STORIES.map((story) => ({
+    url: `${siteUrl}/journal/${story.slug}`,
+    lastModified: now,
+    changeFrequency: "monthly" as const,
+    priority: 0.6,
+  }));
   try {
     const slugs = await getAllProductSlugs();
     productEntries = slugs.map((slug) => ({
@@ -39,5 +46,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // API unavailable at build time — static routes still emitted.
   }
 
-  return [...staticEntries, ...productEntries];
+  return [...staticEntries, ...journalEntries, ...productEntries];
 }

@@ -216,8 +216,12 @@ export function ProductDetailClient({
 
       <section className="px-5 py-20 sm:px-8 md:py-28">
         <div className="mx-auto max-w-7xl">
-          <p className="font-body text-[11px] uppercase tracking-[0.3em] text-olive">Made from</p>
-          <h2 className="mt-4 font-display text-3xl text-maroon md:text-5xl">Materials</h2>
+          <p className="font-body text-[11px] uppercase tracking-[0.3em] text-olive">At the table</p>
+          <h2 className="mt-4 font-display text-3xl text-maroon md:text-5xl">Atelier materials</h2>
+          <p className="mt-4 max-w-xl font-body text-base text-ink-muted">
+            These stills are the cloth, thread, and pearls we work with — not extra angles of this
+            pair. The jewellery photograph stays the same, contained on linen.
+          </p>
           <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {MATERIAL_CHAPTER.map((item) => (
               <figure key={item.asset.id}>
