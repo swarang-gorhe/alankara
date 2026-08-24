@@ -4,7 +4,8 @@ import { createPageMetadata } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Contact",
-  description: "Write to the Alankara atelier — custom colour, shipping, care, and little moments.",
+  description:
+    "Write to the Alankara atelier — call +91 70207 57445, email thealankarastudios@gmail.com, or Instagram @alankara.studios.",
   path: "/contact",
 });
 
