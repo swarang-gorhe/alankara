@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { ProductStill } from "@/components/media";
 import { getProductMedia } from "@/lib/media";
 import { cn } from "@/lib/utils";
@@ -15,10 +15,14 @@ type ProductGalleryProps = {
 
 export function ProductGallery({ name, slug, images }: ProductGalleryProps) {
   const media = getProductMedia(slug, images);
-  const gallery = media.gallery.length > 0 ? media.gallery : [media.main];
+  const gallery = useMemo(() => {
+    const unique = [...new Set(media.gallery.length > 0 ? media.gallery : [media.main])];
+    return unique;
+  }, [media.gallery, media.main]);
   const [index, setIndex] = useState(0);
   const [lightbox, setLightbox] = useState(false);
   const current = gallery[index] ?? media.main;
+  const showThumbs = gallery.length > 1;
 
   const next = useCallback(() => setIndex((i) => (i + 1) % gallery.length), [gallery.length]);
   const prev = useCallback(
@@ -42,37 +46,37 @@ export function ProductGallery({ name, slug, images }: ProductGalleryProps) {
     };
   }, [lightbox, next, prev]);
 
-  const isProductShot = current === media.main;
-
   return (
     <div className="flex flex-col-reverse gap-3 lg:flex-row">
-      <div
-        className="flex gap-2 overflow-x-auto lg:w-20 lg:flex-col lg:overflow-y-auto lg:overflow-x-hidden"
-        role="tablist"
-        aria-label="Product images"
-      >
-        {gallery.map((src, i) => (
-          <button
-            key={`${src}-${i}`}
-            type="button"
-            onClick={() => setIndex(i)}
-            className={cn(
-              "relative h-16 w-16 shrink-0 overflow-hidden border",
-              i === index ? "border-champagne" : "border-sage/30",
-            )}
-            aria-label={`View image ${i + 1}`}
-          >
-            <ProductStill
-              name=""
-              slug={slug}
-              image={src === media.main ? media.main : src}
-              aspect="square"
-              sizes="64px"
-              className="h-full w-full"
-            />
-          </button>
-        ))}
-      </div>
+      {showThumbs && (
+        <div
+          className="flex gap-2 overflow-x-auto lg:w-20 lg:flex-col lg:overflow-y-auto lg:overflow-x-hidden"
+          role="tablist"
+          aria-label="Product images"
+        >
+          {gallery.map((src, i) => (
+            <button
+              key={`${src}-${i}`}
+              type="button"
+              onClick={() => setIndex(i)}
+              className={cn(
+                "relative h-16 w-16 shrink-0 overflow-hidden border",
+                i === index ? "border-champagne" : "border-sage/30",
+              )}
+              aria-label={`View image ${i + 1}`}
+            >
+              <ProductStill
+                name=""
+                slug={slug}
+                image={src}
+                aspect="square"
+                sizes="64px"
+                className="h-full w-full"
+              />
+            </button>
+          ))}
+        </div>
+      )}
 
       <button
         type="button"
@@ -80,26 +84,15 @@ export function ProductGallery({ name, slug, images }: ProductGalleryProps) {
         className="relative min-w-0 flex-1 overflow-hidden border border-champagne/20 bg-ivory text-left"
         aria-label="Open image lightbox"
       >
-        {isProductShot ? (
-          <ProductStill
-            name={name}
-            slug={slug}
-            image={media.main}
-            aspect="portrait"
-            priority
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            className="min-h-[320px] lg:min-h-[min(70vh,640px)]"
-          />
-        ) : (
-          <ProductStill
-            name={name}
-            slug={slug}
-            image={current}
-            aspect="portrait"
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            className="min-h-[320px] lg:min-h-[min(70vh,640px)]"
-          />
-        )}
+        <ProductStill
+          name={name}
+          slug={slug}
+          image={current}
+          aspect="portrait"
+          priority
+          sizes="(max-width: 1024px) 100vw, 50vw"
+          className="min-h-[280px] lg:min-h-[min(62vh,520px)]"
+        />
       </button>
 
       <AnimatePresence>
@@ -123,7 +116,7 @@ export function ProductGallery({ name, slug, images }: ProductGalleryProps) {
               <X />
             </button>
             <div
-              className="relative h-[min(90dvh,900px)] w-full max-w-5xl"
+              className="relative h-[min(90dvh,900px)] w-full max-w-3xl"
               onClick={(e) => e.stopPropagation()}
               onTouchStart={(e) => {
                 const x = e.changedTouches[0]?.clientX ?? 0;

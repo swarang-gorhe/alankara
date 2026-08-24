@@ -33,7 +33,7 @@ export function ChapterJournal() {
 
         <div ref={gridRef} className="mt-14 grid gap-8 md:grid-cols-3">
           {JOURNAL_STORIES.map((story) => (
-            <Link key={story.slug} href="/journal" data-reveal className="group block">
+            <Link key={story.slug} href={`/journal/${story.slug}`} data-reveal className="group block">
               <LuxuryImage
                 src={story.image.src}
                 alt={story.image.alt}

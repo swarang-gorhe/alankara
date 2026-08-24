@@ -45,7 +45,6 @@ export function KeepsakeScene() {
   const jewelleryOpacity = useTransform(scrollYProgress, [0.4, 0.55], [0, 1]);
   const logoOpacity = useTransform(scrollYProgress, [0.5, 0.64], [0, 1]);
   const logoScale = useTransform(scrollYProgress, [0.5, 0.68], [0.72, 1]);
-  const logoRotate = useTransform(scrollYProgress, [0.66, 0.78], [0, 360]);
   const taglineOpacity = useTransform(scrollYProgress, [0.76, 0.86], [0, 1]);
   const taglineY = useTransform(scrollYProgress, [0.76, 0.86], [24, 0]);
   const fabricScale = useTransform(scrollYProgress, [0.84, 1], [0.2, 8]);
@@ -86,6 +85,12 @@ export function KeepsakeScene() {
       aria-label="The arrival — opening the Alankara keepsake"
     >
       <div className="keepsake-scene sticky top-0 flex h-dvh items-center justify-center overflow-hidden">
+        <p className="absolute left-5 top-6 z-10 font-body text-[10px] uppercase tracking-[0.32em] text-olive/80 md:left-8 md:top-8">
+          Chapter 01 — The arrival
+        </p>
+        <p className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 font-body text-[10px] uppercase tracking-[0.28em] text-olive/80">
+          Scroll to open
+        </p>
         <LuxuryImage
           src={MEDIA.linenDrape.src}
           alt=""
@@ -173,15 +178,14 @@ export function KeepsakeScene() {
 
           <motion.div
             className="mt-8 flex flex-col items-center"
-            style={{ opacity: logoOpacity, scale: logoScale, rotate: logoRotate }}
+            style={{ opacity: logoOpacity, scale: logoScale }}
           >
             <AnimatedLogo
-              variant="mark"
-              size={168}
+              variant="full"
+              size={120}
               playEntrance={false}
               showTagline={false}
               priority
-              className="md:[&_img]:scale-110"
             />
           </motion.div>
 
@@ -234,7 +238,10 @@ function ArrivalStill() {
       <div className="absolute inset-0 bg-ivory/50" aria-hidden />
       <GrainOverlay />
       <div className="relative z-10 flex flex-col items-center text-center">
-        <AnimatedLogo variant="mark" size={148} playEntrance={false} priority />
+        <p className="mb-10 font-body text-[10px] uppercase tracking-[0.32em] text-olive">
+          Chapter 01 — The arrival
+        </p>
+        <AnimatedLogo variant="full" size={110} playEntrance={false} priority />
         <p className="mt-8 font-display text-sm tracking-[0.32em] text-maroon">ALANKARA</p>
         <p className="mt-4 font-script text-2xl italic text-warm-brown md:text-4xl">
           Crafted for little moments.

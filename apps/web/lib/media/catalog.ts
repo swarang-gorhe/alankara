@@ -135,74 +135,51 @@ export type ProductMediaSet = {
   detail: string;
 };
 
-const PRODUCT_LIFESTYLE: Record<string, ProductMediaSet> = {
+const PRODUCT_CONTEXT: Record<string, { lifestyle: string; detail: string }> = {
   "kesari-diamond-drops": {
-    main: "/products/kesari-diamond-drops.webp",
-    gallery: [
-      "/products/kesari-diamond-drops.webp",
-      MEDIA.threadBrown.src,
-      MEDIA.yarnMacro.src,
-    ],
     lifestyle: MEDIA.yarnMacro.src,
-    thumbnail: "/products/kesari-diamond-drops.webp",
     detail: MEDIA.creamFolds.src,
   },
   "cocoa-crescent-drops": {
-    main: "/products/cocoa-crescent-drops.webp",
-    gallery: [
-      "/products/cocoa-crescent-drops.webp",
-      MEDIA.threadVintage.src,
-      MEDIA.creamFolds.src,
-    ],
     lifestyle: MEDIA.silkCream.src,
-    thumbnail: "/products/cocoa-crescent-drops.webp",
     detail: MEDIA.threadWhite.src,
   },
   "vanam-textile-studs": {
-    main: "/products/vanam-textile-studs.webp",
-    gallery: [
-      "/products/vanam-textile-studs.webp",
-      MEDIA.pearls.src,
-      MEDIA.creamFolds.src,
-    ],
     lifestyle: MEDIA.creamFolds.src,
-    thumbnail: "/products/vanam-textile-studs.webp",
     detail: MEDIA.pearls.src,
   },
   "raga-heart-studs": {
-    main: "/products/raga-heart-studs.webp",
-    gallery: [
-      "/products/raga-heart-studs.webp",
-      MEDIA.linenDrape.src,
-      MEDIA.threadBrown.src,
-    ],
     lifestyle: MEDIA.linenDrape.src,
-    thumbnail: "/products/raga-heart-studs.webp",
     detail: MEDIA.threadBrown.src,
   },
 };
 
 const FALLBACK_SET = (main: string): ProductMediaSet => ({
   main,
-  gallery: [main, MEDIA.creamFolds.src, MEDIA.threadWhite.src],
+  gallery: [main],
   lifestyle: MEDIA.creamFolds.src,
   thumbnail: main,
   detail: MEDIA.silkCream.src,
 });
 
-/** Same product image URL everywhere — never generate a second version of a piece. */
+/**
+ * Same product image URL everywhere — never generate a second version of a piece,
+ * and never pad the gallery with unrelated stock stills as if they were extra angles.
+ */
 export function getProductMedia(slug: string, images: string[] = []): ProductMediaSet {
-  const known = PRODUCT_LIFESTYLE[slug];
-  const main = images[0] ?? known?.main;
-  if (known) {
-    return {
-      ...known,
-      main: main ?? known.main,
-      thumbnail: main ?? known.thumbnail,
-      gallery: [main ?? known.main, ...known.gallery.filter((src) => src !== (main ?? known.main))],
-    };
+  const context = PRODUCT_CONTEXT[slug];
+  const productImages = images.filter(Boolean);
+  const main = productImages[0] ?? `/products/${slug}.webp`;
+  if (!productImages.length && !context) {
+    return FALLBACK_SET(MEDIA.creamFolds.src);
   }
-  return FALLBACK_SET(main ?? MEDIA.creamFolds.src);
+  return {
+    main,
+    gallery: productImages.length > 0 ? productImages : [main],
+    lifestyle: context?.lifestyle ?? MEDIA.creamFolds.src,
+    thumbnail: main,
+    detail: context?.detail ?? MEDIA.silkCream.src,
+  };
 }
 
 export const JOURNAL_STORIES = [
@@ -211,17 +188,38 @@ export const JOURNAL_STORIES = [
     title: "Cloth that moves with you",
     excerpt: "Why we build jewellery from textile — and why it should feel as light as a well-cut blouse.",
     image: MEDIA.creamFolds,
+    body: [
+      "Most jewellery asks you to hold still. Ours is cut from cloth, so it can do what cloth does: fold, rest, and move with the person wearing it.",
+      "We start with cotton and linen because they already know how to sit against skin. The silhouette is drawn, then backed just enough to keep its shape — never so much that the ear notices the weight. Beads, pearls, and ghungroos are added as notes, not as the whole composition.",
+      "The result is jewellery you can forget until a glance in a window reminds you. That is the point: presence without performance, for the hours that do not wait for a special occasion.",
+    ],
   },
   {
     slug: "little-moments",
     title: "Crafted for little moments",
     excerpt: "Festival mornings, last-minute dinners, Tuesdays that deserve a pair of drops.",
     image: MEDIA.silkCream,
+    body: [
+      "Alankara is named for adornment, not for spectacle. The pieces are made for the morning you want colour with chai, the dinner that was decided at six, the festival that begins before the house is ready.",
+      "Bigger drops at one hundred and sixty rupees carry mustard, cocoa, and geometric bands. Smaller studs at one hundred and thirty sit close — forest, burgundy, a quiet heart of cloth. Same table, two tempos.",
+      "We finish in small batches so a pair can leave the atelier the week it is asked for. Little moments do not wait for a lookbook.",
+    ],
   },
   {
     slug: "the-atelier-table",
     title: "At the atelier table",
     excerpt: "Cutting, folding, layering, finishing — the quiet choreography behind each pair.",
     image: MEDIA.cutting,
+    body: [
+      "The table is ivory linen, wooden spools, and a pair of shears that already know the diamond and the crescent. Cloth is chosen for drape, then cut so each earring has a twin — not a copy, a counterpart.",
+      "Folding gives the piece its body. Thread and lining close the form. Pearls and beads are weighed in pairs so the sway matches. Hooks are hypoallergenic and unobtrusive; the jewellery should not announce its hardware.",
+      "When a pair is ready, it is nested in tissue and a reusable cotton pouch. Photography of the jewellery itself is still arriving. Until then, you will see each piece contained on linen — the same photograph everywhere, never cropped — beside the materials that actually made it.",
+    ],
   },
 ] as const;
+
+export type JournalStory = (typeof JOURNAL_STORIES)[number];
+
+export function getJournalStory(slug: string): JournalStory | undefined {
+  return JOURNAL_STORIES.find((story) => story.slug === slug);
+}

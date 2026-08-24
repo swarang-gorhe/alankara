@@ -11,6 +11,7 @@ export {
   JOURNAL_STORIES,
   MATERIAL_CHAPTER,
   MEDIA,
+  getJournalStory,
   getProductMedia,
 } from "./catalog";
-export type { MediaAsset, ProductMediaSet } from "./catalog";
+export type { JournalStory, MediaAsset, ProductMediaSet } from "./catalog";

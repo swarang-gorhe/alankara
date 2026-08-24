@@ -23,7 +23,7 @@ export function ChapterNewsletter() {
       <FabricTexture id="newsletter" className="opacity-[0.08]" opacity={1} />
 
       <div className="relative z-10 mx-auto max-w-2xl text-center">
-        <p className="font-script text-2xl text-champagne/90">Stay in the loop</p>
+        <p className="font-script text-2xl text-champagne/90">Chapter 10 — Stay close</p>
         <h2 className="mt-4 font-display text-3xl md:text-4xl">
           New drops, studio notes, and slow-fashion stories
         </h2>

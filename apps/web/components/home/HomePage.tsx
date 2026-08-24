@@ -13,7 +13,6 @@ import { ChapterStyle } from "./chapters/ChapterStyle";
 import { UnwrapIntro } from "./intro/UnwrapIntro";
 import { KeepsakeScene } from "./intro/KeepsakeScene";
 import { JournalSpread } from "@/components/journal";
-import { RecommendationRail } from "@/components/shop/RecommendationRail";
 import type { ProductFixture } from "@/lib/fixtures/types";
 
 type HomePageProps = {
@@ -29,7 +28,6 @@ export function HomePage({ products }: HomePageProps) {
         <ChapterMaterial />
         <ChapterMadeByHand />
         <ChapterCollection products={products} />
-        <RecommendationRail surface="home" className="mx-auto max-w-6xl px-4 py-16 sm:px-6" />
         <ChapterDetails />
         <ChapterStyle />
         <ChapterCustomerStories />

@@ -46,19 +46,19 @@ export function ChapterCollection({ products }: ChapterCollectionProps) {
           className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-12 lg:gap-6"
         >
           {pieces[0] && (
-            <div data-reveal className="lg:col-span-7 lg:row-span-2">
-              <EditorialProductCard product={pieces[0]} size="large" layout="feature" />
+            <div data-reveal className="lg:col-span-5">
+              <EditorialProductCard product={pieces[0]} layout="portrait" />
             </div>
           )}
-          <div data-reveal className="hidden lg:col-span-5 lg:block">
+          <div data-reveal className="hidden lg:col-span-7 lg:block">
             <LuxuryImage
               src={MEDIA.yarnMacro.src}
               alt={MEDIA.yarnMacro.alt}
               width={MEDIA.yarnMacro.width}
               height={MEDIA.yarnMacro.height}
               fit="cover"
-              sizes="40vw"
-              className="aspect-[4/3] w-full border border-champagne/15"
+              sizes="(max-width: 1024px) 100vw, 58vw"
+              className="aspect-[16/11] w-full border border-champagne/15"
             />
             <p className="mt-4 max-w-sm font-script text-xl italic text-warm-brown">
               Bigger drops at ₹160. Smaller studs at ₹130. Same cloth, different presence.

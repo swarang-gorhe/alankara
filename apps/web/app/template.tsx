@@ -3,12 +3,18 @@
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
+import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 
 export default function Template({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   if (isAdmin) return children;
+
+  if (prefersReducedMotion) {
+    return <div key={pathname}>{children}</div>;
+  }
 
   return (
     <motion.div

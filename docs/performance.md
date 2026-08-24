@@ -22,13 +22,13 @@ const IntroAtmosphere3D = dynamic(
 
 Pinned scroll distance is shorter on mobile (`280vh` vs `450vh`).
 
-## Homepage hero (Chapter 5)
+## Homepage opening
 
-`Chapter5Hero` is static React + GSAP parallax pearls — no Three.js. The bloom moment lives in the opening sequence (Chapter 3) or the short return-visit bloom.
+The keepsake arrival (`KeepsakeScene`) is CSS/SVG + Framer Motion — no Three.js. Return visits render a still; reduced motion skips the pin.
 
 ## Below-fold homepage chapters
 
-Chapters 6–11 are standard React + GSAP — no additional Three.js bundles. GSAP animations are disabled when `usePrefersReducedMotion()` is true.
+Chapters 02–10 are standard React + GSAP — no additional Three.js bundles. GSAP animations and the linen page wipe are skipped when `usePrefersReducedMotion()` is true.
 
 ## Images
 
@@ -38,7 +38,7 @@ Chapters 6–11 are standard React + GSAP — no additional Three.js bundles. GS
 
 ## Bundle splitting
 
-- `@react-three/fiber`, `@react-three/drei`, and `three` are only imported inside intro atmosphere + legacy `WelcomeHero3D.tsx` (lazy chunks)
+- `@react-three/fiber`, `@react-three/drei`, and `three` are only imported inside intro atmosphere (lazy chunks)
 - Admin routes use a separate layout without Lenis, luxury cursor, or FAQ widget
 
 ## Lighthouse targets (Phase 8 exit criteria)

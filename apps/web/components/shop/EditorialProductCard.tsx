@@ -53,7 +53,11 @@ export function EditorialProductCard({
                 ? "(max-width: 768px) 100vw, 60vw"
                 : "(max-width: 768px) 50vw, 25vw"
             }
-            className={layout === "feature" ? "min-h-[320px] md:min-h-[480px]" : undefined}
+            className={
+              layout === "feature"
+                ? "min-h-[240px] md:min-h-[320px]"
+                : undefined
+            }
           />
 
           <div

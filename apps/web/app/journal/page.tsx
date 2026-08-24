@@ -47,6 +47,12 @@ export default function JournalPage() {
               </p>
               <h2 className="mt-3 font-display text-3xl text-maroon md:text-4xl">{story.title}</h2>
               <p className="mt-4 font-body text-lg leading-relaxed text-ink-muted">{story.excerpt}</p>
+              <Link
+                href={`/journal/${story.slug}`}
+                className="mt-6 inline-block font-body text-sm uppercase tracking-[0.18em] text-maroon underline-offset-4 hover:underline"
+              >
+                Read the note →
+              </Link>
             </div>
           </article>
         ))}

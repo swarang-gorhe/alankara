@@ -12,7 +12,6 @@ export function ChapterStyle() {
   useChapterReveal({ trigger: sectionRef, targets: contentRef, variant: "fade-up" });
 
   const drop = products.find((p) => p.slug === "kesari-diamond-drops");
-  const stud = products.find((p) => p.slug === "vanam-textile-studs");
 
   return (
     <section
@@ -51,7 +50,7 @@ export function ChapterStyle() {
                 name={drop.name}
                 slug={drop.slug}
                 image={drop.images[0]}
-                aspect="portrait"
+                aspect="square"
                 sizes="(max-width: 1024px) 100vw, 33vw"
                 className="border border-champagne/15"
                 hoverZoom
@@ -59,21 +58,20 @@ export function ChapterStyle() {
             )}
             <h3 className="mt-5 font-display text-2xl text-maroon">Statement</h3>
             <p className="mt-2 font-body text-sm leading-relaxed text-ink-muted">
-              Bigger drops in mustard and cocoa — colour that arrives before you do.
+              Bigger drops in mustard and cocoa — colour that arrives before you do. Shown contained
+              on linen until studio photography is ready.
             </p>
           </article>
           <article data-reveal className="lg:mt-6">
-            {stud && (
-              <ProductStill
-                name={stud.name}
-                slug={stud.slug}
-                image={stud.images[0]}
-                aspect="square"
-                sizes="(max-width: 1024px) 100vw, 33vw"
-                className="border border-champagne/15"
-                hoverZoom
-              />
-            )}
+            <LuxuryImage
+              src={MEDIA.pearls.src}
+              alt={MEDIA.pearls.alt}
+              width={MEDIA.pearls.width}
+              height={MEDIA.pearls.height}
+              fit="cover"
+              sizes="(max-width: 1024px) 100vw, 33vw"
+              className="aspect-square w-full border border-champagne/15"
+            />
             <h3 className="mt-5 font-display text-2xl text-maroon">Gifting</h3>
             <p className="mt-2 font-body text-sm leading-relaxed text-ink-muted">
               Tissue, a cotton pouch, a pair that already feels like a keepsake.
