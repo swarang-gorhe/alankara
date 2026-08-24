@@ -27,7 +27,10 @@ const VALID_COLORS = new Set<string>(COLOR_OPTIONS);
 const VALID_COLLECTIONS = new Set(COLLECTION_OPTIONS.map((c) => c.id));
 
 export const CATEGORY_OPTIONS: { slug: CategorySlug; label: string }[] = [
-  { slug: "cloth-earrings", label: "Cloth Earrings" },
+  { slug: "cloth-earrings", label: "Earrings" },
+  { slug: "fabric-necklaces", label: "Necklaces" },
+  { slug: "fabric-bracelets", label: "Bracelets" },
+  { slug: "jewellery-sets", label: "Sets" },
 ];
 
 export const EMPTY_FILTERS: ShopFiltersState = {

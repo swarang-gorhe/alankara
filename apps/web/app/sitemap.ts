@@ -14,6 +14,7 @@ const STATIC_ROUTES = [
   "/account",
   "/cart",
   "/checkout",
+  "/customize",
 ] as const;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

@@ -13,10 +13,10 @@ import { products } from "@/lib/fixtures";
 import { cn } from "@/lib/utils";
 
 const navLinks = [
-  { href: "/shop?collection=featured", label: "Collections" },
   { href: "/shop", label: "Shop" },
+  { href: "/shop?collection=featured", label: "Collections" },
+  { href: "/customize", label: "Customize" },
   { href: "/our-story", label: "Our Story" },
-  { href: "/journal", label: "Journal" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -75,7 +75,7 @@ export function Header({ className }: { className?: string }) {
     ? products.filter((p) => p.name.toLowerCase().includes(query.toLowerCase())).slice(0, 6)
     : [];
 
-  const logoSize = compact ? 48 : 64;
+  const logoSize = compact ? 56 : 76;
 
   return (
     <header
@@ -87,11 +87,19 @@ export function Header({ className }: { className?: string }) {
       <div
         className={cn(
           "mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6",
-          compact ? "h-[3.75rem] md:h-16" : "h-[4.5rem] md:h-[5.25rem]",
+          compact ? "h-16 md:h-[4.25rem]" : "h-[4.75rem] md:h-[5.75rem]",
         )}
       >
-        <Link href="/" className="flex shrink-0 items-center" aria-label="Alankara home">
+        <Link href="/" className="flex shrink-0 items-center gap-3" aria-label="Alankara home">
           <AnimatedLogo variant="full" size={logoSize} playEntrance={false} priority />
+          <span className="hidden min-w-0 flex-col sm:flex">
+            <span className="font-display text-base tracking-[0.16em] text-maroon md:text-lg">
+              ALANKARA
+            </span>
+            <span className="hidden font-script text-sm italic text-warm-brown lg:block">
+              Crafted for little moments.
+            </span>
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-7 xl:flex" aria-label="Main navigation">

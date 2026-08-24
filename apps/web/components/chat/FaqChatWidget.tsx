@@ -1,17 +1,17 @@
 "use client";
 
-import { Send, Sparkles, X } from "lucide-react";
+import { Send, X } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { FlowerMotif } from "@/components/brand/FlowerMotif";
 import { sendFaqChatMessage, AiApiError, type FaqChatMessage } from "@/lib/api/ai";
 import { cn } from "@/lib/utils";
 
 const SUGGESTED_QUESTIONS = [
-  "Find earrings",
-  "Care guide",
-  "Shipping",
-  "Returns",
-  "Customization",
-  "Track order",
+  "Which earrings are lightweight?",
+  "Can I customize a design?",
+  "How do I care for fabric jewellery?",
+  "How long does delivery take?",
+  "How can I choose a fabric?",
 ];
 
 const OUT_OF_KB_MARKERS = ["i'm not sure", "hello@alankara.com"] as const;
@@ -44,7 +44,7 @@ function ChatBubble({ message }: ChatBubbleProps) {
     >
       {isFallback && (
         <p className="mb-1.5 flex items-center gap-1.5 font-body text-[10px] uppercase tracking-widest text-olive">
-          <Sparkles className="h-3 w-3 text-champagne" aria-hidden="true" />
+          <FlowerMotif className="h-3 w-3" />
           Outside our knowledge base
         </p>
       )}
@@ -149,7 +149,7 @@ export function FaqChatWidget() {
         ) : (
           <>
             <span className="flex h-8 w-8 items-center justify-center rounded-full border border-champagne/40 bg-linen">
-              <Sparkles className="h-3.5 w-3.5 text-champagne" aria-hidden="true" />
+              <FlowerMotif className="h-3.5 w-3.5" />
             </span>
             <span className="hidden text-left sm:block">
               <span className="block font-display text-sm leading-none">Concierge</span>
