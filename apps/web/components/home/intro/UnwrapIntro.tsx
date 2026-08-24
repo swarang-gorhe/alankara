@@ -58,7 +58,7 @@ export function UnwrapIntro({ children }: UnwrapIntroProps) {
         <SkipIntroButton
           onSkip={handleSkip}
           visible={skipVisible}
-          className="bottom-6 left-1/2 right-auto -translate-x-1/2"
+          className="bottom-[max(1.25rem,env(safe-area-inset-bottom))] left-1/2 right-auto -translate-x-1/2"
         />
       )}
       {children}

@@ -32,7 +32,7 @@ export function SiteChrome({ children }: SiteChromeProps) {
       />
       <main className="flex-1">{children}</main>
       {!isHome && <Footer />}
-      <FaqChatWidget />
+      {!(isHome && hideChrome) && <FaqChatWidget />}
     </div>
   );
 }
