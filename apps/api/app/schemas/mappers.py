@@ -1,4 +1,6 @@
 from sqlalchemy import inspect as sa_inspect
+
+from app.models.artisan import Artisan
 from app.models.product import Product, ProductVariant
 from app.models.review import Review
 from app.schemas.artisan import ArtisanSchema

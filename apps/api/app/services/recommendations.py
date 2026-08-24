@@ -52,7 +52,11 @@ async def _fallback_products(db: AsyncSession, *, exclude: set[str], limit: int)
         .outerjoin(sold, sold.c.product_id == Product.id)
         .where(Product.status == "published")
         .options(selectinload(Product.variants), selectinload(Product.category))
-        .order_by(func.coalesce(sold.c.qty, 0).desc(), Product.featured.desc(), Product.created_at.desc())
+        .order_by(
+            func.coalesce(sold.c.qty, 0).desc(),
+            Product.featured.desc(),
+            Product.created_at.desc(),
+        )
     )
     products = [p for p in result.scalars().unique().all() if p.id not in exclude]
     if len(products) < limit:
@@ -130,7 +134,8 @@ async def recommend_products(
         score = 0.0
         if product.category_id in seed_categories:
             score += 4.0
-        product_tags = {str(t).lower() for t in (product.tags or []) + (product.ai_generated_tags or [])}
+        tags = (product.tags or []) + (product.ai_generated_tags or [])
+        product_tags = {str(t).lower() for t in tags}
         product_tags.add(product.primary_material.lower())
         overlap = seed_tags & product_tags
         score += 2.0 * len(overlap)
@@ -142,7 +147,9 @@ async def recommend_products(
     ranked.sort(key=lambda pair: pair[0], reverse=True)
     selected = [p for _, p in ranked[:limit]]
     if len(selected) < limit:
-        filler = await _fallback_products(db, exclude=exclude | {p.id for p in selected}, limit=limit)
+        filler = await _fallback_products(
+            db, exclude=exclude | {p.id for p in selected}, limit=limit
+        )
         seen = {p.id for p in selected}
         for product in filler:
             if product.id not in seen:

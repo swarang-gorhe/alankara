@@ -1,5 +1,7 @@
 """Admin API integration tests."""
 
+import pytest
+
 
 def test_dashboard_stats(client, admin_headers):
     response = client.get("/admin/dashboard/stats", headers=admin_headers)

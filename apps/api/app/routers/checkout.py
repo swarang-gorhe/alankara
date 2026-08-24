@@ -23,7 +23,7 @@ from app.services.discount import validate_discount_for_cart
 from app.services.email import send_order_confirmation
 from app.services.events import log_event
 from app.services.payment import get_payment_provider
-from app.services.stock import InsufficientStockError, restore_stock, reserve_stock
+from app.services.stock import InsufficientStockError, reserve_stock, restore_stock
 
 router = APIRouter(tags=["checkout"])
 
@@ -230,7 +230,10 @@ async def checkout(
         order.status = "cancelled"
         order.payment_status = "failed"
         await db.commit()
-        raise HTTPException(status_code=status.HTTP_402_PAYMENT_REQUIRED, detail=payment.get("message"))
+        raise HTTPException(
+            status_code=status.HTTP_402_PAYMENT_REQUIRED,
+            detail=payment.get("message"),
+        )
 
     if payment.get("paymentIntentId"):
         order.payment_intent_id = payment["paymentIntentId"]
@@ -241,7 +244,9 @@ async def checkout(
     if payment.get("status") == "succeeded":
         await db.refresh(order, ["items"])
         await mark_order_paid(db, order)
-        payment["message"] = payment.get("message") or "Payment received. A confirmation is on its way."
+        payment["message"] = (
+            payment.get("message") or "Payment received. A confirmation is on its way."
+        )
 
     await db.refresh(order, ["items"])
     return CheckoutResponse(order=order_to_schema(order), payment=payment)

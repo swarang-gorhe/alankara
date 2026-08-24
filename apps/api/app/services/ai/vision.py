@@ -17,18 +17,19 @@ from app.services.ai.langchain_factory import get_chat_model
 
 logger = logging.getLogger(__name__)
 
-ANALYZE_PROMPT = """You are cataloguing handmade cloth and fabric jewellery for Alankara, a luxury heritage house.
-
-Return STRICT JSON only, no markdown, in this exact shape:
-{
-  "category": "Necklace | Earrings | Bangles | Anklets | Hair Accessories | Brooch | Other",
-  "material": "short material guess, e.g. Silk thread & gold zari",
-  "tags": ["3-6 short lowercase style tags"],
-  "estimatedPriceRange": "e.g. ₹800–₹1,400"
-}
-
-Do not invent a product name or description. Guess only from the photograph.
-"""
+ANALYZE_PROMPT = (
+    "You are cataloguing handmade cloth and fabric jewellery for Alankara, "
+    "a luxury heritage house.\n\n"
+    "Return STRICT JSON only, no markdown, in this exact shape:\n"
+    "{\n"
+    '  "category": "Necklace | Earrings | Bangles | Anklets | '
+    'Hair Accessories | Brooch | Other",\n'
+    '  "material": "short material guess, e.g. Silk thread & gold zari",\n'
+    '  "tags": ["3-6 short lowercase style tags"],\n'
+    '  "estimatedPriceRange": "e.g. ₹800–₹1,400"\n'
+    "}\n\n"
+    "Do not invent a product name or description. Guess only from the photograph.\n"
+)
 
 
 def _parse_json_payload(text: str) -> dict | None:
@@ -69,7 +70,10 @@ async def analyze_product_image(
     if not is_ai_configured():
         return {
             "ok": False,
-            "error": "AI is not configured. Add ANTHROPIC_API_KEY or OPENAI_API_KEY to continue tagging by hand.",
+            "error": (
+                "AI is not configured. Add ANTHROPIC_API_KEY or OPENAI_API_KEY "
+                "to continue tagging by hand."
+            ),
         }
 
     import base64

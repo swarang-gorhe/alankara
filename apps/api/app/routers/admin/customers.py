@@ -57,7 +57,9 @@ class CustomerEventSchema(BaseModel):
 
 
 @router.get("/{email}/events", response_model=list[CustomerEventSchema])
-async def customer_events(email: str, db: DbSession, _admin: AdminUser) -> list[CustomerEventSchema]:
+async def customer_events(
+    email: str, db: DbSession, _admin: AdminUser
+) -> list[CustomerEventSchema]:
     orders = (
         await db.execute(select(Order.user_id).where(Order.email == email))
     ).all()

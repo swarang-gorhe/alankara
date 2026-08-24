@@ -60,7 +60,7 @@ export default function AdminCustomersPage() {
                 <li key={event.id} className="flex justify-between border-b border-admin-border py-2">
                   <span>
                     <span className="font-mono uppercase">{event.eventType}</span>{" "}
-                    {event.productName ?? event.productId}
+                    {event.productName ?? event.id}
                   </span>
                   <span className="text-admin-muted">{new Date(event.createdAt).toLocaleString()}</span>
                 </li>

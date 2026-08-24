@@ -33,7 +33,8 @@ def render_order_email(order: Order, *, heading: str, intro: str) -> tuple[str, 
     subject = f"{heading} — {order.id}"
     html = f"""
     <div style="font-family:Georgia,serif;background:#FAF3E7;padding:32px;color:#2B231C">
-      <p style="letter-spacing:0.2em;text-transform:uppercase;font-size:11px;color:#C9932F">Alankara</p>
+      <p style="letter-spacing:0.2em;text-transform:uppercase;
+        font-size:11px;color:#C9932F">Alankara</p>
       <h1 style="font-weight:normal;color:#6F2317">{heading}</h1>
       <p>{intro}</p>
       <p>Order <strong>{order.id}</strong></p>
@@ -86,7 +87,10 @@ async def send_order_confirmation(order: Order) -> None:
     subject, html = render_order_email(
         order,
         heading="Your order is confirmed",
-        intro="Thank you for choosing Alankara. We have received your order and will begin preparing it with care.",
+        intro=(
+            "Thank you for choosing Alankara. We have received your order "
+            "and will begin preparing it with care."
+        ),
     )
     await send_email(to=order.email, subject=subject, html=html)
 
@@ -94,11 +98,20 @@ async def send_order_confirmation(order: Order) -> None:
 async def send_order_status_email(order: Order) -> None:
     copy = {
         "confirmed": ("Your order is confirmed", "We are preparing your pieces in the atelier."),
-        "processing": ("Your order is being prepared", "The makers have begun assembling your order."),
+        "processing": (
+            "Your order is being prepared",
+            "The makers have begun assembling your order.",
+        ),
         "shipped": ("Your order is on its way", "Your Alankara pieces have left the atelier."),
         "delivered": ("Your order has arrived", "We hope it brings a little moment of joy."),
-        "cancelled": ("Your order was cancelled", "This order has been cancelled. If this is unexpected, write to us."),
-        "paid": ("Payment received", "We have received your payment and will begin preparing your order."),
+        "cancelled": (
+            "Your order was cancelled",
+            "This order has been cancelled. If this is unexpected, write to us.",
+        ),
+        "paid": (
+            "Payment received",
+            "We have received your payment and will begin preparing your order.",
+        ),
     }
     heading, intro = copy.get(
         order.status,

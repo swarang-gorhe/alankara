@@ -24,7 +24,10 @@ def upgrade() -> None:
         "products",
         sa.Column("status", sa.String(length=32), nullable=False, server_default="published"),
     )
-    op.add_column("products", sa.Column("tags", postgresql.JSONB(astext_type=sa.Text()), nullable=True))
+    op.add_column(
+        "products",
+        sa.Column("tags", postgresql.JSONB(astext_type=sa.Text()), nullable=True),
+    )
     op.add_column(
         "products",
         sa.Column("ai_generated_tags", postgresql.JSONB(astext_type=sa.Text()), nullable=True),
@@ -47,7 +50,12 @@ def upgrade() -> None:
     op.add_column("reviews", sa.Column("customer_email", sa.String(length=255), nullable=True))
     op.add_column(
         "reviews",
-        sa.Column("verified_purchase", sa.Boolean(), nullable=False, server_default=sa.text("false")),
+        sa.Column(
+            "verified_purchase",
+            sa.Boolean(),
+            nullable=False,
+            server_default=sa.text("false"),
+        ),
     )
     op.add_column(
         "reviews",
@@ -67,7 +75,12 @@ def upgrade() -> None:
         sa.Column("shipping_amount", sa.Integer(), nullable=False, server_default="0"),
     )
     op.create_index(op.f("ix_orders_payment_status"), "orders", ["payment_status"], unique=False)
-    op.create_index(op.f("ix_orders_payment_intent_id"), "orders", ["payment_intent_id"], unique=False)
+    op.create_index(
+        op.f("ix_orders_payment_intent_id"),
+        "orders",
+        ["payment_intent_id"],
+        unique=False,
+    )
     op.execute(
         "UPDATE orders SET payment_status = 'paid' "
         "WHERE status IN ('paid', 'processing', 'shipped', 'delivered')"

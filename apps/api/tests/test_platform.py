@@ -16,7 +16,10 @@ def test_event_logging_and_recommendations(client):
         cookies={"alankara_cart_session": cookie},
     )
     assert logged.status_code == 200
-    recs = client.get("/recommendations?surface=pdp&product_id=prod-001", cookies={"alankara_cart_session": cookie})
+    recs = client.get(
+        "/recommendations?surface=pdp&product_id=prod-001",
+        cookies={"alankara_cart_session": cookie},
+    )
     assert recs.status_code == 200
     ids = {item["id"] for item in recs.json()["items"]}
     assert "prod-001" not in ids
