@@ -254,17 +254,14 @@ export default function DesignSystemPage() {
 
           <ShowcaseSection
             title="Animated logo"
-            description={`Showcase size ${LOGO_SHOWCASE_SIZE}px (~250% of 40px header). Entrance spin, petal bloom, glow, scroll float, idle pulse, hover spread.`}
+            description={`Circular Alankara lockup at ${LOGO_SHOWCASE_SIZE}px. Soft float on scroll; hover scales slightly.`}
           >
             <div className="paper-card flex flex-col items-center rounded-sm border border-sage/30 px-8 py-16">
-              <AnimatedLogo size={LOGO_SHOWCASE_SIZE} showTagline playEntrance idlePulse />
-              <p className="mt-8 text-center font-body text-xs text-ink-muted">
-                Scroll the page to see subtle float · hover for petal spread · idle rotate every ~20s
-              </p>
+              <AnimatedLogo size={LOGO_SHOWCASE_SIZE} variant="full" playEntrance />
             </div>
             <div className="mt-8 flex items-center gap-4 rounded-sm border border-dashed border-sage/40 bg-cotton/50 p-6">
-              <AnimatedLogo size={40} idlePulse playEntrance={false} />
-              <p className="font-body text-sm text-ink-muted">Header scale (40px) — idle pulse only</p>
+              <AnimatedLogo size={48} variant="full" playEntrance={false} />
+              <p className="font-body text-sm text-ink-muted">Header scale</p>
             </div>
           </ShowcaseSection>
 

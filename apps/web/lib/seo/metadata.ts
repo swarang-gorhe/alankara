@@ -51,7 +51,7 @@ export function createPageMetadata({
   title,
   description = DEFAULT_DESCRIPTION,
   path = "",
-  image = "/brand/logo-mark.png",
+  image = "/brand/logo-full.png",
   noIndex = false,
 }: PageMetadataOptions): Metadata {
   const siteUrl = getSiteUrl();
@@ -92,5 +92,12 @@ export const rootMetadata: Metadata = {
   title: {
     default: `${SITE_NAME} — Crafted for little moments`,
     template: `%s — ${SITE_NAME}`,
+  },
+  icons: {
+    icon: [
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon.ico" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
 };
