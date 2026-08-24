@@ -22,12 +22,16 @@ class TryOnRequest(Base):
     __tablename__ = "try_on_requests"
     __table_args__ = (
         CheckConstraint(
-            "status IN ('new','contacted','customization_discussion','confirmed','order_created','cancelled')",
+            "status IN ("
+            "'new','contacted','customization_discussion',"
+            "'confirmed','order_created','cancelled')",
             name="ck_try_on_requests_status",
         ),
     )
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     customer_id: Mapped[str | None] = mapped_column(String(64), index=True, nullable=True)
     product_id: Mapped[str] = mapped_column(
         ForeignKey("products.id", ondelete="CASCADE"),
@@ -41,7 +45,9 @@ class TryOnRequest(Base):
     message: Mapped[str | None] = mapped_column(Text, nullable=True)
     customization_request: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
     status: Mapped[str] = mapped_column(String(64), default="new", index=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, index=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=_utcnow, index=True
+    )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=_utcnow, onupdate=_utcnow
     )
@@ -60,7 +66,9 @@ class TryOnEvent(Base):
         ),
     )
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, default=uuid.uuid4
+    )
     session_id: Mapped[str] = mapped_column(String(128), index=True)
     product_id: Mapped[str | None] = mapped_column(
         ForeignKey("products.id", ondelete="SET NULL"),
@@ -68,4 +76,6 @@ class TryOnEvent(Base):
         nullable=True,
     )
     event_type: Mapped[str] = mapped_column(String(64), index=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow, index=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), default=_utcnow, index=True
+    )

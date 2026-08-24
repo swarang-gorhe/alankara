@@ -86,7 +86,9 @@ def upgrade() -> None:
         ),
         sa.ForeignKeyConstraint(["product_id"], ["products.id"], ondelete="CASCADE"),
         sa.CheckConstraint(
-            "status IN ('new','contacted','customization_discussion','confirmed','order_created','cancelled')",
+            "status IN ("
+            "'new','contacted','customization_discussion',"
+            "'confirmed','order_created','cancelled')",
             name="ck_try_on_requests_status",
         ),
     )
