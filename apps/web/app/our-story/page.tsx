@@ -82,11 +82,11 @@ export default function OurStoryPage() {
       <section className="border-t border-champagne/10 bg-ivory/80">
         <div className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 md:py-24">
           <Image
-            src="/brand/logo-mark.png"
-            alt=""
-            width={80}
-            height={80}
-            className="mx-auto opacity-80"
+            src="/brand/logo-full.png"
+            alt="Alankara"
+            width={160}
+            height={160}
+            className="mx-auto"
           />
           <p className="mt-8 font-script text-lg italic text-champagne md:text-xl">
             Meet the voices behind the thread

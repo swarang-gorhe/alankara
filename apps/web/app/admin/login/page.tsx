@@ -30,7 +30,7 @@ export default function AdminLoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-admin-sidebar px-4">
       <div className="w-full max-w-md rounded-lg border border-admin-sidebar-border bg-[#231c18] p-8">
         <div className="flex flex-col items-center text-center">
-          <AnimatedLogo size={48} className="text-admin-accent" />
+          <AnimatedLogo size={64} variant="full" playEntrance={false} />
           <h1 className="mt-4 font-display text-2xl text-admin-sidebar-text">Atelier Console</h1>
           <p className="mt-1 font-mono text-xs uppercase tracking-widest text-admin-sidebar-muted">
             Staff access only

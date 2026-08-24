@@ -42,8 +42,6 @@ export function KeepsakeScene() {
   const jewelleryOpacity = useTransform(scrollYProgress, [0.32, 0.48], [0, 1]);
   const logoOpacity = useTransform(scrollYProgress, [0.5, 0.64], [0, 1]);
   const logoScale = useTransform(scrollYProgress, [0.5, 0.68], [0.82, 1]);
-  const taglineOpacity = useTransform(scrollYProgress, [0.66, 0.78], [0, 1]);
-  const taglineY = useTransform(scrollYProgress, [0.66, 0.78], [16, 0]);
   const fabricScale = useTransform(scrollYProgress, [0.84, 1], [0.18, 9]);
   const fabricOpacity = useTransform(scrollYProgress, [0.84, 0.94, 1], [0, 1, 1]);
   const boxScale = useTransform(scrollYProgress, [0.86, 1], [1, 0.9]);
@@ -184,17 +182,9 @@ export function KeepsakeScene() {
               className="absolute inset-0 z-20 flex items-center justify-center"
               style={{ opacity: logoOpacity, scale: logoScale }}
             >
-              <AnimatedLogo variant="mark" size={96} playEntrance={false} priority className="md:hidden" />
-              <AnimatedLogo variant="full" size={88} playEntrance={false} priority className="hidden md:flex" />
+              <AnimatedLogo variant="full" size={148} playEntrance={false} priority />
             </motion.div>
           </div>
-
-          <motion.p
-            className="mt-8 max-w-[16rem] text-center font-script text-xl italic text-maroon md:mt-10 md:max-w-md md:text-4xl"
-            style={{ opacity: taglineOpacity, y: taglineY }}
-          >
-            Crafted for little moments.
-          </motion.p>
         </motion.div>
 
         <motion.div
@@ -252,12 +242,8 @@ function ArrivalStill() {
         <p className="mb-10 font-body text-[10px] uppercase tracking-[0.32em] text-olive">
           Chapter 01 — The arrival
         </p>
-        <AnimatedLogo variant="mark" size={120} playEntrance={false} priority className="md:hidden" />
-        <AnimatedLogo variant="full" size={110} playEntrance={false} priority className="hidden md:flex" />
-        <p className="mt-8 font-display text-sm tracking-[0.32em] text-maroon">ALANKARA</p>
-        <p className="mt-4 font-script text-2xl italic text-warm-brown md:text-4xl">
-          Crafted for little moments.
-        </p>
+        <AnimatedLogo variant="full" size={160} playEntrance={false} priority />
+        <p className="mt-6 font-display text-sm tracking-[0.32em] text-maroon">Welcome back</p>
       </div>
     </section>
   );

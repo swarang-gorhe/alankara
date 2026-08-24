@@ -33,7 +33,7 @@ export function ChapterFooter() {
       <div className="relative mx-auto max-w-6xl px-6 py-16">
         <div className="flex flex-col items-center gap-10 md:flex-row md:justify-between">
           <div className="flex flex-col items-center gap-4 md:items-start">
-            <AnimatedLogo size={96} idlePulse showTagline />
+            <AnimatedLogo variant="full" size={140} idlePulse playEntrance={false} />
           </div>
 
           <nav className="flex flex-wrap justify-center gap-8" aria-label="Footer navigation">

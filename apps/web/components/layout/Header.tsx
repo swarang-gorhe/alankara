@@ -75,7 +75,7 @@ export function Header({ className }: { className?: string }) {
     ? products.filter((p) => p.name.toLowerCase().includes(query.toLowerCase())).slice(0, 6)
     : [];
 
-  const logoSize = compact ? 56 : 80;
+  const logoSize = compact ? 48 : 64;
 
   return (
     <header
@@ -90,16 +90,8 @@ export function Header({ className }: { className?: string }) {
           compact ? "h-[3.75rem] md:h-16" : "h-[4.5rem] md:h-[5.25rem]",
         )}
       >
-        <Link href="/" className="flex shrink-0 items-center gap-3" aria-label="Alankara home">
-          <AnimatedLogo size={logoSize} playEntrance={false} priority />
-          <span className="hidden flex-col sm:flex">
-            <span className="font-display text-base tracking-[0.18em] text-maroon md:text-lg">
-              ALANKARA
-            </span>
-            <span className="hidden font-script text-sm italic text-warm-brown md:block">
-              Crafted for little moments.
-            </span>
-          </span>
+        <Link href="/" className="flex shrink-0 items-center" aria-label="Alankara home">
+          <AnimatedLogo variant="full" size={logoSize} playEntrance={false} priority />
         </Link>
 
         <nav className="hidden items-center gap-7 xl:flex" aria-label="Main navigation">

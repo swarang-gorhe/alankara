@@ -37,7 +37,7 @@ export function AdminShell({ children, onLogout }: AdminShellProps) {
       <aside className="flex w-60 shrink-0 flex-col border-r border-admin-sidebar-border bg-admin-sidebar text-admin-sidebar-text">
         <div className="border-b border-admin-sidebar-border px-5 py-6">
           <Link href={`${base}`} className="flex items-center gap-3">
-            <AnimatedLogo size={28} className="text-admin-accent" />
+            <AnimatedLogo size={28} variant="mark" playEntrance={false} />
             <div>
               <p className="font-display text-sm tracking-wide text-admin-sidebar-text">Atelier</p>
               <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-admin-sidebar-muted">
