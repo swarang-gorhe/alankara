@@ -76,7 +76,12 @@ async def _get_cart_by_user(db: AsyncSession, user_id: str) -> Cart | None:
 
 
 async def _reload_cart(db: AsyncSession, cart_id: str) -> Cart:
-    """Re-fetch a cart with the full relationship graph (async-safe)."""
+    """Re-fetch a cart with the full relationship graph (async-safe).
+
+    populate_existing=True is required because the session uses
+    expire_on_commit=False and would otherwise return a stale Cart
+    (including deleted items) from the identity map.
+    """
     stmt = (
         select(Cart)
         .where(Cart.id == cart_id)
@@ -86,6 +91,7 @@ async def _reload_cart(db: AsyncSession, cart_id: str) -> Cart:
             .selectinload(ProductVariant.product)
             .selectinload(Product.category),
         )
+        .execution_options(populate_existing=True)
     )
     result = await db.execute(stmt)
     return result.scalar_one()
