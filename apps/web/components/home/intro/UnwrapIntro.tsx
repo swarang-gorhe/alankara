@@ -50,8 +50,9 @@ export function UnwrapIntro({ children }: UnwrapIntroProps) {
       setPhase("bloom");
       setShowOverlay(true);
     } else {
+      // First visit uses the on-page keepsake scroll, not a timed overlay.
       setPhase("intro");
-      setShowOverlay(true);
+      setShowOverlay(false);
     }
 
     const skipTimer = window.setTimeout(() => setSkipVisible(true), SKIP_INTRO_DELAY_MS);
@@ -64,7 +65,7 @@ export function UnwrapIntro({ children }: UnwrapIntroProps) {
       setShowOverlay(false);
       completeIntro();
       if (skipped) {
-        window.scrollTo({ top: 0, behavior: "auto" });
+        document.getElementById("crafted-moments")?.scrollIntoView({ behavior: "auto" });
       }
     },
     [completeIntro],
@@ -78,13 +79,13 @@ export function UnwrapIntro({ children }: UnwrapIntroProps) {
   return (
     <>
       {showIntroOverlay && (
-        <>
-          <RefinedIntroOverlay
-            compact={isReturnVisit}
-            onComplete={() => finishIntro(false)}
-          />
-          <SkipIntroButton onSkip={handleSkip} visible={skipVisible} />
-        </>
+        <RefinedIntroOverlay
+          compact={isReturnVisit}
+          onComplete={() => finishIntro(false)}
+        />
+      )}
+      {(phase === "intro" || phase === "bloom") && !prefersReducedMotion && (
+        <SkipIntroButton onSkip={handleSkip} visible={skipVisible} className="bottom-6 left-1/2 right-auto -translate-x-1/2" />
       )}
 
       {reducedFade && (

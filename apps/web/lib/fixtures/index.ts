@@ -35,6 +35,10 @@ export {
   MATERIAL_LABELS,
   SHOP_STYLE_FILTERS,
   STYLE_LABELS,
+  SHOP_MATERIAL_FILTERS,
+  COLOR_OPTIONS,
+  COLLECTION_OPTIONS,
+  EMPTY_SHOP_FILTERS,
 } from "./shop";
 export type { EarringSize } from "./shop";
 

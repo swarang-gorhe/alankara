@@ -44,7 +44,9 @@ export function ChapterCustomerStories() {
       <div className="mx-auto max-w-6xl">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <p className="font-body text-xs uppercase tracking-[0.3em] text-olive">Customer stories</p>
+            <p className="font-body text-xs uppercase tracking-[0.3em] text-olive">
+              Chapter 08 — Customer stories
+            </p>
             <h2 className="mt-5 font-display text-4xl text-maroon md:text-5xl">Worn &amp; loved</h2>
           </div>
           <Button variant="ghost" size="sm" asChild>

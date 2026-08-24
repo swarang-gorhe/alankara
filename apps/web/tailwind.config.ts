@@ -109,8 +109,12 @@ const config: Config = {
         "3xl": ["1.875rem", { lineHeight: "2.25rem", letterSpacing: "-0.01em" }],
         "4xl": ["2.25rem", { lineHeight: "2.5rem", letterSpacing: "-0.02em" }],
         display: [
-          "clamp(2.5rem, 5vw + 1rem, 4.5rem)",
-          { lineHeight: "1.1", letterSpacing: "-0.03em" },
+          "clamp(2.75rem, 6vw + 1rem, 5.5rem)",
+          { lineHeight: "1.05", letterSpacing: "-0.03em" },
+        ],
+        "display-xl": [
+          "clamp(3.25rem, 9vw + 1rem, 8.5rem)",
+          { lineHeight: "0.95", letterSpacing: "-0.04em" },
         ],
       },
       borderRadius: {

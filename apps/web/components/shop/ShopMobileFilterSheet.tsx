@@ -7,7 +7,7 @@ import { Chip } from "@/components/ui/chip";
 import { EARRING_SIZES, PRICE_RANGES, SHOP_STYLE_FILTERS, STYLE_LABELS } from "@/lib/fixtures";
 import type { CategorySlug, ShopFiltersState, StyleTag } from "@/lib/fixtures/types";
 import { cn } from "@/lib/utils";
-import { CATEGORY_OPTIONS, toggleItem } from "./shop-filter-utils";
+import { CATEGORY_OPTIONS, EMPTY_FILTERS, toggleItem } from "./shop-filter-utils";
 
 const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -49,7 +49,7 @@ export function ShopMobileFilterSheet({
   };
 
   const clearAll = () => {
-    onChange({ categories: [], styles: [], sizes: [], priceRange: null });
+    onChange(EMPTY_FILTERS);
   };
 
   const countLabel =

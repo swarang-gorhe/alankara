@@ -1,35 +1,40 @@
 "use client";
 
-import { Chapter5Hero } from "./chapters/Chapter5Hero";
-import { ChapterBrandStatement } from "./chapters/ChapterBrandStatement";
-import { ChapterCrafted } from "./chapters/ChapterCrafted";
-import { ChapterCollections } from "./chapters/ChapterCollections";
+import { ChapterCollection } from "./chapters/ChapterCollection";
 import { ChapterCustomerStories } from "./chapters/ChapterCustomerStories";
+import { ChapterDetails } from "./chapters/ChapterDetails";
 import { ChapterFooter } from "./chapters/ChapterFooter";
-import { ChapterMeetMakers } from "./chapters/ChapterMeetMakers";
+import { ChapterJournal } from "./chapters/ChapterJournal";
+import { ChapterMadeByHand } from "./chapters/ChapterMadeByHand";
+import { ChapterMaterial } from "./chapters/ChapterMaterial";
+import { ChapterMoments } from "./chapters/ChapterMoments";
 import { ChapterNewsletter } from "./chapters/ChapterNewsletter";
-import { ChapterThreadToTreasure } from "./chapters/ChapterThreadToTreasure";
-import { FeatureBar } from "./FeatureBar";
+import { ChapterStyle } from "./chapters/ChapterStyle";
 import { UnwrapIntro } from "./intro/UnwrapIntro";
-import { JournalSpread, TornDivider } from "@/components/journal";
+import { KeepsakeScene } from "./intro/KeepsakeScene";
+import { JournalSpread } from "@/components/journal";
 import { RecommendationRail } from "@/components/shop/RecommendationRail";
+import type { ProductFixture } from "@/lib/fixtures/types";
 
-/** Pitch homepage — seven sections, restrained motion */
-export function HomePage() {
+type HomePageProps = {
+  products: ProductFixture[];
+};
+
+export function HomePage({ products }: HomePageProps) {
   return (
     <UnwrapIntro>
       <JournalSpread>
-        <Chapter5Hero />
-        <FeatureBar />
-        <ChapterBrandStatement />
-        <TornDivider className="mx-auto max-w-6xl" />
-        <ChapterCrafted />
-      <ChapterThreadToTreasure />
-      <ChapterMeetMakers />
-      <ChapterCollections />
-      <RecommendationRail surface="home" className="mx-auto max-w-6xl px-4 py-16 sm:px-6" />
-      <ChapterCustomerStories />
-      <ChapterNewsletter />
+        <KeepsakeScene />
+        <ChapterMoments />
+        <ChapterMaterial />
+        <ChapterMadeByHand />
+        <ChapterCollection products={products} />
+        <RecommendationRail surface="home" className="mx-auto max-w-6xl px-4 py-16 sm:px-6" />
+        <ChapterDetails />
+        <ChapterStyle />
+        <ChapterCustomerStories />
+        <ChapterJournal />
+        <ChapterNewsletter />
         <ChapterFooter />
       </JournalSpread>
     </UnwrapIntro>

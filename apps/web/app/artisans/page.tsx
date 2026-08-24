@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import { LuxuryImage } from "@/components/media";
+import { MEDIA } from "@/lib/media";
 import { SectionDivider } from "@/components/ui/SectionDivider";
 import { Button } from "@/components/ui/button";
 import { artisans } from "@/lib/fixtures";
 import { createPageMetadata } from "@/lib/seo/metadata";
 
 const artisanImages = [
-  "/editorial/studio-morning.webp",
-  "/editorial/pearl-threading.webp",
-  "/editorial/stitch-detail.webp",
-  "/editorial/ghungroo-detail.webp",
+  MEDIA.cutting,
+  MEDIA.threadWhite,
+  MEDIA.creamFolds,
+  MEDIA.yarnMacro,
+  MEDIA.threadVintage,
 ];
 
 export const metadata: Metadata = createPageMetadata({
@@ -36,15 +38,16 @@ export default function ArtisansPage() {
             </p>
           </div>
           <div className="relative min-h-[280px] lg:min-h-[360px]">
-            <Image
-              src="/editorial/studio-morning.webp"
-              alt="Sunlit studio table with scissors, thread, and linen"
-              fill
-              className="object-cover"
+            <LuxuryImage
+              src={MEDIA.cutting.src}
+              alt={MEDIA.cutting.alt}
+              width={MEDIA.cutting.width}
+              height={MEDIA.cutting.height}
+              fit="cover"
               sizes="(max-width: 1024px) 100vw, 50vw"
               priority
+              className="absolute inset-0 h-full w-full"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-ink/20 to-transparent" />
           </div>
         </div>
       </section>
@@ -57,20 +60,16 @@ export default function ArtisansPage() {
               className="grid items-center gap-10 md:grid-cols-12 md:gap-14"
             >
               <div className={`md:col-span-5 ${index % 2 === 1 ? "md:order-2" : ""}`}>
-                <div className="relative aspect-[4/5] overflow-hidden rounded-sm border border-sage/25 bg-ivory shadow-luxury">
-                  <Image
-                    src={artisanImages[index % artisanImages.length]}
-                    alt={`Craft detail by ${artisan.name}`}
-                    fill
-                    className="object-cover"
+                <div className="relative aspect-[4/5] overflow-hidden border border-sage/25 bg-ivory">
+                  <LuxuryImage
+                    src={artisanImages[index % artisanImages.length].src}
+                    alt={artisanImages[index % artisanImages.length].alt}
+                    width={artisanImages[index % artisanImages.length].width}
+                    height={artisanImages[index % artisanImages.length].height}
+                    fit="cover"
                     sizes="(max-width: 768px) 100vw, 40vw"
+                    className="absolute inset-0 h-full w-full"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-maroon/30 via-transparent to-transparent" />
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <p className="font-body text-[10px] uppercase tracking-widest text-ivory/90">
-                      Studio detail
-                    </p>
-                  </div>
                 </div>
               </div>
 

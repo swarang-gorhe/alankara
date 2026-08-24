@@ -7,7 +7,7 @@ import type { ShopFiltersState } from "@/lib/fixtures/types";
 import { cn } from "@/lib/utils";
 import { ShopActiveFilterChips } from "./ShopActiveFilterChips";
 import { ShopMobileFilterSheet } from "./ShopMobileFilterSheet";
-import { CATEGORY_OPTIONS, toggleItem } from "./shop-filter-utils";
+import { EMPTY_FILTERS, CATEGORY_OPTIONS, toggleItem } from "./shop-filter-utils";
 
 const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -35,7 +35,7 @@ export function ShopChipFilters({
   };
 
   const clearAll = () => {
-    onChange({ categories: [], styles: [], sizes: [], priceRange: null });
+    onChange(EMPTY_FILTERS);
   };
 
   const hasActive =

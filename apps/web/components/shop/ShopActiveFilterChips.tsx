@@ -2,11 +2,11 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
-import { STYLE_LABELS, PRICE_RANGES } from "@/lib/fixtures";
-import type { CategorySlug, ShopFiltersState, StyleTag } from "@/lib/fixtures/types";
+import { STYLE_LABELS, PRICE_RANGES, MATERIAL_LABELS } from "@/lib/fixtures";
+import type { CategorySlug, MaterialSlug, ShopFiltersState, StyleTag } from "@/lib/fixtures/types";
 import type { EarringSize } from "@/lib/fixtures/shop";
 import { cn } from "@/lib/utils";
-import { CATEGORY_OPTIONS } from "./shop-filter-utils";
+import { activeFilterCount, CATEGORY_OPTIONS } from "./shop-filter-utils";
 
 const LUXURY_EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -27,11 +27,7 @@ export function ShopActiveFilterChips({
   onClearAll,
   className,
 }: ShopActiveFilterChipsProps) {
-  const activeCount =
-    filters.categories.length +
-    filters.styles.length +
-    filters.sizes.length +
-    (filters.priceRange ? 1 : 0);
+  const activeCount = activeFilterCount(filters);
 
   if (activeCount === 0) return null;
 
@@ -141,6 +137,50 @@ export function ShopActiveFilterChips({
               aria-label={`Remove ${STYLE_LABELS[style]} filter`}
             >
               <span>{STYLE_LABELS[style]}</span>
+              <X className="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
+            </motion.button>
+          ))}
+          {(filters.materials ?? []).map((material: MaterialSlug) => (
+            <motion.button
+              key={`mat-${material}`}
+              layout
+              type="button"
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.85 }}
+              transition={{ duration: 0.25, ease: LUXURY_EASE }}
+              onClick={() =>
+                onChange({
+                  ...filters,
+                  materials: (filters.materials ?? []).filter((m) => m !== material),
+                })
+              }
+              className="inline-flex h-9 items-center gap-1.5 rounded-full border border-olive/30 bg-olive/8 pl-3.5 pr-2.5 font-body text-xs text-olive"
+              aria-label={`Remove ${MATERIAL_LABELS[material]} filter`}
+            >
+              <span>{MATERIAL_LABELS[material]}</span>
+              <X className="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
+            </motion.button>
+          ))}
+          {(filters.colors ?? []).map((color) => (
+            <motion.button
+              key={`color-${color}`}
+              layout
+              type="button"
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.85 }}
+              transition={{ duration: 0.25, ease: LUXURY_EASE }}
+              onClick={() =>
+                onChange({
+                  ...filters,
+                  colors: (filters.colors ?? []).filter((c) => c !== color),
+                })
+              }
+              className="inline-flex h-9 items-center gap-1.5 rounded-full border border-champagne/50 bg-champagne/10 pl-3.5 pr-2.5 font-body text-xs text-warm-brown"
+              aria-label={`Remove ${color} filter`}
+            >
+              <span>{color}</span>
               <X className="h-3.5 w-3.5 shrink-0 opacity-70" aria-hidden />
             </motion.button>
           ))}

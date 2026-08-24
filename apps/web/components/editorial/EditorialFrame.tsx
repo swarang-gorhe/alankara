@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import { LuxuryImage } from "@/components/media";
 import { editorialAspectRatio } from "@/lib/editorial/story-images";
 import { cn } from "@/lib/utils";
 
@@ -14,7 +14,7 @@ type EditorialFrameProps = {
   sizes?: string;
   width?: number;
   height?: number;
-  /** Warm vignette for text legibility */
+  fit?: "cover" | "contain";
   vignette?: "none" | "soft" | "bottom";
 };
 
@@ -28,7 +28,8 @@ export function EditorialFrame({
   sizes = "(max-width: 768px) 100vw, 50vw",
   width,
   height,
-  vignette = "soft",
+  fit = "cover",
+  vignette = "none",
 }: EditorialFrameProps) {
   const hasIntrinsicSize = Boolean(width && height);
   const aspectRatio = hasIntrinsicSize ? editorialAspectRatio(width!, height!) : undefined;
@@ -36,48 +37,43 @@ export function EditorialFrame({
   return (
     <figure
       className={cn(
-        "group relative overflow-hidden rounded-sm border border-champagne/20 bg-linen shadow-[0_12px_40px_rgba(43,35,28,0.08)]",
+        "group relative min-w-0 overflow-hidden border border-champagne/15 bg-linen",
         className,
       )}
       style={aspectRatio ? { aspectRatio } : undefined}
     >
-      <div className={cn("relative w-full", imageClassName)} style={aspectRatio ? { aspectRatio } : undefined}>
-        {hasIntrinsicSize ? (
-          <Image
-            src={src}
-            alt={alt}
-            width={width}
-            height={height}
-            priority={priority}
-            className="h-full w-full object-cover transition-transform duration-slow ease-luxury group-hover:scale-[1.02]"
-            sizes={sizes}
-          />
-        ) : (
-          <Image
-            src={src}
-            alt={alt}
-            fill
-            priority={priority}
-            className="object-cover transition-transform duration-slow ease-luxury group-hover:scale-[1.03]"
-            sizes={sizes}
-          />
-        )}
+      <div
+        className={cn("relative h-full w-full min-h-0", imageClassName)}
+        style={aspectRatio ? { aspectRatio } : { minHeight: "100%" }}
+      >
+        <LuxuryImage
+          src={src}
+          alt={alt}
+          width={width}
+          height={height}
+          fill={!hasIntrinsicSize}
+          fit={fit}
+          priority={priority}
+          sizes={sizes}
+          className="h-full w-full"
+          imageClassName="transition-transform duration-slow ease-luxury group-hover:scale-[1.03]"
+        />
         {vignette === "soft" && (
           <div
-            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/25 via-transparent to-ivory/10"
-            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/20 via-transparent to-ivory/5"
+            aria-hidden
           />
         )}
         {vignette === "bottom" && (
           <div
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink/50 to-transparent"
-            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-ink/45 to-transparent"
+            aria-hidden
           />
         )}
       </div>
       {caption && (
-        <figcaption className="absolute bottom-0 left-0 right-0 px-4 py-3 md:px-5 md:py-4">
-          <p className="font-display text-sm text-ivory drop-shadow-sm md:text-base">{caption}</p>
+        <figcaption className="px-1 py-3">
+          <p className="font-body text-[11px] uppercase tracking-[0.2em] text-olive">{caption}</p>
         </figcaption>
       )}
     </figure>

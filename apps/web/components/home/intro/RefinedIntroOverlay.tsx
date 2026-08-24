@@ -116,12 +116,12 @@ export function RefinedIntroOverlay({
           transition={{ duration: 0.6, ease: LUXURY_EASE }}
         >
           <AnimatedLogo
-            variant="full"
-            size={compact ? 96 : 112}
+            variant="mark"
+            size={compact ? 160 : 200}
             playEntrance={!compact && phase !== "gradient"}
             showTagline={false}
             priority
-            className="min-w-[220px] md:min-w-[260px]"
+            className="min-w-[180px] md:min-w-[240px]"
           />
         </motion.div>
 
