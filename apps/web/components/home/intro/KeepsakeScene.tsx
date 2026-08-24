@@ -33,11 +33,11 @@ export function KeepsakeScene() {
     offset: ["start start", "end end"],
   });
 
-  const ribbonX = useTransform(scrollYProgress, [0.06, 0.22], [0, 22]);
-  const ribbonRotate = useTransform(scrollYProgress, [0.06, 0.22], [0, -12]);
-  const ribbonOpacity = useTransform(scrollYProgress, [0.16, 0.3], [1, 0]);
-  const lidRotate = useTransform(scrollYProgress, [0.22, 0.44], [0, -105]);
-  const lidY = useTransform(scrollYProgress, [0.22, 0.44], [0, -8]);
+  const ribbonY = useTransform(scrollYProgress, [0.06, 0.22], [0, -36]);
+  const ribbonOpacity = useTransform(scrollYProgress, [0.14, 0.28], [1, 0]);
+  // Start slightly tilted so the closed tin already has a wall; then hinge open.
+  const lidRotate = useTransform(scrollYProgress, [0, 0.2, 0.46], [16, 16, -108]);
+  const lidY = useTransform(scrollYProgress, [0.2, 0.46], [0, -10]);
   const innerLight = useTransform(scrollYProgress, [0.34, 0.52], [0, 1]);
   const jewelleryOpacity = useTransform(scrollYProgress, [0.32, 0.48], [0, 1]);
   const logoOpacity = useTransform(scrollYProgress, [0.5, 0.64], [0, 1]);
@@ -114,86 +114,72 @@ export function KeepsakeScene() {
         >
           <div className="keepsake-box relative aspect-square w-full">
             <div
-              className="absolute left-1/2 top-[82%] h-8 w-[62%] -translate-x-1/2 rounded-[100%] bg-ink/25 blur-2xl md:h-10"
+              className="absolute left-1/2 top-[84%] h-9 w-[58%] -translate-x-1/2 rounded-[100%] bg-ink/30 blur-2xl"
               aria-hidden
             />
 
-            {/* Side wall — gives the disc a tin/box thickness */}
+            {/* Cylinder wall sitting just below the lid */}
             <div
-              className="absolute inset-[9%] translate-y-[5%] rounded-full bg-gradient-to-b from-[#c4a06a] to-[#9a7548] shadow-luxury"
+              className="absolute inset-[10%] translate-y-[7%] rounded-full bg-gradient-to-b from-[#d4b07a] via-[#b88950] to-[#7a5428] shadow-luxury"
+              aria-hidden
+            />
+            <div
+              className="absolute inset-x-[18%] bottom-[6%] h-[12%] rounded-[100%] bg-ink/20 blur-md"
               aria-hidden
             />
 
-            {/* Box well */}
-            <div className="absolute inset-[11%] overflow-hidden rounded-full border border-champagne/25 bg-gradient-to-b from-[#6b2418] to-[#3a1418]">
-              <LuxuryImage
-                src={MEDIA.creamFolds.src}
-                alt=""
-                width={MEDIA.creamFolds.width}
-                height={MEDIA.creamFolds.height}
-                fit="cover"
-                sizes="40vw"
-                className="absolute inset-0 opacity-25"
-              />
+            {/* Velvet well */}
+            <div className="absolute inset-[13%] overflow-hidden rounded-full bg-gradient-to-b from-[#7a2a1c] to-[#2f1014] ring-1 ring-champagne/30">
               <motion.div
-                className="absolute inset-[18%] flex items-center justify-center"
+                className="absolute inset-[16%] flex items-center justify-center"
                 style={{ opacity: jewelleryOpacity }}
               >
                 <LuxuryImage
                   src="/products/kesari-diamond-drops.webp"
                   alt=""
-                  width={1024}
-                  height={1024}
+                  fill
                   fit="contain"
-                  sizes="30vw"
-                  className="h-full w-full bg-transparent"
-                  imageClassName="object-contain p-[8%]"
+                  sizes="28vw"
+                  className="bg-transparent"
+                  imageClassName="object-contain p-[12%]"
                 />
               </motion.div>
             </div>
 
-            {/* Lid — perspective lives on this node so it actually hinges */}
+            {/* Cloth lid — slightly tilted at rest so the tin has a wall */}
             <motion.div
-              className="absolute inset-[8%] origin-[50%_8%] overflow-hidden rounded-full border border-[#e8d4b0] shadow-luxury-lg"
+              className="absolute inset-[8%] overflow-hidden rounded-full border-[3px] border-[#f0ddc0] shadow-luxury-lg"
               style={{
                 rotateX: lidRotate,
                 y: lidY,
-                transformPerspective: 1100,
-                transformOrigin: "50% 8%",
+                transformPerspective: 900,
+                transformOrigin: "50% 10%",
                 backfaceVisibility: "hidden",
               }}
             >
               <LuxuryImage
-                src={MEDIA.creamFolds.src}
+                src={MEDIA.silkCream.src}
                 alt=""
-                width={MEDIA.creamFolds.width}
-                height={MEDIA.creamFolds.height}
+                fill
                 fit="cover"
-                sizes="50vw"
+                priority
+                sizes="70vw"
                 className="absolute inset-0"
-                imageClassName="scale-105"
               />
-              <div className="linen-grain absolute inset-0 opacity-70 mix-blend-multiply" />
-              <div className="absolute inset-0 bg-gradient-to-br from-[#faf3e7]/50 via-transparent to-[#c9a56a]/35" />
-              <div className="absolute inset-[6%] rounded-full border border-dashed border-maroon/20" />
-              <div className="absolute left-1/2 top-[16%] h-2.5 w-9 -translate-x-1/2 rounded-full bg-maroon/55 shadow-sm" />
+              <div className="linen-grain absolute inset-0 opacity-50 mix-blend-multiply" />
+              <div className="absolute inset-[7%] rounded-full border border-dashed border-maroon/25" />
+              <div className="absolute inset-x-0 bottom-0 h-[22%] bg-gradient-to-t from-[#8a6234]/55 to-transparent" />
             </motion.div>
 
-            {/* Ribbon wrap — stays on the box */}
+            {/* Bow sits on the lid, then lifts off — never slides sideways */}
             <motion.div
-              className="absolute inset-x-[12%] top-1/2 z-20 h-2.5 -translate-y-1/2 rounded-sm bg-gradient-to-r from-[#6f2317] via-[#9a3a28] to-[#c9932f] shadow-sm md:h-3"
-              style={{ opacity: ribbonOpacity }}
-              aria-hidden
-            />
-            <motion.div
-              className="absolute left-1/2 top-[42%] z-30 -translate-x-1/2"
-              style={{ x: ribbonX, rotate: ribbonRotate, opacity: ribbonOpacity }}
+              className="absolute left-1/2 top-[22%] z-30 -translate-x-1/2"
+              style={{ y: ribbonY, opacity: ribbonOpacity }}
               aria-hidden
             >
               <RibbonBow />
             </motion.div>
 
-            {/* Logo blooms from the open well, not under the box */}
             <motion.div
               className="absolute inset-0 z-20 flex items-center justify-center"
               style={{ opacity: logoOpacity, scale: logoScale }}
@@ -234,19 +220,12 @@ export function KeepsakeScene() {
 
 function RibbonBow() {
   return (
-    <svg viewBox="0 0 88 48" className="h-10 w-[4.4rem] md:h-12 md:w-[5.4rem]" aria-hidden>
-      <path
-        d="M44 18 C28 4 8 8 10 20 C12 30 32 28 44 22 C56 28 76 30 78 20 C80 8 60 4 44 18Z"
-        fill="#7a281c"
-      />
-      <path
-        d="M44 18 C32 8 18 10 20 20 C22 28 36 28 44 22 C52 28 66 28 68 20 C70 10 56 8 44 18Z"
-        fill="#c9932f"
-        opacity="0.9"
-      />
-      <ellipse cx="44" cy="22" rx="7" ry="8" fill="#5c1c14" />
-      <path d="M40 28 L32 46 L42 34 Z" fill="#9a3a28" />
-      <path d="M48 28 L56 46 L46 34 Z" fill="#c9932f" />
+    <svg viewBox="0 0 120 70" className="h-14 w-[5.6rem] drop-shadow-md md:h-16 md:w-[6.4rem]" aria-hidden>
+      <path d="M60 28 C38 6 12 10 14 26 C16 40 42 40 60 32 C78 40 104 40 106 26 C108 10 82 6 60 28Z" fill="#6f2317" />
+      <path d="M60 28 C42 10 22 14 24 26 C26 36 46 38 60 32 C74 38 94 36 96 26 C98 14 78 10 60 28Z" fill="#c9932f" />
+      <ellipse cx="60" cy="32" rx="9" ry="11" fill="#5c1c14" />
+      <path d="M54 40 L44 66 L58 46 Z" fill="#9a3a28" />
+      <path d="M66 40 L76 66 L62 46 Z" fill="#c9932f" />
     </svg>
   );
 }
