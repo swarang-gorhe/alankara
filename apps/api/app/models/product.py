@@ -1,6 +1,7 @@
 from datetime import UTC, datetime
+from decimal import Decimal
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, String, Text
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, Numeric, String, Text
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -32,6 +33,15 @@ class Product(Base):
     status: Mapped[str] = mapped_column(String(32), default="published", index=True)
     tags: Mapped[list | None] = mapped_column(JSONB, nullable=True)
     ai_generated_tags: Mapped[list | None] = mapped_column(JSONB, nullable=True)
+    try_on_enabled: Mapped[bool] = mapped_column(Boolean, default=False)
+    try_on_asset_url: Mapped[str | None] = mapped_column(Text, nullable=True)
+    try_on_scale: Mapped[Decimal] = mapped_column(Numeric(10, 4), default=Decimal("1.0"))
+    try_on_left_offset_x: Mapped[Decimal] = mapped_column(Numeric(10, 4), default=Decimal("0"))
+    try_on_left_offset_y: Mapped[Decimal] = mapped_column(Numeric(10, 4), default=Decimal("0"))
+    try_on_right_offset_x: Mapped[Decimal] = mapped_column(Numeric(10, 4), default=Decimal("0"))
+    try_on_right_offset_y: Mapped[Decimal] = mapped_column(Numeric(10, 4), default=Decimal("0"))
+    try_on_rotation: Mapped[Decimal] = mapped_column(Numeric(10, 4), default=Decimal("0"))
+    try_on_vertical_offset: Mapped[Decimal] = mapped_column(Numeric(10, 4), default=Decimal("0"))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=_utcnow)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=_utcnow, onupdate=_utcnow

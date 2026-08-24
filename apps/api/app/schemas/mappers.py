@@ -3,9 +3,16 @@ from sqlalchemy import inspect as sa_inspect
 from app.models.artisan import Artisan
 from app.models.product import Product, ProductVariant
 from app.models.review import Review
+from app.schemas.admin import TryOnConfigSchema
 from app.schemas.artisan import ArtisanSchema
 from app.schemas.product import ProcessStepSchema, ProductSchema, ProductVariantSchema
 from app.schemas.review import PublicReviewSchema, ReviewSchema
+
+
+def _num(value: object, default: float = 0.0) -> float:
+    if value is None:
+        return default
+    return float(value)
 
 
 def product_to_schema(product: Product) -> ProductSchema:
@@ -40,6 +47,31 @@ def product_to_schema(product: Product) -> ProductSchema:
         variants=[variant_to_schema(v) for v in product.variants],
         averageRating=avg,
         reviewCount=len(approved_reviews),
+        tryOnEnabled=bool(getattr(product, "try_on_enabled", False)),
+        tryOnAssetUrl=getattr(product, "try_on_asset_url", None),
+        tryOnScale=_num(getattr(product, "try_on_scale", None), 1.0),
+        tryOnLeftOffsetX=_num(getattr(product, "try_on_left_offset_x", None)),
+        tryOnLeftOffsetY=_num(getattr(product, "try_on_left_offset_y", None)),
+        tryOnRightOffsetX=_num(getattr(product, "try_on_right_offset_x", None)),
+        tryOnRightOffsetY=_num(getattr(product, "try_on_right_offset_y", None)),
+        tryOnRotation=_num(getattr(product, "try_on_rotation", None)),
+        tryOnVerticalOffset=_num(getattr(product, "try_on_vertical_offset", None)),
+    )
+
+
+def try_on_config_to_schema(product: Product) -> TryOnConfigSchema:
+    return TryOnConfigSchema(
+        productId=product.id,
+        productName=product.name,
+        tryOnEnabled=bool(getattr(product, "try_on_enabled", False)),
+        tryOnAssetUrl=getattr(product, "try_on_asset_url", None),
+        tryOnScale=_num(getattr(product, "try_on_scale", None), 1.0),
+        tryOnLeftOffsetX=_num(getattr(product, "try_on_left_offset_x", None)),
+        tryOnLeftOffsetY=_num(getattr(product, "try_on_left_offset_y", None)),
+        tryOnRightOffsetX=_num(getattr(product, "try_on_right_offset_x", None)),
+        tryOnRightOffsetY=_num(getattr(product, "try_on_right_offset_y", None)),
+        tryOnRotation=_num(getattr(product, "try_on_rotation", None)),
+        tryOnVerticalOffset=_num(getattr(product, "try_on_vertical_offset", None)),
     )
 
 

@@ -13,6 +13,7 @@ from app.models.order import Order, OrderItem
 from app.models.product import Product, ProductVariant
 from app.models.review import Review, ReviewSummary
 from app.models.setting import Setting
+from app.models.try_on import TryOnEvent, TryOnRequest
 from app.models.wishlist import WishlistItem
 
 __all__ = [
@@ -36,5 +37,7 @@ __all__ = [
     "Review",
     "ReviewSummary",
     "Setting",
+    "TryOnEvent",
+    "TryOnRequest",
     "WishlistItem",
 ]

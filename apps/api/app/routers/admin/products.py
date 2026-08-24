@@ -19,9 +19,11 @@ from app.schemas.admin import (
     AdminVariantCreateSchema,
     AdminVariantUpdateSchema,
     PaginatedAdminProductsSchema,
+    TryOnConfigSchema,
+    TryOnConfigUpdateSchema,
 )
 from app.schemas.auth import UserClaims
-from app.schemas.mappers import product_to_schema, variant_to_schema
+from app.schemas.mappers import product_to_schema, try_on_config_to_schema, variant_to_schema
 from app.schemas.product import ProductSchema, ProductVariantSchema
 
 router = APIRouter(prefix="/admin/products", tags=["admin-products"])
@@ -124,6 +126,45 @@ async def analyze_product_image(
 async def get_admin_product(product_id: str, db: DbSession, _admin: AdminUser) -> ProductSchema:
     product = await _get_product(db, product_id)
     return product_to_schema(product)
+
+
+@router.get("/{product_id}/try-on", response_model=TryOnConfigSchema)
+async def get_try_on_config(
+    product_id: str, db: DbSession, _admin: AdminUser
+) -> TryOnConfigSchema:
+    product = await _get_product(db, product_id)
+    return try_on_config_to_schema(product)
+
+
+@router.put("/{product_id}/try-on", response_model=TryOnConfigSchema)
+async def update_try_on_config(
+    product_id: str,
+    body: TryOnConfigUpdateSchema,
+    db: DbSession,
+    _admin: AdminUser,
+) -> TryOnConfigSchema:
+    product = await _get_product(db, product_id)
+    updates = body.model_dump(exclude_unset=True)
+    field_map = {
+        "tryOnEnabled": "try_on_enabled",
+        "tryOnAssetUrl": "try_on_asset_url",
+        "tryOnScale": "try_on_scale",
+        "tryOnLeftOffsetX": "try_on_left_offset_x",
+        "tryOnLeftOffsetY": "try_on_left_offset_y",
+        "tryOnRightOffsetX": "try_on_right_offset_x",
+        "tryOnRightOffsetY": "try_on_right_offset_y",
+        "tryOnRotation": "try_on_rotation",
+        "tryOnVerticalOffset": "try_on_vertical_offset",
+    }
+    for key, value in updates.items():
+        attr = field_map.get(key)
+        if attr is None:
+            continue
+        setattr(product, attr, value)
+    product.updated_at = datetime.now(UTC)
+    await db.commit()
+    await db.refresh(product, ["variants", "category"])
+    return try_on_config_to_schema(product)
 
 
 @router.put("/{product_id}", response_model=ProductSchema)

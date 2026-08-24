@@ -1,0 +1,40 @@
+---
+description: Alankara Try It On virtual try-on constraints
+globs:
+  - apps/web/components/try-on/**
+  - apps/web/app/admin/products/**/try-on-config/**
+  - apps/web/app/admin/try-on-requests/**
+  - apps/api/**/try_on*
+  - docs/tryon-architecture.md
+  - supabase/migrations/*try_on*
+---
+
+You are implementing the "Try It On" virtual try-on feature for Alankara, a fabric/cloth
+jewellery ecommerce brand. Follow /docs/tryon-architecture.md as the source of truth for
+architecture, data model, and component structure — read it before writing code.
+
+Hard constraints, do not violate:
+1. All face/landmark detection and AR rendering must run 100% client-side in the browser
+   (MediaPipe Face Landmarker via WASM/WebGL + Three.js). Never send camera frames or video
+   to any backend automatically.
+2. A customer photo/frame is only ever uploaded when they explicitly click "Share with
+   Alankara" or "Share My Look" — implement this as a single, explicit, auditable action,
+   not a side effect of any other flow.
+3. Match the existing Alankara visual identity exactly: warm ivory, maroon, champagne gold,
+   soft blush, elegant serif type, the existing flower logo. Do not introduce neon AR
+   graphics, cyberpunk UI, blue gradients, or generic "tech dashboard" styling anywhere in
+   this feature, including error and permission states.
+4. Every earring product needs its own try-on calibration (asset, scale, left/right offsets,
+   rotation, vertical offset) — never hardcode one placement for all products.
+5. Provide manual correction controls (zoom/move/scale/rotate/reset) in photo mode, because
+   automatic ear detection will not always be accurate.
+6. Handle all error states gracefully with warm, on-brand copy (camera denied, no face
+   detected, poor lighting, one ear only visible, unsupported browser/device) — always give
+   the customer a fallback path, never a dead end.
+7. Do not generate or alter product imagery with AI. The try-on asset must be the actual
+   product's approved transparent PNG/WebP, uploaded by admin.
+8. AI customization interpretation may only produce a structured suggestion for
+   admin review — it must never modify or create an order on its own.
+
+Work in the phases given to you one at a time. After each phase, stop and summarize what you
+changed and what needs manual testing before continuing to the next phase.

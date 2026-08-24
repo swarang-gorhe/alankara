@@ -1,8 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { AdminProductModal } from "@/components/admin/AdminProductModal";
 import { AdminTable, AdminTableCell, AdminTableRow } from "@/components/admin/AdminTable";
+import { consoleBase } from "@/lib/admin/paths";
 import {
   deleteAdminProduct,
   fetchAdminProduct,
@@ -12,6 +15,8 @@ import {
 import { formatPrice } from "@/lib/fixtures";
 
 export default function AdminProductsPage() {
+  const pathname = usePathname();
+  const base = consoleBase(pathname);
   const [products, setProducts] = useState<AdminProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -103,6 +108,12 @@ export default function AdminProductsPage() {
                   >
                     Edit
                   </button>
+                  <Link
+                    href={`${base}/products/${product.id}/try-on-config`}
+                    className="text-xs uppercase tracking-widest text-admin-muted hover:text-admin-accent hover:underline"
+                  >
+                    Try-on
+                  </Link>
                   <button
                     type="button"
                     onClick={() => void handleDelete(product.id)}

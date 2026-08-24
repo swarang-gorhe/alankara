@@ -44,6 +44,15 @@ class ProductSchema(BaseModel):
     variants: list[ProductVariantSchema] = Field(default_factory=list)
     averageRating: float | None = None
     reviewCount: int = 0
+    tryOnEnabled: bool = False
+    tryOnAssetUrl: str | None = None
+    tryOnScale: float = 1.0
+    tryOnLeftOffsetX: float = 0.0
+    tryOnLeftOffsetY: float = 0.0
+    tryOnRightOffsetX: float = 0.0
+    tryOnRightOffsetY: float = 0.0
+    tryOnRotation: float = 0.0
+    tryOnVerticalOffset: float = 0.0
 
     model_config = {"from_attributes": True}
 

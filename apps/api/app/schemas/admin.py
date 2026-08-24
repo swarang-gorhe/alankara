@@ -160,3 +160,29 @@ class WishlistItemSchema(BaseModel):
     productSlug: str
     productName: str
     createdAt: str
+
+
+class TryOnConfigSchema(BaseModel):
+    productId: str
+    productName: str
+    tryOnEnabled: bool = False
+    tryOnAssetUrl: str | None = None
+    tryOnScale: float = 1.0
+    tryOnLeftOffsetX: float = 0.0
+    tryOnLeftOffsetY: float = 0.0
+    tryOnRightOffsetX: float = 0.0
+    tryOnRightOffsetY: float = 0.0
+    tryOnRotation: float = 0.0
+    tryOnVerticalOffset: float = 0.0
+
+
+class TryOnConfigUpdateSchema(BaseModel):
+    tryOnEnabled: bool | None = None
+    tryOnAssetUrl: str | None = None
+    tryOnScale: float | None = Field(None, ge=0.05, le=5.0)
+    tryOnLeftOffsetX: float | None = Field(None, ge=-200, le=200)
+    tryOnLeftOffsetY: float | None = Field(None, ge=-200, le=200)
+    tryOnRightOffsetX: float | None = Field(None, ge=-200, le=200)
+    tryOnRightOffsetY: float | None = Field(None, ge=-200, le=200)
+    tryOnRotation: float | None = Field(None, ge=-180, le=180)
+    tryOnVerticalOffset: float | None = Field(None, ge=-200, le=200)
