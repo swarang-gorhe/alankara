@@ -71,7 +71,7 @@ cd ../..
 ```bash
 cd apps/api
 source .venv/bin/activate
-alembic upgrade head   # includes migration 005 (collections, media, settings, wishlist)
+alembic upgrade head   # through 006 (commerce: status, events, payments)
 python -m scripts.seed
 cd ../..
 ```
@@ -90,6 +90,12 @@ Alembic revision `005_collections_media` adds:
 | `wishlist_items` | Customer wishlist (user + variant) |
 
 Run via `alembic upgrade head` after pulling. Seed script populates collections from fixtures when present.
+
+### Migration 006 — commerce platform
+
+Alembic revision `006_commerce_platform` adds product status/tags, review moderation fields, order payment fields, `customer_events`, and store settings keys (`low_stock_threshold`, `currency`, `tax_rate_bps`).
+
+Atelier console: `/atelier` (rewrites to `/admin`). Dev owner login is `admin@alankara.local` / `admin-dev-only`; staff is `staff@alankara.local` / `staff-dev-only`.
 
 ### 6. Run development servers
 
