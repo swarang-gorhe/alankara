@@ -91,11 +91,13 @@ def test_admin_discounts_crud(client, admin_headers):
 
     cart = client.get("/cart")
     session_cookie = cart.cookies.get("alankara_cart_session")
-    client.post(
+    added = client.post(
         "/cart/items",
         json={"variantId": "var-001-a", "quantity": 1},
         cookies={"alankara_cart_session": session_cookie},
     )
+    assert added.status_code == 200
+    subtotal = added.json()["subtotal"]["amount"]
 
     validate = client.post(
         "/discounts/validate",
@@ -104,7 +106,7 @@ def test_admin_discounts_crud(client, admin_headers):
     )
     assert validate.status_code == 200
     assert validate.json()["valid"] is True
-    assert validate.json()["discountAmount"] == 1500
+    assert validate.json()["discountAmount"] == int(subtotal * 15 / 100)
 
     deleted = client.delete(f"/admin/discounts/{discount_id}", headers=admin_headers)
     assert deleted.status_code == 204
@@ -114,7 +116,7 @@ def test_checkout_applies_discount(client, admin_headers):
     created = client.post(
         "/admin/discounts",
         headers=admin_headers,
-        json={"code": "CHECKOUT5", "type": "flat", "value": 500, "active": True},
+        json={"code": "CHECKOUT5", "type": "flat", "value": 20, "active": True},
     )
     assert created.status_code == 201
 
@@ -144,8 +146,8 @@ def test_checkout_applies_discount(client, admin_headers):
     assert checkout.status_code == 200
     order = checkout.json()["order"]
     assert order["discountCode"] == "CHECKOUT5"
-    assert order["discountAmount"]["amount"] == 500
-    assert order["total"]["amount"] == order["subtotal"]["amount"] - 500
+    assert order["discountAmount"]["amount"] == 20
+    assert order["total"]["amount"] == order["subtotal"]["amount"] - 20
 
     client.delete(f"/admin/discounts/{created.json()['id']}", headers=admin_headers)
 

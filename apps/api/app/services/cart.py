@@ -293,8 +293,7 @@ async def remove_cart_item(db: AsyncSession, cart: Cart, *, item_id: str) -> Car
     if item is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Cart item not found")
 
-    await db.delete(item)
-    cart.updated_at = datetime.now(UTC)
+    await db.execute(delete(CartItem).where(CartItem.id == item.id))
     await db.commit()
     return await _reload_cart(db, cart.id)
 
