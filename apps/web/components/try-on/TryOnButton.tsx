@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { TryOnModal } from "./TryOnModal";
+import { hasTryOnAsset } from "./tryOnAsset";
 import type { TryOnProduct } from "./types";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +20,8 @@ export function TryOnButton({
   label = "Try It On",
 }: TryOnButtonProps) {
   const [open, setOpen] = useState(false);
+
+  if (!hasTryOnAsset(product)) return null;
 
   return (
     <>

@@ -28,6 +28,8 @@
     "comfort": "Lightweight cotton construction with a firm backing — comfortable for all-day wear.",
     "packaging": "Arrives wrapped in tissue, nestled in a reusable cotton pouch.",
     "featured": true,
+    "tryOnEnabled": true,
+    "tryOnAssetUrl": "/try-on/kesari-diamond-drops.png",
     "occasion": [
       "Festive gatherings",
       "Evening outings",
@@ -95,6 +97,8 @@
     "comfort": "Firm yet light crescent form with a soft reverse — sits close without pinching.",
     "packaging": "Arrives wrapped in tissue, nestled in a reusable cotton pouch.",
     "featured": true,
+    "tryOnEnabled": true,
+    "tryOnAssetUrl": "/try-on/cocoa-crescent-drops.png",
     "occasion": [
       "Anniversary dinners",
       "Festive gatherings",
@@ -161,6 +165,8 @@
     "comfort": "Low-profile posts with a soft backing — made for all-day wear.",
     "packaging": "Arrives wrapped in tissue, nestled in a reusable cotton pouch.",
     "featured": true,
+    "tryOnEnabled": true,
+    "tryOnAssetUrl": "/try-on/vanam-textile-studs.png",
     "occasion": [
       "Workdays",
       "Travel",
@@ -226,6 +232,8 @@
     "comfort": "Soft-backed hearts that sit close to the ear — unobtrusive from morning to night.",
     "packaging": "Arrives wrapped in tissue, nestled in a reusable cotton pouch.",
     "featured": true,
+    "tryOnEnabled": true,
+    "tryOnAssetUrl": "/try-on/raga-heart-studs.png",
     "occasion": [
       "Gifting",
       "Everyday wear",

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type MutableRefObject } from "react";
 import { getObjectCoverTransform, landmarkToBox } from "./coverMapping";
+import { computeAlphaBounds, getTryOnAssetUrl, type TrimBounds } from "./tryOnAsset";
 import type { EarAnchors, TryOnProduct } from "./types";
 
 type EarringOverlayCanvasProps = {
@@ -19,10 +20,6 @@ type EarringOverlayCanvasProps = {
   drawRef?: MutableRefObject<((anchors: EarAnchors | null) => void) | null>;
 };
 
-function assetUrl(product: TryOnProduct): string | null {
-  return product.tryOnAssetUrl || product.images[0] || null;
-}
-
 export function EarringOverlayCanvas({
   width,
   height,
@@ -37,8 +34,9 @@ export function EarringOverlayCanvas({
 }: EarringOverlayCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
+  const trimRef = useRef<TrimBounds | null>(null);
   const anchorsRef = useRef<EarAnchors | null>(anchors);
-  const url = assetUrl(product);
+  const url = getTryOnAssetUrl(product);
 
   useEffect(() => {
     anchorsRef.current = anchors;
@@ -47,6 +45,7 @@ export function EarringOverlayCanvas({
   useEffect(() => {
     if (!url) {
       imgRef.current = null;
+      trimRef.current = null;
       return;
     }
     const img = new Image();
@@ -55,6 +54,7 @@ export function EarringOverlayCanvas({
     img.src = url;
     imgRef.current = img;
     img.onload = () => {
+      trimRef.current = computeAlphaBounds(img);
       paint(anchorsRef.current);
     };
   }, [url]);
@@ -79,12 +79,20 @@ export function EarringOverlayCanvas({
     const img = imgRef.current;
     if (!img.complete || img.naturalWidth === 0) return;
 
+    const trim =
+      trimRef.current ?? {
+        sx: 0,
+        sy: 0,
+        sw: img.naturalWidth,
+        sh: img.naturalHeight,
+      };
+
     const mw = mediaWidth && mediaWidth > 0 ? mediaWidth : width;
     const mh = mediaHeight && mediaHeight > 0 ? mediaHeight : height;
     const cover = getObjectCoverTransform(mw, mh, width, height);
 
+    const aspect = trim.sh / Math.max(1, trim.sw);
     const baseW = Math.max(18, next.scale * width * 0.095);
-    const aspect = img.naturalHeight / Math.max(1, img.naturalWidth);
     const baseH = baseW * aspect;
 
     const drawSide = (side: "left" | "right") => {
@@ -117,8 +125,8 @@ export function EarringOverlayCanvas({
       ctx.shadowColor = "rgba(43,35,28,0.28)";
       ctx.shadowBlur = 8;
       ctx.shadowOffsetY = 3;
-      // Hang from top-center of asset (hook point)
-      ctx.drawImage(img, -w / 2, -h * 0.08, w, h);
+      // Hang from the ear-wire at the top of the trimmed cutout
+      ctx.drawImage(img, trim.sx, trim.sy, trim.sw, trim.sh, -w / 2, 0, w, h);
       ctx.restore();
     };
 
