@@ -23,6 +23,7 @@ from app.routers import (
     products,
     recommendations,
     reviews,
+    try_on,
     webhooks,
     wishlist,
 )
@@ -76,6 +77,7 @@ app.include_router(orders.router)
 app.include_router(addresses.router)
 app.include_router(wishlist.router)
 app.include_router(events.router)
+app.include_router(try_on.router)
 app.include_router(recommendations.router)
 app.include_router(webhooks.router)
 app.include_router(admin_router)

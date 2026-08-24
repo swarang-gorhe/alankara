@@ -9,6 +9,7 @@ import { HomeMadeWithLove } from "./commerce/HomeMadeWithLove";
 import { HomeSocial } from "./commerce/HomeSocial";
 import { ChapterNewsletter } from "./chapters/ChapterNewsletter";
 import { ChapterFooter } from "./chapters/ChapterFooter";
+import { SeeItOnYouPromo } from "@/components/try-on/SeeItOnYouPromo";
 import type { ProductFixture } from "@/lib/fixtures/types";
 
 type HomePageProps = {
@@ -22,6 +23,7 @@ export function HomePage({ products }: HomePageProps) {
       <HomeHero />
       <HomeCollections />
       <HomeProducts products={products} />
+      <SeeItOnYouPromo />
       <HomeMadeByHand />
       <HomeCustomize />
       <HomeMadeWithLove />

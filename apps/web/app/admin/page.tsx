@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { StatCard } from "@/components/admin/StatCard";
 import { AdminTable, AdminTableCell, AdminTableRow } from "@/components/admin/AdminTable";
-import { fetchDashboardStats, fetchAdminProducts, type DashboardStats, type AdminProduct } from "@/lib/api/admin";
+import { fetchDashboardStats, fetchAdminProducts, fetchTryOnAnalytics, type DashboardStats, type AdminProduct, type TryOnAnalytics } from "@/lib/api/admin";
 import { formatPrice } from "@/lib/fixtures";
 
 function RevenueChart({ data }: { data: Array<{ month: string; amount: number }> }) {
@@ -30,13 +30,15 @@ function RevenueChart({ data }: { data: Array<{ month: string; amount: number }>
 export default function AdminDashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [featured, setFeatured] = useState<AdminProduct[]>([]);
+  const [tryOn, setTryOn] = useState<TryOnAnalytics | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    Promise.all([fetchDashboardStats(), fetchAdminProducts()])
-      .then(([s, products]) => {
+    Promise.all([fetchDashboardStats(), fetchAdminProducts(), fetchTryOnAnalytics().catch(() => null)])
+      .then(([s, products, analytics]) => {
         setStats(s);
         setFeatured(products.items.filter((p) => p.featured).slice(0, 5));
+        setTryOn(analytics);
       })
       .catch((err: Error) => setError(err.message));
   }, []);
@@ -88,6 +90,33 @@ export default function AdminDashboardPage() {
         <StatCard label="Reviews" value={stats.reviewsCount} />
         <StatCard label="Customers" value={stats.customersCount} />
       </div>
+
+      {tryOn && (
+        <section className="rounded-lg border border-admin-border bg-admin-surface p-6">
+          <h2 className="font-display text-lg text-admin-text">Virtual Try-On</h2>
+          <p className="mt-1 text-xs text-admin-muted">
+            Attempts, share rate, order-click rate, and conversion
+          </p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-4">
+            <StatCard label="Attempts" value={tryOn.attempts} />
+            <StatCard
+              label="Share rate"
+              value={`${(tryOn.shareRate * 100).toFixed(1)}%`}
+              hint={`${tryOn.shares} shares`}
+            />
+            <StatCard
+              label="Order-click rate"
+              value={`${(tryOn.orderClickRate * 100).toFixed(1)}%`}
+              hint={`${tryOn.orderClicks} clicks`}
+            />
+            <StatCard
+              label="Conversion"
+              value={`${(tryOn.conversionRate * 100).toFixed(1)}%`}
+              hint={`${tryOn.ordersCompleted} completed`}
+            />
+          </div>
+        </section>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-2">
         <section className="rounded-lg border border-admin-border bg-admin-surface p-6">

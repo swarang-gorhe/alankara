@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ProductStill } from "@/components/media";
+import { TryOnButton } from "@/components/try-on/TryOnButton";
 import { formatPrice, getProductSize } from "@/lib/fixtures";
 import type { ProductFixture } from "@/lib/fixtures/types";
 import { cn } from "@/lib/utils";
@@ -34,7 +35,7 @@ export function EditorialProductCard({
   const aspect = layoutAspect[layout];
 
   return (
-    <article className={cn("group min-w-0", size === "large" && "md:col-span-2", className)}>
+    <article className={cn("group relative min-w-0", size === "large" && "md:col-span-2", className)}>
       <Link href={`/product/${product.slug}`} className="block" data-cursor-sparkle>
         <motion.div
           className="relative overflow-hidden border border-champagne/20 bg-ivory"
@@ -53,11 +54,7 @@ export function EditorialProductCard({
                 ? "(max-width: 768px) 100vw, 60vw"
                 : "(max-width: 768px) 50vw, 25vw"
             }
-            className={
-              layout === "feature"
-                ? "min-h-[240px] md:min-h-[320px]"
-                : undefined
-            }
+            className={layout === "feature" ? "min-h-[240px] md:min-h-[320px]" : undefined}
           />
 
           <div
@@ -88,6 +85,9 @@ export function EditorialProductCard({
           )}
         </div>
       </Link>
+      <div className="absolute right-2 top-2 z-10 opacity-100 sm:opacity-0 sm:group-hover:opacity-100">
+        <TryOnButton product={product} variant="card" label="Try on" />
+      </div>
     </article>
   );
 }

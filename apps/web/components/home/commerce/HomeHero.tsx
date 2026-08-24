@@ -41,6 +41,9 @@ export function HomeHero() {
               <Link href="/shop">Shop collection</Link>
             </Button>
             <Button asChild variant="outline" size="lg">
+              <Link href="/shop">See it on you</Link>
+            </Button>
+            <Button asChild variant="ghost" size="lg">
               <Link href="/customize">Customize yours</Link>
             </Button>
           </div>
