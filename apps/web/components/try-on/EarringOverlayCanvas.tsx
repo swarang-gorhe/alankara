@@ -5,11 +5,17 @@ import { getObjectCoverTransform, landmarkToBox } from "./coverMapping";
 import {
   buildFeatheredAsset,
   drawFeathered,
+  drawSoftDropShadow,
   findMediaElement,
   sampleSceneNear,
   sceneColorGrade,
 } from "./compositing";
-import { computeAlphaBounds, getTryOnAssetUrl, type TrimBounds } from "./tryOnAsset";
+import {
+  computeAlphaBounds,
+  findHookAnchor,
+  getTryOnAssetUrl,
+  type TrimBounds,
+} from "./tryOnAsset";
 import { lastEarAnchorDebug } from "./useEarAnchors";
 import { isTryOnDebugEnabled } from "./tryOnDebug";
 import type { EarAnchors, TryOnProduct } from "./types";
@@ -45,6 +51,7 @@ export function EarringOverlayCanvas({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
   const trimRef = useRef<TrimBounds | null>(null);
+  const hookRef = useRef<{ u: number; v: number }>({ u: 0.5, v: 0 });
   const featherRef = useRef<HTMLCanvasElement | null>(null);
   const featherPadRef = useRef(0);
   const anchorsRef = useRef<EarAnchors | null>(anchors);
@@ -59,6 +66,7 @@ export function EarringOverlayCanvas({
       imgRef.current = null;
       trimRef.current = null;
       featherRef.current = null;
+      hookRef.current = { u: 0.5, v: 0 };
       return;
     }
     const img = new Image();
@@ -70,9 +78,13 @@ export function EarringOverlayCanvas({
       const trim = computeAlphaBounds(img);
       trimRef.current = trim;
       if (trim) {
-        const blurPx = 1.4;
+        hookRef.current = findHookAnchor(img, trim);
+        // 1.6–2px soft edge so cutouts match slightly soft camera
+        const blurPx = 1.8;
         featherRef.current = buildFeatheredAsset(img, trim, blurPx);
         featherPadRef.current = Math.ceil(blurPx * 2);
+      } else {
+        hookRef.current = { u: 0.5, v: 0 };
       }
       paint(anchorsRef.current);
     };
@@ -115,6 +127,7 @@ export function EarringOverlayCanvas({
           ctx,
           img,
           trim,
+          hookRef.current,
           next,
           cover,
           aspect,
@@ -164,6 +177,7 @@ function paintEarrings(
   ctx: CanvasRenderingContext2D,
   img: HTMLImageElement,
   trim: TrimBounds,
+  hook: { u: number; v: number },
   next: EarAnchors,
   cover: ReturnType<typeof getObjectCoverTransform>,
   aspect: number,
@@ -181,16 +195,17 @@ function paintEarrings(
     const ear = next[side];
     if (!ear.visible) return;
 
+    // Depth / foreshortening from head yaw — not a flat sticker
     const depthFade =
       side === "left"
-        ? Math.max(0.2, 1 - Math.max(0, -next.yaw) * 0.75)
-        : Math.max(0.2, 1 - Math.max(0, next.yaw) * 0.75);
+        ? Math.max(0.22, 1 - Math.max(0, -next.yaw) * 0.85)
+        : Math.max(0.22, 1 - Math.max(0, next.yaw) * 0.85);
     const depthScaleX =
-      side === "left" ? 1 - next.yaw * 0.32 : 1 + next.yaw * 0.32;
+      side === "left" ? 1 - next.yaw * 0.38 : 1 + next.yaw * 0.38;
     const depthScaleY =
-      side === "left" ? 1 - next.yaw * 0.1 : 1 + next.yaw * 0.1;
-    const w = baseW * Math.max(0.45, Math.abs(depthScaleX));
-    const h = baseH * Math.max(0.5, depthScaleY);
+      side === "left" ? 1 - Math.abs(next.yaw) * 0.08 : 1 - Math.abs(next.yaw) * 0.08;
+    const w = baseW * Math.max(0.42, Math.abs(depthScaleX));
+    const h = baseH * Math.max(0.55, depthScaleY);
 
     const mapped = landmarkToBox(ear.x, ear.y, cover);
     const cx = mirrored ? width - mapped.x : mapped.x;
@@ -199,8 +214,13 @@ function paintEarrings(
     const scene = mediaEl
       ? sampleSceneNear(mediaEl, ear.x, ear.y)
       : { r: 120, g: 100, b: 90, lum: 0.35 };
-    const shadowAlpha = Math.min(0.42, 0.12 + scene.lum * 0.28);
-    const sway = Math.sin(next.roll * 2.2 + order) * (h * 0.01);
+    // Softer shadow in dim rooms, stronger when the scene is bright
+    const shadowAlpha = Math.min(0.48, 0.1 + scene.lum * 0.38) * depthFade;
+    const sway = Math.sin(next.roll * 2.2 + order) * (h * 0.012);
+
+    // Place HOOK (not image center / top-left mid) on the pierce point
+    const ox = -hook.u * w;
+    const oy = -hook.v * h;
 
     ctx.save();
     ctx.globalCompositeOperation = "source-over";
@@ -211,22 +231,34 @@ function paintEarrings(
     }
     ctx.scale(Math.sign(depthScaleX) || 1, 1);
 
-    ctx.globalAlpha = shadowAlpha * depthFade;
-    ctx.fillStyle = "rgba(18, 12, 8, 0.85)";
-    ctx.filter = "blur(4px)";
-    ctx.beginPath();
-    ctx.ellipse(0, h * 0.94, w * 0.22, h * 0.045, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.filter = "none";
+    drawSoftDropShadow(
+      ctx,
+      ox + w * 0.5,
+      oy + h * 0.92,
+      w * 0.28,
+      h * 0.055,
+      shadowAlpha,
+    );
 
-    ctx.globalAlpha = 0.97 * depthFade;
+    // Contact shadow on the cheek/neck under the hook
+    ctx.shadowColor = `rgba(20, 12, 8, ${Math.min(0.55, 0.22 + scene.lum * 0.35) * depthFade})`;
+    ctx.shadowBlur = Math.max(6, h * 0.04);
+    ctx.shadowOffsetX = side === "left" ? -w * 0.02 : w * 0.02;
+    ctx.shadowOffsetY = h * 0.035;
+
+    ctx.globalAlpha = 0.98 * depthFade;
     ctx.filter = sceneColorGrade(scene);
-    drawFeathered(ctx, img, trim, feather, featherPad, -w / 2, 0, w, h);
+    drawFeathered(ctx, img, trim, feather, featherPad, ox, oy, w, h);
     ctx.filter = "none";
+    ctx.shadowColor = "transparent";
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
 
+    // Warm multiply pass so cutout picks up room color temperature
     ctx.globalCompositeOperation = "multiply";
-    ctx.globalAlpha = (0.08 + scene.lum * 0.06) * depthFade;
-    drawFeathered(ctx, img, trim, feather, featherPad, -w / 2, 0, w, h);
+    ctx.globalAlpha = (0.07 + scene.lum * 0.08) * depthFade;
+    drawFeathered(ctx, img, trim, feather, featherPad, ox, oy, w, h);
     ctx.globalCompositeOperation = "source-over";
     ctx.restore();
   };
@@ -261,51 +293,49 @@ function drawAnchorDebug(
     const y = mapped.y;
     ctx.save();
     ctx.fillStyle = color;
-    ctx.strokeStyle = "rgba(255,255,255,0.9)";
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = "rgba(255,255,255,0.95)";
+    ctx.lineWidth = 1.25;
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
     ctx.font = "9px monospace";
     ctx.fillStyle = "rgba(43,35,28,0.95)";
-    ctx.fillText(label, x + 6, y - 6);
+    ctx.strokeStyle = "rgba(250,243,231,0.9)";
+    ctx.lineWidth = 3;
+    ctx.strokeText(label, x + 7, y - 7);
+    ctx.fillText(label, x + 7, y - 7);
     ctx.restore();
   };
 
-  // Cyan = raw landmark; green = accepted final; red = rejected by visibility gate
-  plot(dbg.left.rawX, dbg.left.rawY, "rgba(0,180,220,0.95)", 4, "L raw");
+  // Cyan = cheek 234/454; orange = lower oval 93/323; magenta = pierce (must sit on lobe)
+  plot(dbg.left.cheekX, dbg.left.cheekY, "rgba(0,180,220,0.9)", 3.5, "L cheek");
+  plot(dbg.left.lobeX, dbg.left.lobeY, "rgba(255,140,40,0.9)", 3.5, "L oval");
   plot(
     dbg.left.finalX,
     dbg.left.finalY,
-    dbg.left.visible ? "rgba(40,180,90,0.95)" : "rgba(220,50,50,0.95)",
-    5,
-    dbg.left.visible ? "L ok" : "L rej",
+    dbg.left.visible ? "rgba(220,40,180,0.98)" : "rgba(220,50,50,0.95)",
+    6,
+    dbg.left.visible ? "L pierce" : "L rej",
   );
-  plot(dbg.right.rawX, dbg.right.rawY, "rgba(0,180,220,0.95)", 4, "R raw");
+  plot(dbg.right.cheekX, dbg.right.cheekY, "rgba(0,180,220,0.9)", 3.5, "R cheek");
+  plot(dbg.right.lobeX, dbg.right.lobeY, "rgba(255,140,40,0.9)", 3.5, "R oval");
   plot(
     dbg.right.finalX,
     dbg.right.finalY,
-    dbg.right.visible ? "rgba(40,180,90,0.95)" : "rgba(220,50,50,0.95)",
-    5,
-    dbg.right.visible ? "R ok" : "R rej",
+    dbg.right.visible ? "rgba(220,40,180,0.98)" : "rgba(220,50,50,0.95)",
+    6,
+    dbg.right.visible ? "R pierce" : "R rej",
   );
 
   ctx.save();
-  ctx.fillStyle = "rgba(250,243,231,0.88)";
-  ctx.fillRect(8, 8, 168, 54);
+  ctx.fillStyle = "rgba(250,243,231,0.92)";
+  ctx.fillRect(8, 8, 200, 70);
   ctx.fillStyle = "#2B231C";
   ctx.font = "10px monospace";
-  ctx.fillText(`yaw ${dbg.yaw.toFixed(3)}`, 14, 24);
-  ctx.fillText(
-    `L vis ${dbg.left.visible} d ${dbg.left.depth.toFixed(3)}`,
-    14,
-    40,
-  );
-  ctx.fillText(
-    `R vis ${dbg.right.visible} d ${dbg.right.depth.toFixed(3)}`,
-    14,
-    56,
-  );
+  ctx.fillText(`yaw ${dbg.yaw.toFixed(3)}  io ${dbg.interocular.toFixed(3)}`, 14, 24);
+  ctx.fillText(`L pierce (${dbg.left.finalX.toFixed(3)}, ${dbg.left.finalY.toFixed(3)})`, 14, 40);
+  ctx.fillText(`R pierce (${dbg.right.finalX.toFixed(3)}, ${dbg.right.finalY.toFixed(3)})`, 14, 56);
+  ctx.fillText("magenta = lobe target", 14, 70);
   ctx.restore();
 }

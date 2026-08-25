@@ -122,10 +122,14 @@ A scheduled job should delete unconfirmed `photo_url` files older than N days (P
 
 ### Earrings
 1. Get 478 face landmarks (normalized 0–1 + depth).
-2. Derive pierce anchors from tragus indices (234/454) + small hook drop.
-3. Apply product offsets (`try_on_left_offset_*`, `try_on_right_offset_*`, scale, rotation).
-4. Scale by interocular distance × `try_on_scale`.
-5. Composite with lighting match, feathered edges, drop shadow.
+2. Derive pierce anchors from face-oval cheek (234/454) blended with lower oval
+   (93/323) for lobe height, then pushed **outward** from the eye midline.
+   (Face Mesh has no true earlobe landmarks.)
+3. Align the asset **hook tip** (top opaque centroid of the cutout) to that pierce —
+   never the image center.
+4. Apply product offsets (`try_on_left_offset_*`, `try_on_right_offset_*`, scale, rotation).
+5. Scale by interocular distance × `try_on_scale`.
+6. Composite with lighting match, feathered edges, drop shadow, yaw foreshortening.
 
 ### Necklaces (parallel pipeline)
 1. Run Pose Landmarker for shoulders (11/12) alongside Face Landmarker for chin.

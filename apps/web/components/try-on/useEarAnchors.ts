@@ -6,11 +6,17 @@ import type { EarAnchors, ManualAdjust, TryOnProduct } from "./types";
 import { DEFAULT_MANUAL_ADJUST } from "./types";
 
 /**
- * Face Mesh indices — tragus region (ear-ring pierce point).
- * Avoid jaw/chin indices; blending toward jaw was anchoring on the chin.
+ * Face Mesh does not expose true earlobes. Closest useful contour points:
+ * - 234 / 454 — face-oval at ear / cheekbone height (often called "cheek")
+ * - 93 / 323  — face-oval just below that, toward the jaw / lobe height
+ *
+ * Pierce ≈ blend of those, then pushed OUTWARD from the face midline.
+ * Never blend toward chin (152) — that parked earrings on the jaw.
  */
-const LEFT_TRAGUS = 234;
-const RIGHT_TRAGUS = 454;
+const LEFT_CHEEK = 234;
+const RIGHT_CHEEK = 454;
+const LEFT_LOBE = 93;
+const RIGHT_LOBE = 323;
 const LEFT_EYE = 33;
 const RIGHT_EYE = 263;
 const NOSE = 1;
@@ -19,9 +25,13 @@ const CHIN = 152;
 const LEFT_JAW = 132;
 const RIGHT_JAW = 361;
 
-/** Last anchor breakdown for debug overlay (gated by isTryOnDebugEnabled). */
+/** Debug snapshot for overlay — gated by isTryOnDebugEnabled(). */
 export type EarAnchorDebug = {
   left: {
+    cheekX: number;
+    cheekY: number;
+    lobeX: number;
+    lobeY: number;
     rawX: number;
     rawY: number;
     offsetX: number;
@@ -32,6 +42,10 @@ export type EarAnchorDebug = {
     depth: number;
   };
   right: {
+    cheekX: number;
+    cheekY: number;
+    lobeX: number;
+    lobeY: number;
     rawX: number;
     rawY: number;
     offsetX: number;
@@ -43,6 +57,7 @@ export type EarAnchorDebug = {
   };
   interocular: number;
   yaw: number;
+  midX: number;
 };
 
 export let lastEarAnchorDebug: EarAnchorDebug | null = null;
@@ -60,6 +75,38 @@ function pt(
   return landmarks[i] ?? null;
 }
 
+/**
+ * Earlobe pierce from face-oval cheek (234/454).
+ *
+ * Cover-mapped calibration (430×900 stage): ear-colored pixels span ~x=53–82
+ * with the lobe near y=350–365. Landmark 234’s X is already in that column;
+ * a light 0.03×IO outward bias sits on the outer lobe, and 0.08×IO drop
+ * moves from canal height to the lobe. Larger outward values fall off-head.
+ */
+function pierceFromContour(
+  cheek: { x: number; y: number; z: number },
+  lobe: { x: number; y: number; z: number } | null,
+  midX: number,
+  interocular: number,
+  _eyeOuterY: number,
+): { x: number; y: number; z: number; cheekX: number; cheekY: number; lobeX: number; lobeY: number } {
+  const side = cheek.x < midX ? -1 : 1;
+  // 234 X is at the ear column; a hair toward the midline sits on lobe flesh
+  // (pure outward bias spills into background beside the helix).
+  const x = cheek.x - side * interocular * 0.01;
+  const y = cheek.y + interocular * 0.08;
+
+  return {
+    x,
+    y,
+    z: cheek.z,
+    cheekX: cheek.x,
+    cheekY: cheek.y,
+    lobeX: lobe?.x ?? cheek.x,
+    lobeY: lobe?.y ?? y,
+  };
+}
+
 export function computeEarAnchors(
   landmarks: Array<{ x: number; y: number; z: number }>,
   product: TryOnProduct,
@@ -73,12 +120,14 @@ export function computeEarAnchors(
   const nose = pt(landmarks, NOSE);
   const forehead = pt(landmarks, FOREHEAD);
   const chin = pt(landmarks, CHIN);
-  const lTragus = pt(landmarks, LEFT_TRAGUS);
-  const rTragus = pt(landmarks, RIGHT_TRAGUS);
+  const lCheek = pt(landmarks, LEFT_CHEEK);
+  const rCheek = pt(landmarks, RIGHT_CHEEK);
+  const lLobe = pt(landmarks, LEFT_LOBE);
+  const rLobe = pt(landmarks, RIGHT_LOBE);
   const lJaw = pt(landmarks, LEFT_JAW);
   const rJaw = pt(landmarks, RIGHT_JAW);
 
-  if (!leftEye || !rightEye || !lTragus || !rTragus) return null;
+  if (!leftEye || !rightEye || !lCheek || !rCheek) return null;
 
   const kind = getTryOnKind(product);
   const interocular =
@@ -88,14 +137,26 @@ export function computeEarAnchors(
       ? Math.hypot(chin.x - forehead.x, chin.y - forehead.y)
       : interocular * 2.4;
 
-  // Pierce point: tragus + tiny drop for the hook (NOT jaw/chin blend)
-  const hookDrop = interocular * 0.042;
-  const outPush = interocular * 0.055;
+  const midX = (leftEye.x + rightEye.x) / 2;
+  const leftPierce = pierceFromContour(
+    lCheek,
+    lLobe,
+    midX,
+    interocular,
+    leftEye.y,
+  );
+  const rightPierce = pierceFromContour(
+    rCheek,
+    rLobe,
+    midX,
+    interocular,
+    rightEye.y,
+  );
 
-  const leftRawX = lTragus.x + outPush;
-  const leftRawY = lTragus.y + hookDrop;
-  const rightRawX = rTragus.x - outPush;
-  const rightRawY = rTragus.y + hookDrop;
+  const leftRawX = leftPierce.x;
+  const leftRawY = leftPierce.y;
+  const rightRawX = rightPierce.x;
+  const rightRawY = rightPierce.y;
 
   const leftOffX = ((product.tryOnLeftOffsetX ?? 0) + manual.offsetX) / 100;
   const leftOffY =
@@ -115,24 +176,19 @@ export function computeEarAnchors(
     Math.atan2(rightEye.y - leftEye.y, rightEye.x - leftEye.x) +
     ((product.tryOnRotation ?? 0) + manual.rotation) * (Math.PI / 180);
 
-  const midX = (leftEye.x + rightEye.x) / 2;
   const yaw = nose ? (nose.x - midX) / interocular : 0;
 
   /**
-   * Visibility is yaw-only. Do NOT gate on (tragus.z − nose.z): on a frontal
-   * face MediaPipe places ears behind the nose tip, so depth is usually > 0.05
-   * and both ears were marked invisible — stuck on "Turn a little…".
-   * Soft fade for turned heads lives in EarringOverlayCanvas via yaw.
+   * Visibility is yaw-only. Soft fade for turned heads lives in the canvas.
    */
   const YAW_HIDE = 1.45;
   const leftVisible = yaw > -YAW_HIDE;
   const rightVisible = yaw < YAW_HIDE;
 
   const noseZ = nose?.z ?? 0;
-  const leftDepth = (lTragus.z ?? 0) - noseZ;
-  const rightDepth = (rTragus.z ?? 0) - noseZ;
+  const leftDepth = leftPierce.z - noseZ;
+  const rightDepth = rightPierce.z - noseZ;
 
-  // try_on_scale is a multiplier against interocular — NOT an absolute pixel size
   const scaleMultiplier =
     (product.tryOnScale ?? 1) *
     manual.scale *
@@ -152,6 +208,10 @@ export function computeEarAnchors(
 
   lastEarAnchorDebug = {
     left: {
+      cheekX: leftPierce.cheekX,
+      cheekY: leftPierce.cheekY,
+      lobeX: leftPierce.lobeX,
+      lobeY: leftPierce.lobeY,
       rawX: leftRawX,
       rawY: leftRawY,
       offsetX: leftOffX,
@@ -162,6 +222,10 @@ export function computeEarAnchors(
       depth: leftDepth,
     },
     right: {
+      cheekX: rightPierce.cheekX,
+      cheekY: rightPierce.cheekY,
+      lobeX: rightPierce.lobeX,
+      lobeY: rightPierce.lobeY,
       rawX: rightRawX,
       rawY: rightRawY,
       offsetX: rightOffX,
@@ -173,7 +237,13 @@ export function computeEarAnchors(
     },
     interocular,
     yaw,
+    midX,
   };
+
+  if (typeof window !== "undefined") {
+    (window as unknown as { __earAnchorDebug?: EarAnchorDebug }).__earAnchorDebug =
+      lastEarAnchorDebug;
+  }
 
   return {
     kind,

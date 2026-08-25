@@ -99,10 +99,12 @@ export function buildFeatheredAsset(
 
 export function sceneColorGrade(sample: SceneSample): string {
   const warmth = sample.r / Math.max(1, sample.b) - 1;
-  const bright = 0.55 + sample.lum * 0.75;
-  const sat = 0.82 + sample.lum * 0.18;
-  const sepia = Math.min(0.35, Math.max(0, warmth * 0.12));
-  return `brightness(${bright.toFixed(2)}) saturate(${sat.toFixed(2)}) sepia(${sepia.toFixed(2)})`;
+  // Dim rooms: darken + warm slightly; bright rooms: lift less aggressively
+  const bright = 0.62 + sample.lum * 0.55;
+  const contrast = 0.92 + (1 - sample.lum) * 0.12;
+  const sat = 0.78 + sample.lum * 0.22;
+  const sepia = Math.min(0.42, Math.max(0, warmth * 0.16 + (1 - sample.lum) * 0.08));
+  return `brightness(${bright.toFixed(2)}) contrast(${contrast.toFixed(2)}) saturate(${sat.toFixed(2)}) sepia(${sepia.toFixed(2)})`;
 }
 
 export function drawFeathered(
