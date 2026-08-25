@@ -157,12 +157,12 @@ export function TryOnModal({ open, product, onClose }: TryOnModalProps) {
           {/* Bottom dock — single spaced row, clear of browser chrome / shop Filter */}
           <div className="absolute inset-x-0 bottom-0 z-10 border-t border-champagne/25 bg-ivory/95 pt-3 shadow-[0_-8px_24px_rgba(43,35,28,0.06)] backdrop-blur-md pb-[max(0.85rem,env(safe-area-inset-bottom))]">
             <div className="mx-auto flex w-full max-w-lg flex-col gap-2.5 px-4">
-              <div className="flex flex-wrap items-stretch gap-2">
+              <div className="flex items-stretch gap-2">
                 <button
                   type="button"
                   onClick={() => setShowAfter((v) => !v)}
                   className={cn(
-                    "min-w-[7.25rem] flex-1 rounded-full border px-3 py-2.5 font-body text-[10px] uppercase tracking-[0.14em] sm:text-[11px]",
+                    "flex-1 rounded-full border px-2 py-2.5 font-body text-[10px] uppercase tracking-[0.12em] sm:px-3 sm:text-[11px] sm:tracking-[0.14em]",
                     showAfter
                       ? "border-champagne/40 bg-ivory text-maroon"
                       : "border-maroon/20 bg-maroon text-ivory",
@@ -176,7 +176,7 @@ export function TryOnModal({ open, product, onClose }: TryOnModalProps) {
                   <button
                     type="button"
                     onClick={() => setAdjustOpen((v) => !v)}
-                    className="min-w-[7.25rem] flex-1 rounded-full border border-champagne/40 bg-ivory px-3 py-2.5 font-body text-[10px] uppercase tracking-[0.14em] text-maroon sm:text-[11px]"
+                    className="flex-1 rounded-full border border-champagne/40 bg-ivory px-2 py-2.5 font-body text-[10px] uppercase tracking-[0.12em] text-maroon sm:px-3 sm:text-[11px] sm:tracking-[0.14em]"
                   >
                     Adjust
                   </button>
@@ -187,7 +187,7 @@ export function TryOnModal({ open, product, onClose }: TryOnModalProps) {
                     void trackTryOnEvent("order_click", product.id);
                     onClose();
                   }}
-                  className="inline-flex min-w-[7.25rem] flex-1 items-center justify-center gap-1.5 rounded-full bg-maroon px-3 py-2.5 font-body text-[10px] uppercase tracking-[0.14em] text-ivory shadow-sm sm:text-[11px]"
+                  className="inline-flex flex-1 items-center justify-center gap-1 rounded-full bg-maroon px-2 py-2.5 font-body text-[10px] uppercase tracking-[0.12em] text-ivory shadow-sm sm:gap-1.5 sm:px-3 sm:text-[11px] sm:tracking-[0.14em]"
                 >
                   <ShoppingBag className="h-3.5 w-3.5 shrink-0" />
                   Order
@@ -195,7 +195,7 @@ export function TryOnModal({ open, product, onClose }: TryOnModalProps) {
                 <button
                   type="button"
                   onClick={() => setShareOpen(true)}
-                  className="min-w-[7.25rem] flex-1 rounded-full border border-maroon/15 bg-linen px-3 py-2.5 font-body text-[10px] uppercase tracking-[0.14em] text-maroon sm:text-[11px]"
+                  className="flex-1 rounded-full border border-maroon/15 bg-linen px-2 py-2.5 font-body text-[10px] uppercase tracking-[0.12em] text-maroon sm:px-3 sm:text-[11px] sm:tracking-[0.14em]"
                 >
                   Share
                 </button>
