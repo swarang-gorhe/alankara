@@ -30,13 +30,17 @@ export const EARRING_SIZES = ["Bigger", "Smaller"] as const;
 
 export type EarringSize = (typeof EARRING_SIZES)[number];
 
-export const SHOP_MATERIAL_FILTERS: MaterialSlug[] = ["cotton"];
+export const SHOP_MATERIAL_FILTERS: MaterialSlug[] = ["cotton", "pearls", "ghungroos"];
 
 export const COLOR_OPTIONS = [
   "Mustard & burgundy",
   "Cocoa & ivory",
   "Forest green",
   "Burgundy",
+  "Ivory pearl",
+  "Blush & sage",
+  "Warm gold",
+  "Festive mix",
 ] as const;
 
 export const COLLECTION_OPTIONS = [

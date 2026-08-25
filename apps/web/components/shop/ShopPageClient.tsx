@@ -41,6 +41,12 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
     filtersFromSearchParams(searchParams),
   );
 
+  useEffect(() => {
+    setFilters(filtersFromSearchParams(searchParams));
+    const q = searchParams.get("q");
+    if (q !== null) setSearchQuery(q);
+  }, [searchParams]);
+
   const filteredProducts = useMemo(() => {
     let list = filterProducts(products, filters);
     if (searchQuery.trim()) {
@@ -80,10 +86,6 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
   );
 
   useEffect(() => {
-    setFilters(filtersFromSearchParams(searchParams));
-  }, [searchParams]);
-
-  useEffect(() => {
     if (!showSkeleton) return;
     const timer = window.setTimeout(() => setShowSkeleton(false), 280);
     return () => window.clearTimeout(timer);
@@ -102,8 +104,9 @@ export function ShopPageClient({ products }: ShopPageClientProps) {
               Handmade cloth jewellery
             </h1>
             <p className="mt-6 max-w-lg font-body text-base leading-relaxed text-ink-muted md:text-lg">
-              Fabric earrings in two sizes — bigger drops at ₹160, smaller studs at ₹130. Each piece
-              uses the same photograph everywhere, contained on ivory linen so the cloth stays sharp.
+              Fabric earrings, pearl chokers, and festive sets — each piece photographed once and
+              shown true. Tap any piece to open its page; try earrings and necklaces on you in
+              private, on your device.
             </p>
           </div>
           <LuxuryImage

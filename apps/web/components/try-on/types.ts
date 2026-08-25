@@ -3,8 +3,10 @@ export type TryOnProduct = {
   slug: string;
   name: string;
   images: string[];
+  categorySlug?: string;
   tryOnEnabled?: boolean;
   tryOnAssetUrl?: string | null;
+  tryOnKind?: "earring" | "necklace";
   tryOnScale?: number;
   tryOnLeftOffsetX?: number;
   tryOnLeftOffsetY?: number;
@@ -21,8 +23,14 @@ export type EarAnchor = {
 };
 
 export type EarAnchors = {
+  kind: "earring" | "necklace";
   left: EarAnchor;
   right: EarAnchor;
+  /** Necklace center in normalized coords */
+  centerX: number;
+  centerY: number;
+  /** Necklace width in normalized face space */
+  neckWidth: number;
   roll: number; // radians
   yaw: number;
   scale: number; // relative to interocular distance

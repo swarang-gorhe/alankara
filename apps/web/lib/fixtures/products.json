@@ -29,6 +29,7 @@
     "packaging": "Arrives wrapped in tissue, nestled in a reusable cotton pouch.",
     "featured": true,
     "tryOnEnabled": true,
+    "tryOnKind": "earring",
     "tryOnAssetUrl": "/try-on/kesari-diamond-drops.png",
     "occasion": [
       "Festive gatherings",
@@ -98,6 +99,7 @@
     "packaging": "Arrives wrapped in tissue, nestled in a reusable cotton pouch.",
     "featured": true,
     "tryOnEnabled": true,
+    "tryOnKind": "earring",
     "tryOnAssetUrl": "/try-on/cocoa-crescent-drops.png",
     "occasion": [
       "Anniversary dinners",
@@ -166,6 +168,7 @@
     "packaging": "Arrives wrapped in tissue, nestled in a reusable cotton pouch.",
     "featured": true,
     "tryOnEnabled": true,
+    "tryOnKind": "earring",
     "tryOnAssetUrl": "/try-on/vanam-textile-studs.png",
     "occasion": [
       "Workdays",
@@ -233,6 +236,7 @@
     "packaging": "Arrives wrapped in tissue, nestled in a reusable cotton pouch.",
     "featured": true,
     "tryOnEnabled": true,
+    "tryOnKind": "earring",
     "tryOnAssetUrl": "/try-on/raga-heart-studs.png",
     "occasion": [
       "Gifting",
@@ -269,6 +273,269 @@
           "currency": "INR"
         },
         "stock": 20
+      }
+    ]
+  },
+  {
+    "id": "prod-005",
+    "slug": "moti-pearl-choker",
+    "name": "Moti Pearl Choker",
+    "description": "A soft pearl choker strung by hand — ivory beads resting close to the collarbone with a quiet, classic weight. Made for layering with fabric drops or worn alone with an open neckline.",
+    "shortDescription": "Hand-strung ivory pearl choker for the collarbone",
+    "categoryId": "cat-fabric-necklaces",
+    "categorySlug": "fabric-necklaces",
+    "images": [
+      "/products/moti-pearl-choker.webp"
+    ],
+    "primaryMaterial": "pearls",
+    "styleTags": [
+      "pearls",
+      "minimal",
+      "traditional"
+    ],
+    "minPrice": 280,
+    "materials": [
+      "Ivory glass pearls",
+      "Cotton cord",
+      "Gold-tone clasp"
+    ],
+    "careInstructions": "Wipe gently with a soft cloth. Store flat. Keep away from perfume and water.",
+    "comfort": "Light on the neck — sits close without pulling.",
+    "packaging": "Arrives wrapped in tissue, nestled in a reusable cotton pouch.",
+    "featured": true,
+    "tryOnEnabled": true,
+    "tryOnKind": "necklace",
+    "tryOnAssetUrl": "/try-on/moti-pearl-choker.png",
+    "tryOnScale": 1.15,
+    "occasion": [
+      "Weddings",
+      "Festive gatherings",
+      "Everyday grace"
+    ],
+    "process": [
+      {
+        "title": "Select pearls",
+        "description": "Ivory pearls are matched for size and lustre before stringing."
+      },
+      {
+        "title": "Hand knotting",
+        "description": "Each bead is knotted on soft cord so the choker drapes evenly."
+      },
+      {
+        "title": "Clasp finishing",
+        "description": "A gold-tone clasp is fitted and checked for secure, gentle close."
+      }
+    ],
+    "relatedSlugs": [
+      "meadow-floral-collar",
+      "cocoa-crescent-drops"
+    ],
+    "variants": [
+      {
+        "id": "var-005-a",
+        "sku": "MPC-CHK-IV",
+        "size": "One size",
+        "color": "Ivory pearl",
+        "material": "Pearls",
+        "price": {
+          "amount": 280,
+          "currency": "INR"
+        },
+        "stock": 12
+      }
+    ]
+  },
+  {
+    "id": "prod-006",
+    "slug": "meadow-floral-collar",
+    "name": "Meadow Floral Collar",
+    "description": "A fabric floral collar with soft petals, a pearl centre, and trailing pearl drops — a garden piece for open necklines and festive evenings.",
+    "shortDescription": "Fabric floral collar with pearl centre and drops",
+    "categoryId": "cat-fabric-necklaces",
+    "categorySlug": "fabric-necklaces",
+    "images": [
+      "/products/meadow-floral-collar.webp"
+    ],
+    "primaryMaterial": "cotton",
+    "styleTags": [
+      "statement",
+      "pastel",
+      "traditional"
+    ],
+    "minPrice": 320,
+    "materials": [
+      "Printed mesh fabric petals",
+      "Sage fabric leaves",
+      "Ivory pearls",
+      "Gold-tone findings"
+    ],
+    "careInstructions": "Store flat in the cotton pouch. Spot clean petals only. Avoid crushing.",
+    "comfort": "Lightweight collar that rests at the base of the neck.",
+    "packaging": "Arrives wrapped in tissue, nestled in a reusable cotton pouch.",
+    "featured": true,
+    "tryOnEnabled": true,
+    "tryOnKind": "necklace",
+    "tryOnAssetUrl": "/try-on/meadow-floral-collar.png",
+    "tryOnScale": 1.05,
+    "occasion": [
+      "Festive gatherings",
+      "Mehendi",
+      "Evening outings"
+    ],
+    "process": [
+      {
+        "title": "Petal shaping",
+        "description": "Printed mesh is cut and layered into soft floral blooms."
+      },
+      {
+        "title": "Pearl setting",
+        "description": "A centre pearl is set in a gold beaded ring and paired with leaf accents."
+      },
+      {
+        "title": "Drop finishing",
+        "description": "Trailing pearl drops are balanced so the collar sits true."
+      }
+    ],
+    "relatedSlugs": [
+      "moti-pearl-choker",
+      "kesari-diamond-drops"
+    ],
+    "variants": [
+      {
+        "id": "var-006-a",
+        "sku": "MFC-COL-PK",
+        "size": "One size",
+        "color": "Blush & sage",
+        "material": "Cotton textile",
+        "price": {
+          "amount": 320,
+          "currency": "INR"
+        },
+        "stock": 10
+      }
+    ]
+  },
+  {
+    "id": "prod-007",
+    "slug": "ghungroo-wrap-bracelet",
+    "name": "Ghungroo Wrap Bracelet",
+    "description": "A soft fabric wrap bracelet finished with tiny ghungroos and beads — quiet movement for the wrist, made to pair with cloth earrings.",
+    "shortDescription": "Fabric wrap bracelet with ghungroo accents",
+    "categoryId": "cat-fabric-bracelets",
+    "categorySlug": "fabric-bracelets",
+    "images": [
+      "/products/ghungroo-wrap-bracelet.webp"
+    ],
+    "primaryMaterial": "ghungroos",
+    "styleTags": [
+      "boho",
+      "earthy",
+      "traditional"
+    ],
+    "minPrice": 180,
+    "materials": [
+      "Cotton wrap",
+      "Ghungroos",
+      "Glass beads",
+      "Gold-tone findings"
+    ],
+    "careInstructions": "Keep dry. Store coiled in the pouch. Wipe metal gently.",
+    "comfort": "Soft wrap that adjusts without pinching.",
+    "packaging": "Arrives wrapped in tissue, nestled in a reusable cotton pouch.",
+    "featured": true,
+    "tryOnEnabled": false,
+    "occasion": [
+      "Festive gatherings",
+      "Everyday colour"
+    ],
+    "process": [
+      {
+        "title": "Wrap cutting",
+        "description": "Cotton strips are cut and finished for a soft, adjustable wrap."
+      },
+      {
+        "title": "Ghungroo setting",
+        "description": "Tiny bells and beads are set so the wrap moves quietly."
+      }
+    ],
+    "relatedSlugs": [
+      "kesari-diamond-drops",
+      "festival-matching-set"
+    ],
+    "variants": [
+      {
+        "id": "var-007-a",
+        "sku": "GWB-WRP-GD",
+        "size": "One size",
+        "color": "Warm gold",
+        "material": "Cotton & ghungroos",
+        "price": {
+          "amount": 180,
+          "currency": "INR"
+        },
+        "stock": 16
+      }
+    ]
+  },
+  {
+    "id": "prod-008",
+    "slug": "festival-matching-set",
+    "name": "Festival Matching Set",
+    "description": "A coordinated earring-and-accent set for festive evenings — matching fabric tones and findings, packed together as a small-batch pair of pieces.",
+    "shortDescription": "Coordinated fabric earring set for festive wear",
+    "categoryId": "cat-jewellery-sets",
+    "categorySlug": "jewellery-sets",
+    "images": [
+      "/products/festival-matching-set.webp"
+    ],
+    "primaryMaterial": "cotton",
+    "styleTags": [
+      "statement",
+      "traditional",
+      "earthy"
+    ],
+    "minPrice": 420,
+    "materials": [
+      "Cotton textile",
+      "Matching findings",
+      "Beads"
+    ],
+    "careInstructions": "Store pieces together in the pouch. Spot clean fabric only.",
+    "comfort": "Lightweight coordinated pieces made for all-evening wear.",
+    "packaging": "Arrives as a set, wrapped in tissue in a reusable cotton pouch.",
+    "featured": true,
+    "tryOnEnabled": false,
+    "occasion": [
+      "Festive gatherings",
+      "Weddings",
+      "Gifting"
+    ],
+    "process": [
+      {
+        "title": "Pair matching",
+        "description": "Fabric tones and findings are matched across the set."
+      },
+      {
+        "title": "Finishing",
+        "description": "Each piece is weighed and checked so the set feels balanced together."
+      }
+    ],
+    "relatedSlugs": [
+      "kesari-diamond-drops",
+      "meadow-floral-collar"
+    ],
+    "variants": [
+      {
+        "id": "var-008-a",
+        "sku": "FMS-SET-FT",
+        "size": "Set",
+        "color": "Festive mix",
+        "material": "Cotton textile",
+        "price": {
+          "amount": 420,
+          "currency": "INR"
+        },
+        "stock": 8
       }
     ]
   }

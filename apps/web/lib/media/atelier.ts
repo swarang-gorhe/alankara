@@ -120,7 +120,7 @@ export const COLLECTION_TILES = [
   },
   {
     slug: "customize",
-    label: "Accessories",
+    label: "Customize",
     href: "/customize",
     image: ATELIER_MEDIA.customize,
   },

@@ -42,6 +42,7 @@ export type Product = {
   reviewCount?: number;
   tryOnEnabled?: boolean;
   tryOnAssetUrl?: string | null;
+  tryOnKind?: "earring" | "necklace";
   tryOnScale?: number;
   tryOnLeftOffsetX?: number;
   tryOnLeftOffsetY?: number;

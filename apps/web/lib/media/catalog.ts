@@ -152,6 +152,22 @@ const PRODUCT_CONTEXT: Record<string, { lifestyle: string; detail: string }> = {
     lifestyle: MEDIA.linenDrape.src,
     detail: MEDIA.threadBrown.src,
   },
+  "moti-pearl-choker": {
+    lifestyle: MEDIA.pearls.src,
+    detail: MEDIA.silkCream.src,
+  },
+  "meadow-floral-collar": {
+    lifestyle: MEDIA.creamFolds.src,
+    detail: MEDIA.linenDrape.src,
+  },
+  "ghungroo-wrap-bracelet": {
+    lifestyle: MEDIA.threadVintage.src,
+    detail: MEDIA.threadBrown.src,
+  },
+  "festival-matching-set": {
+    lifestyle: MEDIA.yarnMacro.src,
+    detail: MEDIA.creamFolds.src,
+  },
 };
 
 const FALLBACK_SET = (main: string): ProductMediaSet => ({
