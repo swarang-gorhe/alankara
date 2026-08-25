@@ -75,42 +75,33 @@ function pt(
   return landmarks[i] ?? null;
 }
 
-function lerp(a: number, b: number, t: number): number {
-  return a + (b - a) * t;
-}
-
 /**
- * Earlobe pierce estimate from cheek + lower oval, pushed outward.
- * `outward` is a fraction of the cheek→midline vector length added again
- * so the point sits outside the cheek contour (on the lobe), not inside.
+ * Earlobe pierce from face-oval cheek (234/454).
+ *
+ * Cover-mapped calibration (430×900 stage): ear-colored pixels span ~x=53–82
+ * with the lobe near y=350–365. Landmark 234’s X is already in that column;
+ * a light 0.03×IO outward bias sits on the outer lobe, and 0.08×IO drop
+ * moves from canal height to the lobe. Larger outward values fall off-head.
  */
 function pierceFromContour(
   cheek: { x: number; y: number; z: number },
   lobe: { x: number; y: number; z: number } | null,
   midX: number,
   interocular: number,
+  _eyeOuterY: number,
 ): { x: number; y: number; z: number; cheekX: number; cheekY: number; lobeX: number; lobeY: number } {
-  // Bias toward lower oval (lobe height); cheek alone sits too high/inward.
-  const t = 0.62;
-  const baseX = lobe ? lerp(cheek.x, lobe.x, t) : cheek.x;
-  const baseY = lobe ? lerp(cheek.y, lobe.y, t) : cheek.y + interocular * 0.12;
-
-  // OUTWARD: left cheek is left of mid → (cheek.x - midX) < 0; add more of that.
-  // (Previous bug added a positive constant to left x → pushed INTO the cheek.)
-  const outward = 0.28;
-  const x = baseX + (baseX - midX) * outward;
-  // Small extra drop so the hook sits on the lobe, not the canal.
-  const y = baseY + interocular * 0.035;
-  const z = lobe ? lerp(cheek.z, lobe.z, t) : cheek.z;
+  const side = cheek.x < midX ? -1 : 1;
+  const x = cheek.x + side * interocular * 0.03;
+  const y = cheek.y + interocular * 0.08;
 
   return {
     x,
     y,
-    z,
+    z: cheek.z,
     cheekX: cheek.x,
     cheekY: cheek.y,
     lobeX: lobe?.x ?? cheek.x,
-    lobeY: lobe?.y ?? baseY,
+    lobeY: lobe?.y ?? y,
   };
 }
 
@@ -145,8 +136,20 @@ export function computeEarAnchors(
       : interocular * 2.4;
 
   const midX = (leftEye.x + rightEye.x) / 2;
-  const leftPierce = pierceFromContour(lCheek, lLobe, midX, interocular);
-  const rightPierce = pierceFromContour(rCheek, rLobe, midX, interocular);
+  const leftPierce = pierceFromContour(
+    lCheek,
+    lLobe,
+    midX,
+    interocular,
+    leftEye.y,
+  );
+  const rightPierce = pierceFromContour(
+    rCheek,
+    rLobe,
+    midX,
+    interocular,
+    rightEye.y,
+  );
 
   const leftRawX = leftPierce.x;
   const leftRawY = leftPierce.y;
@@ -234,6 +237,11 @@ export function computeEarAnchors(
     yaw,
     midX,
   };
+
+  if (typeof window !== "undefined") {
+    (window as unknown as { __earAnchorDebug?: EarAnchorDebug }).__earAnchorDebug =
+      lastEarAnchorDebug;
+  }
 
   return {
     kind,

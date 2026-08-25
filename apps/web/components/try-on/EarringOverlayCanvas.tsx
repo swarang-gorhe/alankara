@@ -235,15 +235,25 @@ function paintEarrings(
       ctx,
       ox + w * 0.5,
       oy + h * 0.92,
-      w * 0.24,
-      h * 0.05,
+      w * 0.28,
+      h * 0.055,
       shadowAlpha,
     );
+
+    // Contact shadow on the cheek/neck under the hook
+    ctx.shadowColor = `rgba(20, 12, 8, ${Math.min(0.55, 0.22 + scene.lum * 0.35) * depthFade})`;
+    ctx.shadowBlur = Math.max(6, h * 0.04);
+    ctx.shadowOffsetX = side === "left" ? -w * 0.02 : w * 0.02;
+    ctx.shadowOffsetY = h * 0.035;
 
     ctx.globalAlpha = 0.98 * depthFade;
     ctx.filter = sceneColorGrade(scene);
     drawFeathered(ctx, img, trim, feather, featherPad, ox, oy, w, h);
     ctx.filter = "none";
+    ctx.shadowColor = "transparent";
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
 
     // Warm multiply pass so cutout picks up room color temperature
     ctx.globalCompositeOperation = "multiply";
