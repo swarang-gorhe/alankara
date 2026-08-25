@@ -19,17 +19,33 @@ const CHIN = 152;
 const LEFT_JAW = 132;
 const RIGHT_JAW = 361;
 
-/** Dev-only: last anchor breakdown for debug overlay + console verification. */
+/** Last anchor breakdown for debug overlay (gated by isTryOnDebugEnabled). */
 export type EarAnchorDebug = {
-  left: { rawX: number; rawY: number; offsetX: number; offsetY: number; finalX: number; finalY: number };
-  right: { rawX: number; rawY: number; offsetX: number; offsetY: number; finalX: number; finalY: number };
+  left: {
+    rawX: number;
+    rawY: number;
+    offsetX: number;
+    offsetY: number;
+    finalX: number;
+    finalY: number;
+    visible: boolean;
+    depth: number;
+  };
+  right: {
+    rawX: number;
+    rawY: number;
+    offsetX: number;
+    offsetY: number;
+    finalX: number;
+    finalY: number;
+    visible: boolean;
+    depth: number;
+  };
   interocular: number;
   yaw: number;
 };
 
 export let lastEarAnchorDebug: EarAnchorDebug | null = null;
-
-const DEV = process.env.NODE_ENV === "development";
 
 /** EMA — lower alpha = more lag, reads as physically attached. */
 function smooth(prev: number | undefined, next: number, alpha = 0.14): number {
@@ -102,12 +118,19 @@ export function computeEarAnchors(
   const midX = (leftEye.x + rightEye.x) / 2;
   const yaw = nose ? (nose.x - midX) / interocular : 0;
 
-  // Depth: z relative to nose — farther ear / turned away fades (proxy for occlusion)
+  /**
+   * Visibility is yaw-only. Do NOT gate on (tragus.z − nose.z): on a frontal
+   * face MediaPipe places ears behind the nose tip, so depth is usually > 0.05
+   * and both ears were marked invisible — stuck on "Turn a little…".
+   * Soft fade for turned heads lives in EarringOverlayCanvas via yaw.
+   */
+  const YAW_HIDE = 1.45;
+  const leftVisible = yaw > -YAW_HIDE;
+  const rightVisible = yaw < YAW_HIDE;
+
   const noseZ = nose?.z ?? 0;
   const leftDepth = (lTragus.z ?? 0) - noseZ;
   const rightDepth = (rTragus.z ?? 0) - noseZ;
-  const leftVisible = yaw > -1.05 && leftDepth < 0.05;
-  const rightVisible = yaw < 1.05 && rightDepth < 0.05;
 
   // try_on_scale is a multiplier against interocular — NOT an absolute pixel size
   const scaleMultiplier =
@@ -127,28 +150,30 @@ export function computeEarAnchors(
   const centerY = chinY + faceH * 0.1 + neckOy;
   const neckWidth = Math.hypot(jawRx - jawLx, jawRy - jawLy) * 1.35;
 
-  if (DEV) {
-    lastEarAnchorDebug = {
-      left: {
-        rawX: leftRawX,
-        rawY: leftRawY,
-        offsetX: leftOffX,
-        offsetY: leftOffY,
-        finalX: lx,
-        finalY: ly,
-      },
-      right: {
-        rawX: rightRawX,
-        rawY: rightRawY,
-        offsetX: rightOffX,
-        offsetY: rightOffY,
-        finalX: rx,
-        finalY: ry,
-      },
-      interocular,
-      yaw,
-    };
-  }
+  lastEarAnchorDebug = {
+    left: {
+      rawX: leftRawX,
+      rawY: leftRawY,
+      offsetX: leftOffX,
+      offsetY: leftOffY,
+      finalX: lx,
+      finalY: ly,
+      visible: leftVisible,
+      depth: leftDepth,
+    },
+    right: {
+      rawX: rightRawX,
+      rawY: rightRawY,
+      offsetX: rightOffX,
+      offsetY: rightOffY,
+      finalX: rx,
+      finalY: ry,
+      visible: rightVisible,
+      depth: rightDepth,
+    },
+    interocular,
+    yaw,
+  };
 
   return {
     kind,

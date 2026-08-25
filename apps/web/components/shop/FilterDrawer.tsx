@@ -262,6 +262,7 @@ export function FloatingFilterButton({
         "fixed bottom-6 left-6 z-40 inline-flex items-center gap-2 rounded-full border border-champagne/40 bg-ivory/95 px-5 py-3 font-body text-sm text-maroon shadow-luxury backdrop-blur-md",
         className,
       )}
+      data-shop-filter-fab
       aria-haspopup="dialog"
     >
       <span className="font-display tracking-wide">Filter</span>

@@ -22,9 +22,8 @@ type TryOnModalProps = {
 };
 
 /**
- * Lenskart-style full-bleed try-on: camera fills the screen,
- * chrome floats lightly, actions sit in a slim bottom dock.
- * Auto-selects earring vs necklace pipeline from product.tryOnType.
+ * Boutique fitting-room try-on: warm ivory stage, framed camera,
+ * chrome aligned with Alankara serif / maroon language.
  */
 export function TryOnModal({ open, product, onClose }: TryOnModalProps) {
   const [mode, setMode] = useState<TryOnMode>("live");
@@ -46,8 +45,10 @@ export function TryOnModal({ open, product, onClose }: TryOnModalProps) {
     void trackTryOnEvent("open", product.id);
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    document.body.setAttribute("data-try-on-open", "true");
     return () => {
       document.body.style.overflow = prev;
+      document.body.removeAttribute("data-try-on-open");
     };
   }, [open, product.id]);
 
@@ -59,12 +60,11 @@ export function TryOnModal({ open, product, onClose }: TryOnModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[80] bg-ink"
+      className="fixed inset-0 z-[100] bg-gradient-to-b from-ivory via-[#F7EDE0] to-linen"
       role="dialog"
       aria-modal="true"
       aria-label={`Try on ${product.name}`}
     >
-      {/* Full-bleed stage */}
       <div className="absolute inset-0">
         {shareOpen ? (
           <div className="flex h-full items-end justify-center bg-ivory sm:items-center">
@@ -105,33 +105,35 @@ export function TryOnModal({ open, product, onClose }: TryOnModalProps) {
 
       {!shareOpen && (
         <>
-          {/* Top floating chrome */}
-          <div className="pointer-events-none absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-ink/55 via-ink/20 to-transparent pb-16 pt-[max(0.75rem,env(safe-area-inset-top))]">
+          {/* Top floating chrome — keep product name / privacy treatment */}
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-10 bg-gradient-to-b from-ivory via-ivory/90 to-transparent pb-10 pt-[max(0.75rem,env(safe-area-inset-top))]">
             <div className="pointer-events-auto flex items-center justify-between px-4">
               <button
                 type="button"
                 onClick={onClose}
-                className="flex h-10 w-10 items-center justify-center rounded-full bg-ink/45 text-ivory backdrop-blur-md"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-champagne/40 bg-ivory/90 text-maroon shadow-sm backdrop-blur-md"
                 aria-label="Close try-on"
               >
                 <X className="h-5 w-5" />
               </button>
 
               <div className="mx-3 min-w-0 flex-1 text-center">
-                <p className="truncate font-display text-base text-ivory drop-shadow">{product.name}</p>
-                <p className="font-body text-[10px] uppercase tracking-[0.2em] text-ivory/70">
+                <p className="truncate font-display text-base text-maroon sm:text-lg">
+                  {product.name}
+                </p>
+                <p className="font-body text-[10px] uppercase tracking-[0.2em] text-ink-muted">
                   Try it on · private on device
                 </p>
               </div>
 
-              <div className="flex rounded-full bg-ink/45 p-1 backdrop-blur-md">
+              <div className="flex rounded-full border border-champagne/40 bg-ivory/90 p-1 shadow-sm backdrop-blur-md">
                 <button
                   type="button"
                   disabled={unsupported}
                   onClick={() => setMode("live")}
                   className={cn(
                     "flex h-8 w-8 items-center justify-center rounded-full",
-                    mode === "live" ? "bg-ivory text-maroon" : "text-ivory/80",
+                    mode === "live" ? "bg-maroon text-ivory" : "text-maroon/70",
                   )}
                   aria-label="Live camera"
                 >
@@ -142,7 +144,7 @@ export function TryOnModal({ open, product, onClose }: TryOnModalProps) {
                   onClick={() => setMode("photo")}
                   className={cn(
                     "flex h-8 w-8 items-center justify-center rounded-full",
-                    mode === "photo" ? "bg-ivory text-maroon" : "text-ivory/80",
+                    mode === "photo" ? "bg-maroon text-ivory" : "text-maroon/70",
                   )}
                   aria-label="Use a photo"
                 >
@@ -152,54 +154,55 @@ export function TryOnModal({ open, product, onClose }: TryOnModalProps) {
             </div>
           </div>
 
-          {/* Bottom dock */}
-          <div className="absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-ink/70 via-ink/35 to-transparent pt-20 pb-[max(1rem,env(safe-area-inset-bottom))]">
-            <div className="mx-auto flex max-w-lg flex-col gap-3 px-4">
-              <div className="flex items-center gap-2">
+          {/* Bottom dock — single spaced row, clear of browser chrome / shop Filter */}
+          <div className="absolute inset-x-0 bottom-0 z-10 border-t border-champagne/25 bg-ivory/95 pt-3 shadow-[0_-8px_24px_rgba(43,35,28,0.06)] backdrop-blur-md pb-[max(0.85rem,env(safe-area-inset-bottom))]">
+            <div className="mx-auto flex w-full max-w-lg flex-col gap-2.5 px-4">
+              <div className="flex flex-wrap items-stretch gap-2">
                 <button
                   type="button"
                   onClick={() => setShowAfter((v) => !v)}
                   className={cn(
-                    "rounded-full px-4 py-2.5 font-body text-[11px] uppercase tracking-[0.16em] backdrop-blur-md",
+                    "min-w-[7.25rem] flex-1 rounded-full border px-3 py-2.5 font-body text-[10px] uppercase tracking-[0.14em] sm:text-[11px]",
                     showAfter
-                      ? "bg-ivory/20 text-ivory"
-                      : "bg-ivory text-maroon",
+                      ? "border-champagne/40 bg-ivory text-maroon"
+                      : "border-maroon/20 bg-maroon text-ivory",
                   )}
+                  aria-pressed={showAfter}
+                  title="Toggle jewellery overlay on the preview"
                 >
-                  {showAfter ? "Hide" : "Show"}
+                  {showAfter ? "Hide piece" : "Show piece"}
                 </button>
                 {mode === "photo" && (
                   <button
                     type="button"
                     onClick={() => setAdjustOpen((v) => !v)}
-                    className="rounded-full bg-ivory/20 px-4 py-2.5 font-body text-[11px] uppercase tracking-[0.16em] text-ivory backdrop-blur-md"
+                    className="min-w-[7.25rem] flex-1 rounded-full border border-champagne/40 bg-ivory px-3 py-2.5 font-body text-[10px] uppercase tracking-[0.14em] text-maroon sm:text-[11px]"
                   >
                     Adjust
                   </button>
                 )}
-                <div className="flex-1" />
                 <Link
                   href={`/product/${product.slug}`}
                   onClick={() => {
                     void trackTryOnEvent("order_click", product.id);
                     onClose();
                   }}
-                  className="inline-flex items-center gap-2 rounded-full bg-maroon px-5 py-2.5 font-body text-[11px] uppercase tracking-[0.16em] text-ivory shadow-lg"
+                  className="inline-flex min-w-[7.25rem] flex-1 items-center justify-center gap-1.5 rounded-full bg-maroon px-3 py-2.5 font-body text-[10px] uppercase tracking-[0.14em] text-ivory shadow-sm sm:text-[11px]"
                 >
-                  <ShoppingBag className="h-3.5 w-3.5" />
+                  <ShoppingBag className="h-3.5 w-3.5 shrink-0" />
                   Order
                 </Link>
                 <button
                   type="button"
                   onClick={() => setShareOpen(true)}
-                  className="rounded-full bg-ivory px-5 py-2.5 font-body text-[11px] uppercase tracking-[0.16em] text-maroon shadow-lg"
+                  className="min-w-[7.25rem] flex-1 rounded-full border border-maroon/15 bg-linen px-3 py-2.5 font-body text-[10px] uppercase tracking-[0.14em] text-maroon sm:text-[11px]"
                 >
                   Share
                 </button>
               </div>
 
               {adjustOpen && mode === "photo" && (
-                <div className="rounded-lg bg-ivory/95 p-3 backdrop-blur-md">
+                <div className="rounded-lg border border-champagne/30 bg-ivory p-3">
                   <ManualAdjustControls value={manual} onChange={setManual} />
                 </div>
               )}
