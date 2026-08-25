@@ -24,8 +24,9 @@ Hard constraints, do not violate:
    soft blush, elegant serif type, the existing flower logo. Do not introduce neon AR
    graphics, cyberpunk UI, blue gradients, or generic "tech dashboard" styling anywhere in
    this feature, including error and permission states.
-4. Every earring product needs its own try-on calibration (asset, scale, left/right offsets,
-   rotation, vertical offset) — never hardcode one placement for all products.
+4. Every earring **or necklace** product needs its own try-on calibration — never hardcode
+   one placement for all products. Necklaces use a parallel shoulder/neck-base pipeline
+   (`useNecklaceAnchors` + `NecklaceOverlayCanvas`), not ear anchors.
 5. Provide manual correction controls (zoom/move/scale/rotate/reset) in photo mode, because
    automatic ear detection will not always be accurate.
 6. Handle all error states gracefully with warm, on-brand copy (camera denied, no face

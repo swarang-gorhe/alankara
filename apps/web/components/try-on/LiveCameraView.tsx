@@ -2,10 +2,18 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { EarringOverlayCanvas } from "./EarringOverlayCanvas";
-import { getTryOnAssetUrl } from "./tryOnAsset";
+import { NecklaceOverlayCanvas } from "./NecklaceOverlayCanvas";
+import { getTryOnAssetUrl, getTryOnType } from "./tryOnAsset";
 import { ErrorStates } from "./ErrorStates";
 import { computeEarAnchors } from "./useEarAnchors";
-import type { EarAnchors, ManualAdjust, TryOnErrorKind, TryOnProduct } from "./types";
+import { computeNecklaceAnchors } from "./useNecklaceAnchors";
+import type {
+  EarAnchors,
+  ManualAdjust,
+  NecklaceAnchors,
+  TryOnErrorKind,
+  TryOnProduct,
+} from "./types";
 import { DEFAULT_MANUAL_ADJUST } from "./types";
 import { trackTryOnEvent } from "./tryOnAnalytics";
 
@@ -14,7 +22,14 @@ type LiveCameraViewProps = {
   detectVideo: (video: HTMLVideoElement, ts: number) => {
     landmarks: Array<{ x: number; y: number; z: number }>;
   } | null;
+  detectPoseVideo?: (
+    video: HTMLVideoElement,
+    ts: number,
+  ) => {
+    landmarks: Array<{ x: number; y: number; z: number; visibility?: number }>;
+  } | null;
   landmarkerReady: boolean;
+  poseReady?: boolean;
   unsupported: boolean;
   onSwitchPhoto: () => void;
   onSuccess?: () => void;
@@ -26,7 +41,9 @@ type LiveCameraViewProps = {
 export function LiveCameraView({
   product,
   detectVideo,
+  detectPoseVideo,
   landmarkerReady,
+  poseReady = true,
   unsupported,
   onSwitchPhoto,
   onSuccess,
@@ -34,10 +51,16 @@ export function LiveCameraView({
   showOverlay = true,
   onFrameCapture,
 }: LiveCameraViewProps) {
+  const tryOnType = getTryOnType(product);
+  const isNecklace = tryOnType === "necklace";
+  const pipelineReady = landmarkerReady && (!isNecklace || poseReady);
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const anchorsRef = useRef<EarAnchors | null>(null);
-  const drawRef = useRef<((anchors: EarAnchors | null) => void) | null>(null);
+  const earAnchorsRef = useRef<EarAnchors | null>(null);
+  const neckAnchorsRef = useRef<NecklaceAnchors | null>(null);
+  const earDrawRef = useRef<((anchors: EarAnchors | null) => void) | null>(null);
+  const neckDrawRef = useRef<((anchors: NecklaceAnchors | null) => void) | null>(null);
   const manualRef = useRef(manual);
   const productRef = useRef(product);
   const [error, setError] = useState<TryOnErrorKind | null>(null);
@@ -100,7 +123,7 @@ export function LiveCameraView({
   }, [consented, product.id, stopStream, unsupported]);
 
   useEffect(() => {
-    if (!consented || !landmarkerReady || error === "camera_denied") return;
+    if (!consented || !pipelineReady || error === "camera_denied") return;
     let raf = 0;
     let lastInfer = 0;
     let lastUi = 0;
@@ -110,11 +133,41 @@ export function LiveCameraView({
       const video = videoRef.current;
       if (!video || video.readyState < 2) return;
 
-      // Infer ~28fps; draw every frame using smoothed anchors for fluidity
       if (ts - lastInfer >= 1000 / 28) {
         lastInfer = ts;
-        const frame = detectVideo(video, ts);
-        if (!frame) {
+        const face = detectVideo(video, ts);
+
+        if (isNecklace) {
+          const pose = detectPoseVideo?.(video, ts) ?? null;
+          if (!pose && !face) {
+            noFaceRef.current += 1;
+            if (noFaceRef.current > 35 && ts - lastUi > 400) {
+              lastUi = ts;
+              setTracking(false);
+              setHint("Stand back a little — show shoulders and face");
+            }
+          } else {
+            noFaceRef.current = 0;
+            const next = computeNecklaceAnchors(
+              face?.landmarks ?? null,
+              pose?.landmarks ?? null,
+              productRef.current,
+              manualRef.current,
+              neckAnchorsRef.current,
+            );
+            neckAnchorsRef.current = next;
+            if (next && !successSent.current) {
+              successSent.current = true;
+              onSuccess?.();
+              void trackTryOnEvent("try_on_success", productRef.current.id);
+            }
+            if (ts - lastUi > 350) {
+              lastUi = ts;
+              setTracking(Boolean(next));
+              setHint(next ? null : "Centre your shoulders in soft light");
+            }
+          }
+        } else if (!face) {
           noFaceRef.current += 1;
           if (noFaceRef.current > 35 && ts - lastUi > 400) {
             lastUi = ts;
@@ -124,12 +177,12 @@ export function LiveCameraView({
         } else {
           noFaceRef.current = 0;
           const next = computeEarAnchors(
-            frame.landmarks,
+            face.landmarks,
             productRef.current,
             manualRef.current,
-            anchorsRef.current,
+            earAnchorsRef.current,
           );
-          anchorsRef.current = next;
+          earAnchorsRef.current = next;
           if (next && !successSent.current) {
             successSent.current = true;
             onSuccess?.();
@@ -147,17 +200,24 @@ export function LiveCameraView({
         }
       }
 
-      // Always redraw smoothed position (even between inferences)
-      if (anchorsRef.current) {
-        const held = anchorsRef.current;
-        // Light predictive hold — re-smooth toward itself keeps canvas fresh
-        drawRef.current?.(held);
+      if (isNecklace) {
+        if (neckAnchorsRef.current) neckDrawRef.current?.(neckAnchorsRef.current);
+      } else if (earAnchorsRef.current) {
+        earDrawRef.current?.(earAnchorsRef.current);
       }
     };
 
     raf = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(raf);
-  }, [consented, detectVideo, error, landmarkerReady, onSuccess]);
+  }, [
+    consented,
+    detectPoseVideo,
+    detectVideo,
+    error,
+    isNecklace,
+    onSuccess,
+    pipelineReady,
+  ]);
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -178,19 +238,13 @@ export function LiveCameraView({
     canvas.height = video.videoHeight;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-    // Mirror to match what user sees
     ctx.translate(canvas.width, 0);
     ctx.scale(-1, 1);
     ctx.drawImage(video, 0, 0);
-    // Bake earrings in mirrored space
-    const anchors = anchorsRef.current;
-    if (anchors && showOverlay) {
-      // Overlay draw expects mirrored=true and box = canvas size with media = canvas size
-      // Simple approximate bake using cover 1:1
+    if (showOverlay) {
       const img = new Image();
       img.crossOrigin = "anonymous";
       img.src = getTryOnAssetUrl(product) ?? "";
-      // Sync path without waiting — export video still is enough for share
     }
     onFrameCapture?.(canvas.toDataURL("image/jpeg", 0.92));
   }, [onFrameCapture, product, showOverlay]);
@@ -247,28 +301,42 @@ export function LiveCameraView({
         autoPlay
         className="absolute inset-0 h-full w-full scale-x-[-1] object-cover"
       />
-      {/* Overlay is drawn already mirrored in canvas coords — do not CSS-flip again */}
-      <EarringOverlayCanvas
-        width={size.w}
-        height={size.h}
-        mediaWidth={mediaSize.w}
-        mediaHeight={mediaSize.h}
-        anchors={null}
-        product={product}
-        showOverlay={showOverlay}
-        mirrored
-        drawRef={drawRef}
-      />
+      {isNecklace ? (
+        <NecklaceOverlayCanvas
+          width={size.w}
+          height={size.h}
+          mediaWidth={mediaSize.w}
+          mediaHeight={mediaSize.h}
+          anchors={null}
+          product={product}
+          showOverlay={showOverlay}
+          mirrored
+          drawRef={neckDrawRef}
+        />
+      ) : (
+        <EarringOverlayCanvas
+          width={size.w}
+          height={size.h}
+          mediaWidth={mediaSize.w}
+          mediaHeight={mediaSize.h}
+          anchors={null}
+          product={product}
+          showOverlay={showOverlay}
+          mirrored
+          drawRef={earDrawRef}
+        />
+      )}
 
-      {/* Soft face guide — Lenskart-style oval */}
       <div
         className="pointer-events-none absolute inset-0 flex items-center justify-center"
         aria-hidden
       >
         <div
-          className={`h-[52%] max-h-[420px] w-[58%] max-w-[280px] rounded-[50%] border transition-opacity duration-500 ${
-            tracking ? "border-champagne/25 opacity-40" : "border-ivory/50 opacity-70"
-          }`}
+          className={`border transition-opacity duration-500 ${
+            isNecklace
+              ? "h-[62%] max-h-[520px] w-[72%] max-w-[340px] rounded-[40%]"
+              : "h-[52%] max-h-[420px] w-[58%] max-w-[280px] rounded-[50%]"
+          } ${tracking ? "border-champagne/25 opacity-40" : "border-ivory/50 opacity-70"}`}
           style={{ boxShadow: "0 0 0 9999px rgba(20,14,10,0.28)" }}
         />
       </div>
@@ -281,7 +349,7 @@ export function LiveCameraView({
         </div>
       )}
 
-      {!landmarkerReady && (
+      {!pipelineReady && (
         <div className="absolute inset-0 flex items-center justify-center bg-ink/40">
           <p className="font-body text-xs uppercase tracking-widest text-ivory">Preparing…</p>
         </div>

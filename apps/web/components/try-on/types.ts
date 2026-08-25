@@ -1,3 +1,5 @@
+export type TryOnType = "earring" | "necklace";
+
 export type TryOnProduct = {
   id: string;
   slug: string;
@@ -5,8 +7,10 @@ export type TryOnProduct = {
   images: string[];
   categorySlug?: string;
   tryOnEnabled?: boolean;
+  tryOnType?: TryOnType;
+  /** @deprecated Prefer tryOnType */
+  tryOnKind?: TryOnType;
   tryOnAssetUrl?: string | null;
-  tryOnKind?: "earring" | "necklace";
   tryOnScale?: number;
   tryOnLeftOffsetX?: number;
   tryOnLeftOffsetY?: number;
@@ -14,10 +18,14 @@ export type TryOnProduct = {
   tryOnRightOffsetY?: number;
   tryOnRotation?: number;
   tryOnVerticalOffset?: number;
+  tryOnNecklaceAssetUrl?: string | null;
+  tryOnNecklaceLengthOffset?: number;
+  tryOnNecklaceScale?: number;
+  tryOnNecklaceRotationOffset?: number;
 };
 
 export type EarAnchor = {
-  x: number; // 0–1 normalized
+  x: number;
   y: number;
   visible: boolean;
 };
@@ -26,15 +34,30 @@ export type EarAnchors = {
   kind: "earring" | "necklace";
   left: EarAnchor;
   right: EarAnchor;
-  /** Necklace center in normalized coords */
   centerX: number;
   centerY: number;
-  /** Necklace width in normalized face space */
   neckWidth: number;
-  roll: number; // radians
+  roll: number;
   yaw: number;
-  scale: number; // relative to interocular distance
+  scale: number;
   interocular: number;
+};
+
+/** Parallel necklace placement state — separate from EarAnchors. */
+export type NecklaceAnchors = {
+  /** Top of asset (clasp / back-of-neck) in normalized coords */
+  claspX: number;
+  claspY: number;
+  /** Lagged pendant tip for drape sway */
+  pendantX: number;
+  pendantY: number;
+  shoulderWidth: number;
+  torsoRoll: number;
+  yaw: number;
+  scale: number;
+  /** Chin/jaw polygon for occlusion mask */
+  jawPoints: Array<{ x: number; y: number }>;
+  visible: boolean;
 };
 
 export type ManualAdjust = {

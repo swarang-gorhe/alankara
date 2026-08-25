@@ -41,8 +41,10 @@ export type Product = {
   averageRating?: number | null;
   reviewCount?: number;
   tryOnEnabled?: boolean;
-  tryOnAssetUrl?: string | null;
+  tryOnType?: "earring" | "necklace";
+  /** @deprecated Prefer tryOnType — kept for fixture compatibility */
   tryOnKind?: "earring" | "necklace";
+  tryOnAssetUrl?: string | null;
   tryOnScale?: number;
   tryOnLeftOffsetX?: number;
   tryOnLeftOffsetY?: number;
@@ -50,12 +52,17 @@ export type Product = {
   tryOnRightOffsetY?: number;
   tryOnRotation?: number;
   tryOnVerticalOffset?: number;
+  tryOnNecklaceAssetUrl?: string | null;
+  tryOnNecklaceLengthOffset?: number;
+  tryOnNecklaceScale?: number;
+  tryOnNecklaceRotationOffset?: number;
 };
 
 export type TryOnConfig = {
   productId: string;
   productName: string;
   tryOnEnabled: boolean;
+  tryOnType: "earring" | "necklace";
   tryOnAssetUrl?: string | null;
   tryOnScale: number;
   tryOnLeftOffsetX: number;
@@ -64,6 +71,10 @@ export type TryOnConfig = {
   tryOnRightOffsetY: number;
   tryOnRotation: number;
   tryOnVerticalOffset: number;
+  tryOnNecklaceAssetUrl?: string | null;
+  tryOnNecklaceLengthOffset: number;
+  tryOnNecklaceScale: number;
+  tryOnNecklaceRotationOffset: number;
 };
 
 export type Review = {

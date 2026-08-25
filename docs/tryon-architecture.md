@@ -24,7 +24,9 @@ Admin try-on config lives at `/admin/products/[id]/try-on-config` (also reachabl
 | Frontend | Next.js App Router + React + TypeScript | SSR product pages; CSR try-on modal |
 | Styling | Tailwind + Alankara tokens (ivory, maroon, champagne gold, blush, serif) | Brand consistency |
 | Face/landmark detection | MediaPipe Face Landmarker (Tasks Vision, WASM/GPU), client-side | No camera frames leave the device |
-| Ear position | Derived from jaw/temple landmarks + per-product offsets | Face Mesh has no native ear landmarks |
+| Pose / shoulders | MediaPipe Pose Landmarker (lite), client-side | Necklace neck-base from shoulders 11/12 |
+| Ear position | Derived from tragus landmarks + per-product offsets | Face Mesh has no native ear landmarks |
+| Necklace position | Parallel pipeline: shoulder midpoint + chin upper bound | Scale by shoulder width; hang from clasp |
 | Rendering | Canvas 2D for simple cases; Three.js + WebGL for perspective | Head rotation needs depth |
 | Animation loop | `requestAnimationFrame`, inference throttled ~24–30fps | Performance + battery |
 | Photo mode | Same landmark pipeline once on a static image | Reuses live path |
@@ -62,6 +64,7 @@ Preview (Before/After, manual nudge)
 ```sql
 -- products columns
 alter table products add column try_on_enabled boolean default false;
+alter table products add column try_on_type text default 'earring'; -- 'earring' | 'necklace'
 alter table products add column try_on_asset_url text;
 alter table products add column try_on_scale numeric default 1.0;
 alter table products add column try_on_left_offset_x numeric default 0;
@@ -70,12 +73,16 @@ alter table products add column try_on_right_offset_x numeric default 0;
 alter table products add column try_on_right_offset_y numeric default 0;
 alter table products add column try_on_rotation numeric default 0;
 alter table products add column try_on_vertical_offset numeric default 0;
+alter table products add column try_on_necklace_asset_url text;
+alter table products add column try_on_necklace_length_offset numeric default 0;
+alter table products add column try_on_necklace_scale numeric default 1.0;
+alter table products add column try_on_necklace_rotation_offset numeric default 0;
 
 -- try_on_requests (product_id is VARCHAR FK; customer_id has no FK)
 -- try_on_events (session analytics)
 ```
 
-See Alembic `007_try_on` and `supabase/migrations/000004_try_on.sql` for the applied definition.
+See Alembic `007_try_on` + `008_necklace_try_on` and `supabase/migrations/000004_try_on.sql` + `000005_necklace_try_on.sql`.
 
 A scheduled job should delete unconfirmed `photo_url` files older than N days (Phase 6+).
 
@@ -90,13 +97,18 @@ A scheduled job should delete unconfirmed `photo_url` files older than N days (P
   LiveCameraView.tsx
   PhotoUploadView.tsx
   EarringOverlayCanvas.tsx
+  NecklaceOverlayCanvas.tsx
+  compositing.ts
   BeforeAfterToggle.tsx
   ManualAdjustControls.tsx
   ShareMyLookForm.tsx
   ErrorStates.tsx
   useFaceLandmarker.ts
+  usePoseLandmarker.ts
   useEarAnchors.ts
+  useNecklaceAnchors.ts
   tryOnAnalytics.ts
+  tryOnAsset.ts
 
 /app/admin/try-on-requests/
   page.tsx
@@ -108,14 +120,22 @@ A scheduled job should delete unconfirmed `photo_url` files older than N days (P
 
 ## 5. Placement math
 
+### Earrings
 1. Get 478 face landmarks (normalized 0–1 + depth).
-2. Prefer MediaPipe `facialTransformationMatrix` for head pose.
-3. Derive raw left/right ear anchors from temple/jaw indices (~234/454 region).
-4. Apply product offsets (`try_on_left_offset_*`, `try_on_right_offset_*`, scale, rotation, vertical offset).
-5. Place transparent try-on PNG planes in Three.js; scale by interocular distance.
-6. Composite at throttled rate over video/photo base layer.
+2. Derive pierce anchors from tragus indices (234/454) + small hook drop.
+3. Apply product offsets (`try_on_left_offset_*`, `try_on_right_offset_*`, scale, rotation).
+4. Scale by interocular distance × `try_on_scale`.
+5. Composite with lighting match, feathered edges, drop shadow.
 
-Per-product calibration (admin Phase 1) matters more than generic ear detection. Manual nudge controls (Phase 5) are the safety net.
+### Necklaces (parallel pipeline)
+1. Run Pose Landmarker for shoulders (11/12) alongside Face Landmarker for chin.
+2. Neck-base = shoulder midpoint lifted toward chin; clasp = neck-base + `try_on_necklace_length_offset`.
+3. Scale by shoulder width × `try_on_necklace_scale` — not face width.
+4. Roll from shoulder line (torso), not head roll alone.
+5. Hang asset from TOP (clasp); pendant lag/sway for drape; chin/jaw evenodd clip for occlusion.
+6. Reuse shared lighting / feather / shadow utilities from `compositing.ts`.
+
+Per-product calibration (admin) matters more than generic detection. Manual nudge controls in photo mode are the safety net.
 
 ## 6. Privacy
 

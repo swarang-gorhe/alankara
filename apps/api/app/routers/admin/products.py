@@ -147,6 +147,7 @@ async def update_try_on_config(
     updates = body.model_dump(exclude_unset=True)
     field_map = {
         "tryOnEnabled": "try_on_enabled",
+        "tryOnType": "try_on_type",
         "tryOnAssetUrl": "try_on_asset_url",
         "tryOnScale": "try_on_scale",
         "tryOnLeftOffsetX": "try_on_left_offset_x",
@@ -155,6 +156,10 @@ async def update_try_on_config(
         "tryOnRightOffsetY": "try_on_right_offset_y",
         "tryOnRotation": "try_on_rotation",
         "tryOnVerticalOffset": "try_on_vertical_offset",
+        "tryOnNecklaceAssetUrl": "try_on_necklace_asset_url",
+        "tryOnNecklaceLengthOffset": "try_on_necklace_length_offset",
+        "tryOnNecklaceScale": "try_on_necklace_scale",
+        "tryOnNecklaceRotationOffset": "try_on_necklace_rotation_offset",
     }
     for key, value in updates.items():
         attr = field_map.get(key)

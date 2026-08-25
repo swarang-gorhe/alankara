@@ -14,6 +14,7 @@ import {
 
 const DEFAULTS: Omit<TryOnConfig, "productId" | "productName"> = {
   tryOnEnabled: false,
+  tryOnType: "earring",
   tryOnAssetUrl: null,
   tryOnScale: 1,
   tryOnLeftOffsetX: 0,
@@ -22,6 +23,10 @@ const DEFAULTS: Omit<TryOnConfig, "productId" | "productName"> = {
   tryOnRightOffsetY: 0,
   tryOnRotation: 0,
   tryOnVerticalOffset: 0,
+  tryOnNecklaceAssetUrl: null,
+  tryOnNecklaceLengthOffset: 0,
+  tryOnNecklaceScale: 1,
+  tryOnNecklaceRotationOffset: 0,
 };
 
 type NumberField = {
@@ -32,7 +37,7 @@ type NumberField = {
   step: number;
 };
 
-const FIELDS: NumberField[] = [
+const EARRING_FIELDS: NumberField[] = [
   { key: "tryOnScale", label: "Scale", min: 0.2, max: 3, step: 0.05 },
   { key: "tryOnLeftOffsetX", label: "Left offset X", min: -40, max: 40, step: 0.5 },
   { key: "tryOnLeftOffsetY", label: "Left offset Y", min: -40, max: 40, step: 0.5 },
@@ -40,6 +45,24 @@ const FIELDS: NumberField[] = [
   { key: "tryOnRightOffsetY", label: "Right offset Y", min: -40, max: 40, step: 0.5 },
   { key: "tryOnRotation", label: "Rotation (°)", min: -45, max: 45, step: 0.5 },
   { key: "tryOnVerticalOffset", label: "Vertical offset", min: -40, max: 40, step: 0.5 },
+];
+
+const NECKLACE_FIELDS: NumberField[] = [
+  { key: "tryOnNecklaceScale", label: "Necklace scale", min: 0.2, max: 3, step: 0.05 },
+  {
+    key: "tryOnNecklaceLengthOffset",
+    label: "Length offset (chain drop)",
+    min: -30,
+    max: 40,
+    step: 0.5,
+  },
+  {
+    key: "tryOnNecklaceRotationOffset",
+    label: "Rotation offset (°)",
+    min: -30,
+    max: 30,
+    step: 0.5,
+  },
 ];
 
 export default function TryOnConfigPage() {
@@ -96,7 +119,9 @@ export default function TryOnConfigPage() {
         ? {
             ...prev,
             ...DEFAULTS,
+            tryOnType: prev.tryOnType,
             tryOnAssetUrl: prev.tryOnAssetUrl,
+            tryOnNecklaceAssetUrl: prev.tryOnNecklaceAssetUrl,
             tryOnEnabled: prev.tryOnEnabled,
           }
         : prev,
@@ -118,6 +143,9 @@ export default function TryOnConfigPage() {
     );
   }
 
+  const isNecklace = config.tryOnType === "necklace";
+  const fields = isNecklace ? NECKLACE_FIELDS : EARRING_FIELDS;
+
   return (
     <div className="space-y-8">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -130,30 +158,59 @@ export default function TryOnConfigPage() {
           </Link>
           <h1 className="mt-2 font-display text-3xl text-admin-text">Try-on config</h1>
           <p className="mt-1 text-sm text-admin-muted">
-            Calibrate <span className="text-admin-text">{config.productName}</span> so the earring sits
-            on the ear guides. Offsets are percent of the preview face.
+            Calibrate <span className="text-admin-text">{config.productName}</span>
+            {isNecklace
+              ? " so the necklace hangs from the neck-base. Length offset varies by chain."
+              : " so the earring sits on the ear guides. Offsets are percent of the preview face."}
           </p>
         </div>
-        <label className="flex items-center gap-3 rounded border border-admin-border bg-admin-elevated px-4 py-3">
-          <input
-            type="checkbox"
-            checked={config.tryOnEnabled}
-            onChange={(e) => setConfig({ ...config, tryOnEnabled: e.target.checked })}
-          />
-          <span className="text-xs uppercase tracking-widest text-admin-muted">
-            Enable Try It On
-          </span>
-        </label>
+        <div className="flex flex-wrap items-center gap-3">
+          <label className="flex items-center gap-2 rounded border border-admin-border bg-admin-elevated px-3 py-2">
+            <span className="text-[10px] uppercase tracking-widest text-admin-muted">Type</span>
+            <select
+              value={config.tryOnType}
+              onChange={(e) =>
+                setConfig({
+                  ...config,
+                  tryOnType: e.target.value as "earring" | "necklace",
+                })
+              }
+              className="bg-transparent text-xs text-admin-text outline-none"
+            >
+              <option value="earring">Earring</option>
+              <option value="necklace">Necklace</option>
+            </select>
+          </label>
+          <label className="flex items-center gap-3 rounded border border-admin-border bg-admin-elevated px-4 py-3">
+            <input
+              type="checkbox"
+              checked={config.tryOnEnabled}
+              onChange={(e) => setConfig({ ...config, tryOnEnabled: e.target.checked })}
+            />
+            <span className="text-xs uppercase tracking-widest text-admin-muted">
+              Enable Try It On
+            </span>
+          </label>
+        </div>
       </div>
 
       <div className="grid gap-8 lg:grid-cols-2">
         <div className="space-y-6">
           <section className="space-y-3">
-            <h2 className="text-xs uppercase tracking-widest text-admin-muted">Try-on asset</h2>
-            <TryOnAssetUpload
-              url={config.tryOnAssetUrl}
-              onChange={(url) => setConfig({ ...config, tryOnAssetUrl: url })}
-            />
+            <h2 className="text-xs uppercase tracking-widest text-admin-muted">
+              {isNecklace ? "Necklace try-on asset" : "Earring try-on asset"}
+            </h2>
+            {isNecklace ? (
+              <TryOnAssetUpload
+                url={config.tryOnNecklaceAssetUrl}
+                onChange={(url) => setConfig({ ...config, tryOnNecklaceAssetUrl: url })}
+              />
+            ) : (
+              <TryOnAssetUpload
+                url={config.tryOnAssetUrl}
+                onChange={(url) => setConfig({ ...config, tryOnAssetUrl: url })}
+              />
+            )}
           </section>
 
           <section className="space-y-4">
@@ -168,7 +225,7 @@ export default function TryOnConfigPage() {
               </button>
             </div>
             <div className="space-y-4">
-              {FIELDS.map((field) => {
+              {fields.map((field) => {
                 const value = Number(config[field.key] ?? 0);
                 return (
                   <label key={field.key} className="block">
@@ -218,8 +275,9 @@ export default function TryOnConfigPage() {
           <h2 className="text-xs uppercase tracking-widest text-admin-muted">Live preview</h2>
           <TryOnStaticPreview values={config} />
           <p className="text-[11px] text-admin-muted">
-            Gold dashed ovals mark approximate ear anchors. Fine-tune per product — live AR will
-            use the same offsets in later phases.
+            {isNecklace
+              ? "Champagne ring marks the neck-base. Length offset drops the clasp for chokers vs long chains."
+              : "Gold dashed ovals mark approximate ear anchors. Fine-tune per product."}
           </p>
         </div>
       </div>
