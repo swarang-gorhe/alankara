@@ -1,4 +1,4 @@
-import type { TryOnProduct } from "./types";
+import type { TryOnProduct, TryOnType } from "./types";
 
 export type TrimBounds = {
   sx: number;
@@ -7,9 +7,12 @@ export type TrimBounds = {
   sh: number;
 };
 
-export type TryOnKind = "earring" | "necklace";
+export type TryOnKind = TryOnType;
 
-export function getTryOnKind(product: TryOnProduct): TryOnKind {
+export function getTryOnType(product: TryOnProduct): TryOnType {
+  if (product.tryOnType === "necklace" || product.tryOnType === "earring") {
+    return product.tryOnType;
+  }
   if (product.tryOnKind === "necklace" || product.tryOnKind === "earring") {
     return product.tryOnKind;
   }
@@ -17,14 +20,26 @@ export function getTryOnKind(product: TryOnProduct): TryOnKind {
   return "earring";
 }
 
+/** @deprecated Prefer getTryOnType */
+export function getTryOnKind(product: TryOnProduct): TryOnKind {
+  return getTryOnType(product);
+}
+
 /** Transparent cutout URL — never fall back to catalog product photos. */
 export function getTryOnAssetUrl(product: TryOnProduct): string | null {
+  const type = getTryOnType(product);
+  if (type === "necklace") {
+    if (product.tryOnNecklaceAssetUrl) return product.tryOnNecklaceAssetUrl;
+    if (product.tryOnAssetUrl) return product.tryOnAssetUrl;
+    if (product.tryOnEnabled && product.slug) return `/try-on/${product.slug}.png`;
+    return null;
+  }
   if (product.tryOnAssetUrl) return product.tryOnAssetUrl;
   if (product.tryOnEnabled && product.slug) return `/try-on/${product.slug}.png`;
   return null;
 }
 
-/** Only show try-on when the product is explicitly enabled with an asset. */
+/** Only show try-on when enabled with a real cutout asset. */
 export function hasTryOnAsset(product: TryOnProduct): boolean {
   return Boolean(product.tryOnEnabled && getTryOnAssetUrl(product));
 }

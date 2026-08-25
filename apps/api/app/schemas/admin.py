@@ -166,6 +166,7 @@ class TryOnConfigSchema(BaseModel):
     productId: str
     productName: str
     tryOnEnabled: bool = False
+    tryOnType: str = "earring"
     tryOnAssetUrl: str | None = None
     tryOnScale: float = 1.0
     tryOnLeftOffsetX: float = 0.0
@@ -174,10 +175,15 @@ class TryOnConfigSchema(BaseModel):
     tryOnRightOffsetY: float = 0.0
     tryOnRotation: float = 0.0
     tryOnVerticalOffset: float = 0.0
+    tryOnNecklaceAssetUrl: str | None = None
+    tryOnNecklaceLengthOffset: float = 0.0
+    tryOnNecklaceScale: float = 1.0
+    tryOnNecklaceRotationOffset: float = 0.0
 
 
 class TryOnConfigUpdateSchema(BaseModel):
     tryOnEnabled: bool | None = None
+    tryOnType: str | None = Field(None, pattern="^(earring|necklace)$")
     tryOnAssetUrl: str | None = None
     tryOnScale: float | None = Field(None, ge=0.05, le=5.0)
     tryOnLeftOffsetX: float | None = Field(None, ge=-200, le=200)
@@ -186,3 +192,7 @@ class TryOnConfigUpdateSchema(BaseModel):
     tryOnRightOffsetY: float | None = Field(None, ge=-200, le=200)
     tryOnRotation: float | None = Field(None, ge=-180, le=180)
     tryOnVerticalOffset: float | None = Field(None, ge=-200, le=200)
+    tryOnNecklaceAssetUrl: str | None = None
+    tryOnNecklaceLengthOffset: float | None = Field(None, ge=-80, le=80)
+    tryOnNecklaceScale: float | None = Field(None, ge=0.05, le=5.0)
+    tryOnNecklaceRotationOffset: float | None = Field(None, ge=-45, le=45)

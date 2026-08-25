@@ -48,6 +48,7 @@ def product_to_schema(product: Product) -> ProductSchema:
         averageRating=avg,
         reviewCount=len(approved_reviews),
         tryOnEnabled=bool(getattr(product, "try_on_enabled", False)),
+        tryOnType=getattr(product, "try_on_type", None) or "earring",
         tryOnAssetUrl=getattr(product, "try_on_asset_url", None),
         tryOnScale=_num(getattr(product, "try_on_scale", None), 1.0),
         tryOnLeftOffsetX=_num(getattr(product, "try_on_left_offset_x", None)),
@@ -56,6 +57,12 @@ def product_to_schema(product: Product) -> ProductSchema:
         tryOnRightOffsetY=_num(getattr(product, "try_on_right_offset_y", None)),
         tryOnRotation=_num(getattr(product, "try_on_rotation", None)),
         tryOnVerticalOffset=_num(getattr(product, "try_on_vertical_offset", None)),
+        tryOnNecklaceAssetUrl=getattr(product, "try_on_necklace_asset_url", None),
+        tryOnNecklaceLengthOffset=_num(getattr(product, "try_on_necklace_length_offset", None)),
+        tryOnNecklaceScale=_num(getattr(product, "try_on_necklace_scale", None), 1.0),
+        tryOnNecklaceRotationOffset=_num(
+            getattr(product, "try_on_necklace_rotation_offset", None)
+        ),
     )
 
 
@@ -64,6 +71,7 @@ def try_on_config_to_schema(product: Product) -> TryOnConfigSchema:
         productId=product.id,
         productName=product.name,
         tryOnEnabled=bool(getattr(product, "try_on_enabled", False)),
+        tryOnType=getattr(product, "try_on_type", None) or "earring",
         tryOnAssetUrl=getattr(product, "try_on_asset_url", None),
         tryOnScale=_num(getattr(product, "try_on_scale", None), 1.0),
         tryOnLeftOffsetX=_num(getattr(product, "try_on_left_offset_x", None)),
@@ -72,6 +80,12 @@ def try_on_config_to_schema(product: Product) -> TryOnConfigSchema:
         tryOnRightOffsetY=_num(getattr(product, "try_on_right_offset_y", None)),
         tryOnRotation=_num(getattr(product, "try_on_rotation", None)),
         tryOnVerticalOffset=_num(getattr(product, "try_on_vertical_offset", None)),
+        tryOnNecklaceAssetUrl=getattr(product, "try_on_necklace_asset_url", None),
+        tryOnNecklaceLengthOffset=_num(getattr(product, "try_on_necklace_length_offset", None)),
+        tryOnNecklaceScale=_num(getattr(product, "try_on_necklace_scale", None), 1.0),
+        tryOnNecklaceRotationOffset=_num(
+            getattr(product, "try_on_necklace_rotation_offset", None)
+        ),
     )
 
 

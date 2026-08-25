@@ -8,6 +8,8 @@ import { ManualAdjustControls } from "./ManualAdjustControls";
 import { PhotoUploadView } from "./PhotoUploadView";
 import { ShareMyLookForm } from "./ShareMyLookForm";
 import { useFaceLandmarker } from "./useFaceLandmarker";
+import { usePoseLandmarker } from "./usePoseLandmarker";
+import { getTryOnType } from "./tryOnAsset";
 import { trackTryOnEvent } from "./tryOnAnalytics";
 import type { ManualAdjust, TryOnMode, TryOnProduct } from "./types";
 import { DEFAULT_MANUAL_ADJUST } from "./types";
@@ -22,6 +24,7 @@ type TryOnModalProps = {
 /**
  * Lenskart-style full-bleed try-on: camera fills the screen,
  * chrome floats lightly, actions sit in a slim bottom dock.
+ * Auto-selects earring vs necklace pipeline from product.tryOnType.
  */
 export function TryOnModal({ open, product, onClose }: TryOnModalProps) {
   const [mode, setMode] = useState<TryOnMode>("live");
@@ -30,7 +33,13 @@ export function TryOnModal({ open, product, onClose }: TryOnModalProps) {
   const [shareOpen, setShareOpen] = useState(false);
   const [photoDataUrl, setPhotoDataUrl] = useState<string | null>(null);
   const [adjustOpen, setAdjustOpen] = useState(false);
+  const isNecklace = getTryOnType(product) === "necklace";
   const { ready, unsupported, detectVideo, detectImage } = useFaceLandmarker();
+  const {
+    ready: poseReady,
+    detectVideo: detectPoseVideo,
+    detectImage: detectPoseImage,
+  } = usePoseLandmarker(open && isNecklace);
 
   useEffect(() => {
     if (!open) return;
@@ -71,7 +80,9 @@ export function TryOnModal({ open, product, onClose }: TryOnModalProps) {
           <LiveCameraView
             product={product}
             detectVideo={detectVideo}
+            detectPoseVideo={isNecklace ? detectPoseVideo : undefined}
             landmarkerReady={ready}
+            poseReady={!isNecklace || poseReady}
             unsupported={unsupported}
             onSwitchPhoto={() => setMode("photo")}
             manual={manual}
@@ -82,7 +93,9 @@ export function TryOnModal({ open, product, onClose }: TryOnModalProps) {
           <PhotoUploadView
             product={product}
             detectImage={detectImage}
+            detectPoseImage={isNecklace ? detectPoseImage : undefined}
             landmarkerReady={ready}
+            poseReady={!isNecklace || poseReady}
             manual={manual}
             showOverlay={showAfter}
             onPhotoReady={setPhotoDataUrl}

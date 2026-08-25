@@ -31,8 +31,16 @@ export async function getShopProducts(): Promise<ProductFixture[]> {
               ...existing,
               tryOnEnabled: fixture.tryOnEnabled ?? existing.tryOnEnabled,
               tryOnAssetUrl: fixture.tryOnAssetUrl,
+              tryOnType: fixture.tryOnType ?? fixture.tryOnKind ?? existing.tryOnType,
               tryOnKind: fixture.tryOnKind ?? existing.tryOnKind,
               tryOnScale: fixture.tryOnScale ?? existing.tryOnScale,
+              tryOnNecklaceAssetUrl:
+                fixture.tryOnNecklaceAssetUrl ?? existing.tryOnNecklaceAssetUrl,
+              tryOnNecklaceLengthOffset:
+                fixture.tryOnNecklaceLengthOffset ?? existing.tryOnNecklaceLengthOffset,
+              tryOnNecklaceScale: fixture.tryOnNecklaceScale ?? existing.tryOnNecklaceScale,
+              tryOnNecklaceRotationOffset:
+                fixture.tryOnNecklaceRotationOffset ?? existing.tryOnNecklaceRotationOffset,
             }),
           );
         }
@@ -91,7 +99,12 @@ function normalizeProduct(product: ProductFixture): ProductFixture {
     styleTags: product.styleTags ?? [],
     tryOnEnabled: product.tryOnEnabled ?? false,
     tryOnAssetUrl: product.tryOnAssetUrl ?? null,
-    tryOnKind: product.tryOnKind,
+    tryOnType: product.tryOnType ?? product.tryOnKind,
+    tryOnKind: product.tryOnKind ?? product.tryOnType,
+    tryOnNecklaceAssetUrl: product.tryOnNecklaceAssetUrl ?? null,
+    tryOnNecklaceLengthOffset: product.tryOnNecklaceLengthOffset ?? 0,
+    tryOnNecklaceScale: product.tryOnNecklaceScale ?? 1,
+    tryOnNecklaceRotationOffset: product.tryOnNecklaceRotationOffset ?? 0,
   };
 }
 

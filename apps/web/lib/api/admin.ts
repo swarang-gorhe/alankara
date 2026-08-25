@@ -69,6 +69,7 @@ export type AdminProduct = {
   aiGeneratedTags?: string[];
   images?: string[];
   tryOnEnabled?: boolean;
+  tryOnType?: "earring" | "necklace";
   tryOnAssetUrl?: string | null;
   tryOnScale?: number;
   tryOnLeftOffsetX?: number;
@@ -77,6 +78,10 @@ export type AdminProduct = {
   tryOnRightOffsetY?: number;
   tryOnRotation?: number;
   tryOnVerticalOffset?: number;
+  tryOnNecklaceAssetUrl?: string | null;
+  tryOnNecklaceLengthOffset?: number;
+  tryOnNecklaceScale?: number;
+  tryOnNecklaceRotationOffset?: number;
   variants: Array<{
     id: string;
     sku: string;
@@ -92,6 +97,7 @@ export type TryOnConfig = {
   productId: string;
   productName: string;
   tryOnEnabled: boolean;
+  tryOnType: "earring" | "necklace";
   tryOnAssetUrl?: string | null;
   tryOnScale: number;
   tryOnLeftOffsetX: number;
@@ -100,6 +106,10 @@ export type TryOnConfig = {
   tryOnRightOffsetY: number;
   tryOnRotation: number;
   tryOnVerticalOffset: number;
+  tryOnNecklaceAssetUrl?: string | null;
+  tryOnNecklaceLengthOffset: number;
+  tryOnNecklaceScale: number;
+  tryOnNecklaceRotationOffset: number;
 };
 
 export type AdminDiscount = {

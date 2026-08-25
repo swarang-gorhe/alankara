@@ -29,6 +29,7 @@
     "packaging": "Arrives wrapped in tissue, nestled in a reusable cotton pouch.",
     "featured": true,
     "tryOnEnabled": true,
+    "tryOnType": "earring",
     "tryOnKind": "earring",
     "tryOnAssetUrl": "/try-on/kesari-diamond-drops.png",
     "occasion": [
@@ -99,6 +100,7 @@
     "packaging": "Arrives wrapped in tissue, nestled in a reusable cotton pouch.",
     "featured": true,
     "tryOnEnabled": true,
+    "tryOnType": "earring",
     "tryOnKind": "earring",
     "tryOnAssetUrl": "/try-on/cocoa-crescent-drops.png",
     "occasion": [
@@ -168,6 +170,7 @@
     "packaging": "Arrives wrapped in tissue, nestled in a reusable cotton pouch.",
     "featured": true,
     "tryOnEnabled": true,
+    "tryOnType": "earring",
     "tryOnKind": "earring",
     "tryOnAssetUrl": "/try-on/vanam-textile-studs.png",
     "occasion": [
@@ -236,6 +239,7 @@
     "packaging": "Arrives wrapped in tissue, nestled in a reusable cotton pouch.",
     "featured": true,
     "tryOnEnabled": true,
+    "tryOnType": "earring",
     "tryOnKind": "earring",
     "tryOnAssetUrl": "/try-on/raga-heart-studs.png",
     "occasion": [
@@ -304,9 +308,13 @@
     "packaging": "Arrives wrapped in tissue, nestled in a reusable cotton pouch.",
     "featured": true,
     "tryOnEnabled": true,
+    "tryOnType": "necklace",
     "tryOnKind": "necklace",
     "tryOnAssetUrl": "/try-on/moti-pearl-choker.png",
-    "tryOnScale": 1.15,
+    "tryOnNecklaceAssetUrl": "/try-on/moti-pearl-choker.png",
+    "tryOnNecklaceScale": 1.1,
+    "tryOnNecklaceLengthOffset": 2,
+    "tryOnNecklaceRotationOffset": 0,
     "occasion": [
       "Weddings",
       "Festive gatherings",
@@ -374,9 +382,13 @@
     "packaging": "Arrives wrapped in tissue, nestled in a reusable cotton pouch.",
     "featured": true,
     "tryOnEnabled": true,
+    "tryOnType": "necklace",
     "tryOnKind": "necklace",
     "tryOnAssetUrl": "/try-on/meadow-floral-collar.png",
-    "tryOnScale": 1.05,
+    "tryOnNecklaceAssetUrl": "/try-on/meadow-floral-collar.png",
+    "tryOnNecklaceScale": 1.05,
+    "tryOnNecklaceLengthOffset": 6,
+    "tryOnNecklaceRotationOffset": 0,
     "occasion": [
       "Festive gatherings",
       "Mehendi",

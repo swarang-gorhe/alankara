@@ -67,6 +67,7 @@ async def seed_products(session: AsyncSession) -> None:
                 status="published",
                 tags=row.get("styleTags") or row.get("tags") or [],
                 try_on_enabled=row.get("tryOnEnabled", False),
+                try_on_type=row.get("tryOnType") or row.get("tryOnKind") or "earring",
                 try_on_asset_url=row.get("tryOnAssetUrl"),
                 try_on_scale=row.get("tryOnScale", 1.0),
                 try_on_left_offset_x=row.get("tryOnLeftOffsetX", 0),
@@ -75,6 +76,15 @@ async def seed_products(session: AsyncSession) -> None:
                 try_on_right_offset_y=row.get("tryOnRightOffsetY", 0),
                 try_on_rotation=row.get("tryOnRotation", 0),
                 try_on_vertical_offset=row.get("tryOnVerticalOffset", 0),
+                try_on_necklace_asset_url=row.get("tryOnNecklaceAssetUrl")
+                or (
+                    row.get("tryOnAssetUrl")
+                    if (row.get("tryOnType") or row.get("tryOnKind")) == "necklace"
+                    else None
+                ),
+                try_on_necklace_length_offset=row.get("tryOnNecklaceLengthOffset", 0),
+                try_on_necklace_scale=row.get("tryOnNecklaceScale", 1.0),
+                try_on_necklace_rotation_offset=row.get("tryOnNecklaceRotationOffset", 0),
                 created_at=datetime.now(UTC),
                 updated_at=datetime.now(UTC),
             )

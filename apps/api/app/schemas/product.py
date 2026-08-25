@@ -45,6 +45,7 @@ class ProductSchema(BaseModel):
     averageRating: float | None = None
     reviewCount: int = 0
     tryOnEnabled: bool = False
+    tryOnType: str = "earring"
     tryOnAssetUrl: str | None = None
     tryOnScale: float = 1.0
     tryOnLeftOffsetX: float = 0.0
@@ -53,6 +54,10 @@ class ProductSchema(BaseModel):
     tryOnRightOffsetY: float = 0.0
     tryOnRotation: float = 0.0
     tryOnVerticalOffset: float = 0.0
+    tryOnNecklaceAssetUrl: str | None = None
+    tryOnNecklaceLengthOffset: float = 0.0
+    tryOnNecklaceScale: float = 1.0
+    tryOnNecklaceRotationOffset: float = 0.0
 
     model_config = {"from_attributes": True}
 
