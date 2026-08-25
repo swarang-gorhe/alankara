@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { EarringOverlayCanvas } from "./EarringOverlayCanvas";
+import { getTryOnAssetUrl } from "./tryOnAsset";
 import { ErrorStates } from "./ErrorStates";
 import { computeEarAnchors } from "./useEarAnchors";
 import type { EarAnchors, ManualAdjust, TryOnErrorKind, TryOnProduct } from "./types";
@@ -188,11 +189,11 @@ export function LiveCameraView({
       // Simple approximate bake using cover 1:1
       const img = new Image();
       img.crossOrigin = "anonymous";
-      img.src = product.tryOnAssetUrl || product.images[0] || "";
+      img.src = getTryOnAssetUrl(product) ?? "";
       // Sync path without waiting — export video still is enough for share
     }
     onFrameCapture?.(canvas.toDataURL("image/jpeg", 0.92));
-  }, [onFrameCapture, product.images, product.tryOnAssetUrl, showOverlay]);
+  }, [onFrameCapture, product, showOverlay]);
 
   useEffect(() => {
     if (!tracking) return;
