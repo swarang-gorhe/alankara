@@ -88,3 +88,46 @@ export function computeAlphaBounds(
 
   return { sx, sy, sw, sh };
 }
+
+/**
+ * Hook / clasp attach point inside a trimmed cutout, as fractions of trim size.
+ * Uses the centroid of opaque pixels in the top few rows — not the image center.
+ * Drawing must place this (u,v) on the ear pierce landmark.
+ */
+export function findHookAnchor(
+  img: HTMLImageElement,
+  trim: TrimBounds,
+  threshold = 16,
+): { u: number; v: number } {
+  const canvas = document.createElement("canvas");
+  canvas.width = trim.sw;
+  canvas.height = trim.sh;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return { u: 0.5, v: 0 };
+
+  ctx.drawImage(img, trim.sx, trim.sy, trim.sw, trim.sh, 0, 0, trim.sw, trim.sh);
+  const { data } = ctx.getImageData(0, 0, trim.sw, trim.sh);
+
+  const band = Math.max(3, Math.round(trim.sh * 0.04));
+  let sumX = 0;
+  let sumY = 0;
+  let n = 0;
+  let firstY = -1;
+
+  for (let y = 0; y < band; y++) {
+    for (let x = 0; x < trim.sw; x++) {
+      if (data[(y * trim.sw + x) * 4 + 3] > threshold) {
+        if (firstY < 0) firstY = y;
+        // Only accumulate near the first opaque row so we track the hook tip.
+        if (firstY >= 0 && y <= firstY + 2) {
+          sumX += x;
+          sumY += y;
+          n += 1;
+        }
+      }
+    }
+  }
+
+  if (!n) return { u: 0.5, v: 0 };
+  return { u: sumX / n / trim.sw, v: sumY / n / trim.sh };
+}
