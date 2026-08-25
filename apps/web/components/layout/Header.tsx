@@ -165,6 +165,7 @@ export function Header({ className }: { className?: string }) {
                 <Link
                   key={`${link.href}-${link.label}-m`}
                   href={link.href}
+                  onClick={() => setMobileNavOpen(false)}
                   className="rounded-sm px-3 py-3 font-body text-sm tracking-[0.14em] text-ink-muted hover:bg-linen/60 hover:text-maroon"
                 >
                   {link.label}

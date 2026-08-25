@@ -1,11 +1,12 @@
 "use client";
 
 import { useMemo } from "react";
+import { getTryOnKind } from "./tryOnAsset";
 import type { EarAnchors, ManualAdjust, TryOnProduct } from "./types";
 import { DEFAULT_MANUAL_ADJUST } from "./types";
 
 /**
- * Face Mesh indices for ear / lobe placement.
+ * Face Mesh indices for ear / lobe / neck placement.
  * 234/454 sit near the tragus; we blend with cheek/jaw and hang downward for the lobe.
  */
 const LEFT_TRAGUS = 234;
@@ -59,21 +60,22 @@ export function computeEarAnchors(
 
   if (!leftEye || !rightEye || !lTragus || !rTragus) return null;
 
+  const kind = getTryOnKind(product);
   const interocular = Math.hypot(rightEye.x - leftEye.x, rightEye.y - leftEye.y) || 0.08;
   const faceH =
     forehead && chin ? Math.hypot(chin.x - forehead.x, chin.y - forehead.y) : interocular * 2.4;
 
   // Blend tragus → cheek → jaw, then hang below for lobe seat
-  const leftBaseX = lerp(lerp(lTragus.x, lCheek?.x ?? lTragus.x, 0.35), lJaw?.x ?? lTragus.x, 0.2);
-  const leftBaseY = lerp(lerp(lTragus.y, lCheek?.y ?? lTragus.y, 0.25), lJaw?.y ?? lTragus.y, 0.35);
-  const rightBaseX = lerp(lerp(rTragus.x, rCheek?.x ?? rTragus.x, 0.35), rJaw?.x ?? rTragus.x, 0.2);
-  const rightBaseY = lerp(lerp(rTragus.y, rCheek?.y ?? rTragus.y, 0.25), rJaw?.y ?? rTragus.y, 0.35);
+  const leftBaseX = lerp(lerp(lTragus.x, lCheek?.x ?? lTragus.x, 0.35), lJaw?.x ?? lTragus.x, 0.22);
+  const leftBaseY = lerp(lerp(lTragus.y, lCheek?.y ?? lTragus.y, 0.28), lJaw?.y ?? lTragus.y, 0.42);
+  const rightBaseX = lerp(lerp(rTragus.x, rCheek?.x ?? rTragus.x, 0.35), rJaw?.x ?? rTragus.x, 0.22);
+  const rightBaseY = lerp(lerp(rTragus.y, rCheek?.y ?? rTragus.y, 0.28), rJaw?.y ?? rTragus.y, 0.42);
 
-  const lobeDrop = faceH * 0.06;
-  const outPush = interocular * 0.08;
+  // Sit on the lobe, not the cheek — slight outward + down
+  const lobeDrop = faceH * 0.075;
+  const outPush = interocular * 0.12;
 
   const ox = ((product.tryOnLeftOffsetX ?? 0) + manual.offsetX) / 100;
-  // right offset uses its own product fields; manual is shared
   const oy =
     ((product.tryOnLeftOffsetY ?? 0) + (product.tryOnVerticalOffset ?? 0) + manual.offsetY) / 100;
   const rox = ((product.tryOnRightOffsetX ?? 0) + manual.offsetX) / 100;
@@ -96,25 +98,45 @@ export function computeEarAnchors(
   const leftVisible = yaw > -1.15;
   const rightVisible = yaw < 1.15;
 
-  // Earring size tracks face distance; keep moderate for cloth drops
+  // Natural size relative to face — earrings sit lighter; necklaces slightly larger
   const scaleBase =
-    (interocular / 0.075) * (product.tryOnScale ?? 1) * manual.scale * (manual.zoom || 1);
+    (interocular / 0.075) *
+    (product.tryOnScale ?? 1) *
+    manual.scale *
+    (manual.zoom || 1) *
+    (kind === "necklace" ? 1.15 : 0.92);
+
+  // Necklace sits just below the chin, spanning jaw width
+  const jawLx = lJaw?.x ?? leftBaseX;
+  const jawRx = rJaw?.x ?? rightBaseX;
+  const jawLy = lJaw?.y ?? leftBaseY;
+  const jawRy = rJaw?.y ?? rightBaseY;
+  const chinY = chin?.y ?? (jawLy + jawRy) / 2;
+  const neckOx = manual.offsetX / 100;
+  const neckOy = ((product.tryOnVerticalOffset ?? 0) + manual.offsetY) / 100;
+  const centerX = (jawLx + jawRx) / 2 + neckOx;
+  const centerY = chinY + faceH * 0.1 + neckOy;
+  const neckWidth = Math.hypot(jawRx - jawLx, jawRy - jawLy) * 1.35;
 
   return {
+    kind,
     left: {
-      x: smooth(prev?.left.x, lx, 0.2),
-      y: smooth(prev?.left.y, ly, 0.2),
+      x: smooth(prev?.left.x, lx, 0.18),
+      y: smooth(prev?.left.y, ly, 0.18),
       visible: leftVisible,
     },
     right: {
-      x: smooth(prev?.right.x, rx, 0.2),
-      y: smooth(prev?.right.y, ry, 0.2),
+      x: smooth(prev?.right.x, rx, 0.18),
+      y: smooth(prev?.right.y, ry, 0.18),
       visible: rightVisible,
     },
-    roll: smooth(prev?.roll, roll, 0.15),
-    yaw: smooth(prev?.yaw, yaw, 0.15),
-    scale: smooth(prev?.scale, scaleBase, 0.18),
-    interocular: smooth(prev?.interocular, interocular, 0.18),
+    centerX: smooth(prev?.centerX, centerX, 0.18),
+    centerY: smooth(prev?.centerY, centerY, 0.18),
+    neckWidth: smooth(prev?.neckWidth, neckWidth, 0.18),
+    roll: smooth(prev?.roll, roll, 0.14),
+    yaw: smooth(prev?.yaw, yaw, 0.14),
+    scale: smooth(prev?.scale, scaleBase, 0.16),
+    interocular: smooth(prev?.interocular, interocular, 0.16),
   };
 }
 

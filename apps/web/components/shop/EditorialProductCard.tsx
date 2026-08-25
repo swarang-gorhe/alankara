@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { ProductStill } from "@/components/media";
 import { TryOnButton } from "@/components/try-on/TryOnButton";
 import { formatPrice, getProductSize } from "@/lib/fixtures";
@@ -36,12 +35,12 @@ export function EditorialProductCard({
 
   return (
     <article className={cn("group relative min-w-0", size === "large" && "md:col-span-2", className)}>
-      <Link href={`/product/${product.slug}`} className="block" data-cursor-sparkle>
-        <motion.div
-          className="relative overflow-hidden border border-champagne/20 bg-ivory"
-          whileHover={{ y: -4 }}
-          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-        >
+      <Link
+        href={`/product/${product.slug}`}
+        className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-maroon/40"
+        data-cursor-sparkle
+      >
+        <div className="relative overflow-hidden border border-champagne/20 bg-ivory transition-transform duration-500 ease-luxury group-hover:-translate-y-1">
           <ProductStill
             name={product.name}
             slug={product.slug}
@@ -63,7 +62,7 @@ export function EditorialProductCard({
           >
             <p className="font-body text-[11px] uppercase tracking-[0.2em] text-maroon">View piece</p>
           </div>
-        </motion.div>
+        </div>
 
         <div className="mt-4 space-y-1.5 px-0.5">
           <p className="font-body text-[10px] uppercase tracking-[0.22em] text-champagne">
@@ -85,7 +84,8 @@ export function EditorialProductCard({
           )}
         </div>
       </Link>
-      <div className="absolute right-2 top-2 z-10 opacity-100 sm:opacity-0 sm:group-hover:opacity-100">
+      {/* Keep try-on out of the way of taps — desktop hover only; never block product link */}
+      <div className="pointer-events-none absolute right-2 top-2 z-10 opacity-0 transition-opacity duration-300 group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100 max-sm:pointer-events-auto max-sm:opacity-100">
         <TryOnButton product={product} variant="card" label="Try on" />
       </div>
     </article>

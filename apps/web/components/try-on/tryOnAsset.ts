@@ -7,18 +7,29 @@ export type TrimBounds = {
   sh: number;
 };
 
-/** Transparent earring cutout URL — never fall back to catalog product photos. */
+export type TryOnKind = "earring" | "necklace";
+
+export function getTryOnKind(product: TryOnProduct): TryOnKind {
+  if (product.tryOnKind === "necklace" || product.tryOnKind === "earring") {
+    return product.tryOnKind;
+  }
+  if (product.categorySlug?.includes("necklace")) return "necklace";
+  return "earring";
+}
+
+/** Transparent cutout URL — never fall back to catalog product photos. */
 export function getTryOnAssetUrl(product: TryOnProduct): string | null {
   if (product.tryOnAssetUrl) return product.tryOnAssetUrl;
-  if (product.slug) return `/try-on/${product.slug}.png`;
+  if (product.tryOnEnabled && product.slug) return `/try-on/${product.slug}.png`;
   return null;
 }
 
+/** Only show try-on when the product is explicitly enabled with an asset. */
 export function hasTryOnAsset(product: TryOnProduct): boolean {
-  return Boolean(getTryOnAssetUrl(product));
+  return Boolean(product.tryOnEnabled && getTryOnAssetUrl(product));
 }
 
-/** Crop to non-transparent pixels so only the earring is drawn, not empty canvas. */
+/** Crop to non-transparent pixels so only the jewellery is drawn. */
 export function computeAlphaBounds(
   img: HTMLImageElement,
   threshold = 16,

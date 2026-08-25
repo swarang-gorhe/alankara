@@ -27,7 +27,7 @@ export function HomeCollections() {
             <Link
               key={tile.slug}
               href={tile.href}
-              className="group relative flex flex-col items-center text-center"
+              className="group relative z-0 flex min-h-[44px] flex-col items-center text-center"
             >
               <div className="relative aspect-square w-full overflow-hidden rounded-full border border-champagne/25 bg-ivory p-2 shadow-sm transition-transform duration-500 ease-luxury group-hover:-translate-y-1">
                 <div className="relative h-full w-full overflow-hidden rounded-full">

@@ -8,7 +8,7 @@ type ImageSkeletonProps = {
 export function ImageSkeleton({ className }: ImageSkeletonProps) {
   return (
     <div
-      className={cn("fabric-shimmer absolute inset-0", className)}
+      className={cn("pointer-events-none fabric-shimmer absolute inset-0", className)}
       aria-hidden="true"
     />
   );
