@@ -1,10 +1,11 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { prepareDetectionSource } from "./lowLightEnhance";
 
 type FaceLandmarkerLike = {
   detectForVideo: (
-    video: HTMLVideoElement,
+    source: HTMLVideoElement | HTMLCanvasElement,
     ts: number,
   ) => {
     faceLandmarks: Array<Array<{ x: number; y: number; z: number }>>;
@@ -31,6 +32,7 @@ const MODEL_URL =
 export function useFaceLandmarker() {
   const landmarkerRef = useRef<FaceLandmarkerLike | null>(null);
   const modeRef = useRef<"IMAGE" | "VIDEO">("VIDEO");
+  const enhanceCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [unsupported, setUnsupported] = useState(false);
@@ -102,7 +104,11 @@ export function useFaceLandmarker() {
           void ensureMode("VIDEO");
           return null;
         }
-        const result = lm.detectForVideo(video, timestamp);
+        if (!enhanceCanvasRef.current) {
+          enhanceCanvasRef.current = document.createElement("canvas");
+        }
+        const source = prepareDetectionSource(video, enhanceCanvasRef.current);
+        const result = lm.detectForVideo(source, timestamp);
         const face = result.faceLandmarks[0];
         if (!face?.length) return null;
         return {

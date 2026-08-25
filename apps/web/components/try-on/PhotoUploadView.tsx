@@ -201,7 +201,7 @@ export function PhotoUploadView({
   }
 
   return (
-    <div ref={wrapRef} className="relative h-full min-h-[320px] overflow-hidden bg-ink">
+    <div ref={wrapRef} className="relative h-full min-h-[320px] overflow-hidden bg-gradient-to-b from-ivory to-linen">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         ref={imgRef}
@@ -233,7 +233,7 @@ export function PhotoUploadView({
         />
       )}
       {busy && (
-        <p className="absolute inset-x-0 bottom-24 text-center font-body text-xs text-ivory">
+        <p className="absolute inset-x-0 bottom-24 text-center font-body text-xs text-maroon">
           {isNecklace ? "Placing your necklace…" : "Placing your earrings…"}
         </p>
       )}
@@ -245,7 +245,7 @@ export function PhotoUploadView({
           setNeckAnchors(null);
           onRetake?.();
         }}
-        className="absolute right-4 top-20 z-10 rounded-full bg-ink/50 px-3 py-1.5 font-body text-[10px] uppercase tracking-widest text-ivory backdrop-blur-md"
+        className="absolute right-4 top-20 z-10 rounded-full border border-champagne/40 bg-ivory/90 px-3 py-1.5 font-body text-[10px] uppercase tracking-widest text-maroon shadow-sm backdrop-blur-md"
       >
         Retake
       </button>

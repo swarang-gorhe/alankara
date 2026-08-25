@@ -304,6 +304,12 @@ body.luxury-cursor-active * {
   animation: intro-mote-drift 8s ease-in-out infinite;
 }
 
+/* Hide shop Filter FAB while Try It On modal is open (avoids overlap with dock). */
+body[data-try-on-open] [data-shop-filter-fab] {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

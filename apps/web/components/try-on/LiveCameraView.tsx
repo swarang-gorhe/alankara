@@ -16,6 +16,7 @@ import type {
 } from "./types";
 import { DEFAULT_MANUAL_ADJUST } from "./types";
 import { trackTryOnEvent } from "./tryOnAnalytics";
+import { cn } from "@/lib/utils";
 
 type LiveCameraViewProps = {
   product: TryOnProduct;
@@ -57,6 +58,7 @@ export function LiveCameraView({
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const earAnchorsRef = useRef<EarAnchors | null>(null);
   const neckAnchorsRef = useRef<NecklaceAnchors | null>(null);
   const earDrawRef = useRef<((anchors: EarAnchors | null) => void) | null>(null);
@@ -66,7 +68,7 @@ export function LiveCameraView({
   const [error, setError] = useState<TryOnErrorKind | null>(null);
   const [hint, setHint] = useState<string | null>(null);
   const [consented, setConsented] = useState(false);
-  const [size, setSize] = useState({ w: 390, h: 700 });
+  const [size, setSize] = useState({ w: 390, h: 520 });
   const [mediaSize, setMediaSize] = useState({ w: 1280, h: 720 });
   const [tracking, setTracking] = useState(false);
   const successSent = useRef(false);
@@ -169,6 +171,7 @@ export function LiveCameraView({
           }
         } else if (!face) {
           noFaceRef.current += 1;
+          earAnchorsRef.current = null;
           if (noFaceRef.current > 35 && ts - lastUi > 400) {
             lastUi = ts;
             setTracking(false);
@@ -190,8 +193,13 @@ export function LiveCameraView({
           }
           if (ts - lastUi > 350) {
             lastUi = ts;
-            setTracking(Boolean(next));
-            if (next && (!next.left.visible || !next.right.visible)) {
+            // Ready = anchors computed; same gate used for rendering (per-ear
+            // visibility is only extreme yaw — matches the hint below).
+            const ready = Boolean(next);
+            setTracking(ready);
+            if (!next) {
+              setHint("Centre your face in soft light");
+            } else if (!next.left.visible && !next.right.visible) {
               setHint("Turn a little toward the camera");
             } else {
               setHint(null);
@@ -202,7 +210,7 @@ export function LiveCameraView({
 
       if (isNecklace) {
         if (neckAnchorsRef.current) neckDrawRef.current?.(neckAnchorsRef.current);
-      } else if (earAnchorsRef.current) {
+      } else {
         earDrawRef.current?.(earAnchorsRef.current);
       }
     };
@@ -220,7 +228,7 @@ export function LiveCameraView({
   ]);
 
   useEffect(() => {
-    const el = wrapRef.current;
+    const el = stageRef.current ?? wrapRef.current;
     if (!el) return;
     const ro = new ResizeObserver(([entry]) => {
       const { width, height } = entry.contentRect;
@@ -293,67 +301,82 @@ export function LiveCameraView({
   }
 
   return (
-    <div ref={wrapRef} className="relative h-full w-full overflow-hidden bg-ink">
-      <video
-        ref={videoRef}
-        playsInline
-        muted
-        autoPlay
-        className="absolute inset-0 h-full w-full scale-x-[-1] object-cover"
-      />
-      {isNecklace ? (
-        <NecklaceOverlayCanvas
-          width={size.w}
-          height={size.h}
-          mediaWidth={mediaSize.w}
-          mediaHeight={mediaSize.h}
-          anchors={null}
-          product={product}
-          showOverlay={showOverlay}
-          mirrored
-          drawRef={neckDrawRef}
-        />
-      ) : (
-        <EarringOverlayCanvas
-          width={size.w}
-          height={size.h}
-          mediaWidth={mediaSize.w}
-          mediaHeight={mediaSize.h}
-          anchors={null}
-          product={product}
-          showOverlay={showOverlay}
-          mirrored
-          drawRef={earDrawRef}
-        />
-      )}
-
-      <div
-        className="pointer-events-none absolute inset-0 flex items-center justify-center"
-        aria-hidden
-      >
+    <div
+      ref={wrapRef}
+      className="relative flex h-full w-full flex-col overflow-hidden bg-gradient-to-b from-ivory via-[#F7EDE0] to-linen"
+    >
+      {/* Soft boutique fitting-room frame — not full-bleed black AR */}
+      <div className="flex min-h-0 flex-1 flex-col items-center justify-center px-4 pb-[max(5.75rem,calc(env(safe-area-inset-bottom)+4.75rem))] pt-[max(4.5rem,calc(env(safe-area-inset-top)+3.75rem))] sm:px-8">
         <div
-          className={`border transition-opacity duration-500 ${
-            isNecklace
-              ? "h-[62%] max-h-[520px] w-[72%] max-w-[340px] rounded-[40%]"
-              : "h-[52%] max-h-[420px] w-[58%] max-w-[280px] rounded-[50%]"
-          } ${tracking ? "border-champagne/25 opacity-40" : "border-ivory/50 opacity-70"}`}
-          style={{ boxShadow: "0 0 0 9999px rgba(20,14,10,0.28)" }}
-        />
+          ref={stageRef}
+          className={cn(
+            "relative w-full max-w-md overflow-hidden rounded-2xl border border-champagne/35 bg-ink/5 shadow-[0_12px_40px_rgba(43,35,28,0.12)]",
+            "aspect-[3/4] max-h-[min(68vh,560px)]",
+          )}
+        >
+          <video
+            ref={videoRef}
+            playsInline
+            muted
+            autoPlay
+            className="absolute inset-0 h-full w-full scale-x-[-1] object-cover"
+          />
+          {isNecklace ? (
+            <NecklaceOverlayCanvas
+              width={size.w}
+              height={size.h}
+              mediaWidth={mediaSize.w}
+              mediaHeight={mediaSize.h}
+              anchors={null}
+              product={product}
+              showOverlay={showOverlay}
+              mirrored
+              drawRef={neckDrawRef}
+            />
+          ) : (
+            <EarringOverlayCanvas
+              width={size.w}
+              height={size.h}
+              mediaWidth={mediaSize.w}
+              mediaHeight={mediaSize.h}
+              anchors={null}
+              product={product}
+              showOverlay={showOverlay}
+              mirrored
+              drawRef={earDrawRef}
+            />
+          )}
+
+          {/* Subtle rounded framing — no ID-scan oval */}
+          <div
+            className={cn(
+              "pointer-events-none absolute inset-3 rounded-xl border transition-colors duration-500 sm:inset-4",
+              tracking ? "border-champagne/20" : "border-ivory/35",
+            )}
+            aria-hidden
+          />
+
+          {hint && (
+            <div className="pointer-events-none absolute inset-x-0 bottom-5 flex justify-center px-5">
+              <p className="rounded-full border border-champagne/30 bg-ivory/90 px-4 py-2 font-body text-[11px] tracking-wide text-maroon shadow-sm backdrop-blur-sm">
+                {hint}
+              </p>
+            </div>
+          )}
+
+          {!pipelineReady && (
+            <div className="absolute inset-0 flex items-center justify-center bg-ivory/50 backdrop-blur-[1px]">
+              <p className="font-body text-xs uppercase tracking-widest text-maroon">
+                Preparing…
+              </p>
+            </div>
+          )}
+        </div>
+
+        <p className="mt-4 max-w-xs text-center font-body text-[11px] leading-relaxed text-ink-muted">
+          Hold still in soft light — your piece appears as soon as we find your face.
+        </p>
       </div>
-
-      {hint && (
-        <div className="pointer-events-none absolute inset-x-0 bottom-[22%] flex justify-center px-6">
-          <p className="rounded-full bg-ink/55 px-4 py-2 font-body text-[11px] tracking-wide text-ivory backdrop-blur-sm">
-            {hint}
-          </p>
-        </div>
-      )}
-
-      {!pipelineReady && (
-        <div className="absolute inset-0 flex items-center justify-center bg-ink/40">
-          <p className="font-body text-xs uppercase tracking-widest text-ivory">Preparing…</p>
-        </div>
-      )}
     </div>
   );
 }

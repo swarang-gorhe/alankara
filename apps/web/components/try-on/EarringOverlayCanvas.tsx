@@ -11,6 +11,7 @@ import {
 } from "./compositing";
 import { computeAlphaBounds, getTryOnAssetUrl, type TrimBounds } from "./tryOnAsset";
 import { lastEarAnchorDebug } from "./useEarAnchors";
+import { isTryOnDebugEnabled } from "./tryOnDebug";
 import type { EarAnchors, TryOnProduct } from "./types";
 
 type EarringOverlayCanvasProps = {
@@ -26,7 +27,6 @@ type EarringOverlayCanvasProps = {
   drawRef?: MutableRefObject<((anchors: EarAnchors | null) => void) | null>;
 };
 
-const DEV = process.env.NODE_ENV === "development";
 /** Width as fraction of detected interocular span (px) — cloth drops ~30–34% */
 const EARRING_IO_RATIO = 0.32;
 
@@ -94,39 +94,40 @@ export function EarringOverlayCanvas({
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, width, height);
 
-    if (!showOverlay || !next || !imgRef.current) return;
-    const img = imgRef.current;
-    if (!img.complete || img.naturalWidth === 0) return;
-
-    const trim =
-      trimRef.current ?? {
-        sx: 0,
-        sy: 0,
-        sw: img.naturalWidth,
-        sh: img.naturalHeight,
-      };
-
     const mw = mediaWidth && mediaWidth > 0 ? mediaWidth : width;
     const mh = mediaHeight && mediaHeight > 0 ? mediaHeight : height;
     const cover = getObjectCoverTransform(mw, mh, width, height);
-    const aspect = trim.sh / Math.max(1, trim.sw);
-    const mediaEl = findMediaElement(canvas);
 
-    paintEarrings(
-      ctx,
-      img,
-      trim,
-      next,
-      cover,
-      aspect,
-      mirrored,
-      width,
-      mediaEl,
-      featherRef.current,
-      featherPadRef.current,
-    );
+    if (showOverlay && next && imgRef.current) {
+      const img = imgRef.current;
+      if (img.complete && img.naturalWidth > 0) {
+        const trim =
+          trimRef.current ?? {
+            sx: 0,
+            sy: 0,
+            sw: img.naturalWidth,
+            sh: img.naturalHeight,
+          };
+        const aspect = trim.sh / Math.max(1, trim.sw);
+        const mediaEl = findMediaElement(canvas);
 
-    if (DEV) {
+        paintEarrings(
+          ctx,
+          img,
+          trim,
+          next,
+          cover,
+          aspect,
+          mirrored,
+          width,
+          mediaEl,
+          featherRef.current,
+          featherPadRef.current,
+        );
+      }
+    }
+
+    if (isTryOnDebugEnabled() && next) {
       drawAnchorDebug(ctx, cover, mirrored, width);
     }
   };
@@ -248,7 +249,13 @@ function drawAnchorDebug(
   const dbg = lastEarAnchorDebug;
   if (!dbg) return;
 
-  const plot = (nx: number, ny: number, color: string, radius: number, label: string) => {
+  const plot = (
+    nx: number,
+    ny: number,
+    color: string,
+    radius: number,
+    label: string,
+  ) => {
     const mapped = landmarkToBox(nx, ny, cover);
     const x = mirrored ? width - mapped.x : mapped.x;
     const y = mapped.y;
@@ -261,13 +268,44 @@ function drawAnchorDebug(
     ctx.fill();
     ctx.stroke();
     ctx.font = "9px monospace";
-    ctx.fillStyle = "rgba(255,255,255,0.95)";
+    ctx.fillStyle = "rgba(43,35,28,0.95)";
     ctx.fillText(label, x + 6, y - 6);
     ctx.restore();
   };
 
-  plot(dbg.left.rawX, dbg.left.rawY, "rgba(0,220,255,0.95)", 4, "L raw");
-  plot(dbg.left.finalX, dbg.left.finalY, "rgba(50,255,100,0.95)", 5, "L final");
-  plot(dbg.right.rawX, dbg.right.rawY, "rgba(0,220,255,0.95)", 4, "R raw");
-  plot(dbg.right.finalX, dbg.right.finalY, "rgba(50,255,100,0.95)", 5, "R final");
+  // Cyan = raw landmark; green = accepted final; red = rejected by visibility gate
+  plot(dbg.left.rawX, dbg.left.rawY, "rgba(0,180,220,0.95)", 4, "L raw");
+  plot(
+    dbg.left.finalX,
+    dbg.left.finalY,
+    dbg.left.visible ? "rgba(40,180,90,0.95)" : "rgba(220,50,50,0.95)",
+    5,
+    dbg.left.visible ? "L ok" : "L rej",
+  );
+  plot(dbg.right.rawX, dbg.right.rawY, "rgba(0,180,220,0.95)", 4, "R raw");
+  plot(
+    dbg.right.finalX,
+    dbg.right.finalY,
+    dbg.right.visible ? "rgba(40,180,90,0.95)" : "rgba(220,50,50,0.95)",
+    5,
+    dbg.right.visible ? "R ok" : "R rej",
+  );
+
+  ctx.save();
+  ctx.fillStyle = "rgba(250,243,231,0.88)";
+  ctx.fillRect(8, 8, 168, 54);
+  ctx.fillStyle = "#2B231C";
+  ctx.font = "10px monospace";
+  ctx.fillText(`yaw ${dbg.yaw.toFixed(3)}`, 14, 24);
+  ctx.fillText(
+    `L vis ${dbg.left.visible} d ${dbg.left.depth.toFixed(3)}`,
+    14,
+    40,
+  );
+  ctx.fillText(
+    `R vis ${dbg.right.visible} d ${dbg.right.depth.toFixed(3)}`,
+    14,
+    56,
+  );
+  ctx.restore();
 }
