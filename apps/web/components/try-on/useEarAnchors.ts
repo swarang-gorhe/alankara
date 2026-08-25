@@ -91,7 +91,9 @@ function pierceFromContour(
   _eyeOuterY: number,
 ): { x: number; y: number; z: number; cheekX: number; cheekY: number; lobeX: number; lobeY: number } {
   const side = cheek.x < midX ? -1 : 1;
-  const x = cheek.x + side * interocular * 0.03;
+  // 234 X is at the ear column; a hair toward the midline sits on lobe flesh
+  // (pure outward bias spills into background beside the helix).
+  const x = cheek.x - side * interocular * 0.01;
   const y = cheek.y + interocular * 0.08;
 
   return {
